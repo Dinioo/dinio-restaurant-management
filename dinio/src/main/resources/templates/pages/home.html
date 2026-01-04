@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DINIO - Home</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/page/home.css}" />
+</head>
+<body>
+
+  <div th:replace="fragments/header :: header"></div>
+
+  <main class="container">
+    <div id="banner">
+      <div class="box-left">
+        <h2>
+          <span>Welcome to</span>
+          <span>Dinio Restaurant</span>
+        </h2>
+        <p> Dinio mang đến trải nghiệm ẩm thực hiện đại, 
+        kết hợp hương vị tinh tế với quy trình phục vụ nhanh, 
+        tiện lợi và thông minh.
+        </p>
+        <a href="/menu" class="btn btn-primary">
+          KHÁM PHÁ NGAY
+        </a>
+      </div>
+      <div class="box-right">
+    </div>
+</body>
+</html>

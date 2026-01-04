@@ -1,0 +1,21 @@
+<div th:fragment="header" id="header">
+  <a th:href="@{/}" class="logo">
+    <img th:src="@{/assets/pic/logo.png}" alt="Dinio Logo">
+  </a>
+
+  <nav id="menu">
+    <a class="item" th:href="@{/}">Home</a>
+    <a class="item" th:href="@{/menu}">Product</a>
+    <a class="item" th:href="@{/blog}">Blog</a>
+    <a class="item" th:href="@{/contact}">Contact</a>
+  </nav>
+
+  <nav id="action">
+    <a class="item" th:href="@{/search}">
+      <img th:src="@{/assets/pic/element/user.png}" alt="Search">
+    </a>
+    <a class="item" th:href="@{/cart}">
+      <img th:src="@{/assets/pic/element/cart.png}" alt="Cart">
+    </a>
+  </nav>
+</div>

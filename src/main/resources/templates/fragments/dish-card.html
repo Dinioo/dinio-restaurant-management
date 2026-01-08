@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<article class="dish-card" th:fragment="dishCard(title, desc, price, img, badge)">
+  <div class="dish-media">
+    <img th:src="${img}" th:alt="${title}" />
+    <span class="dish-badge" th:text="${badge}">Hot</span>
+  </div>
+
+  <div class="dish-body">
+    <h4 class="dish-title" th:text="${title}">Dish name</h4>
+    <p class="dish-desc" th:text="${desc}">Dish description</p>
+
+    <div class="dish-foot">
+      <span class="dish-price" th:text="${price}">0đ</span>
+      <a href="/menu" class="btn btn-order">Đặt ngay</a>
+    </div>
+  </div>
+</article>
+
+</body>
+</html>

@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DINIO - Home</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/page/home.css}" />
+</head>
+
+<body>
+
+  <div th:replace="fragments/header :: header"></div>
+
+  <main class="container">
+    <div id="banner">
+      <div class="box-left">
+        <h2>
+          <span>Welcome to</span>
+          <span>Dinio</span>
+        </h2>
+        <p>
+          Dinio mang đến trải nghiệm ẩm thực hiện đại,
+          kết hợp hương vị tinh tế với quy trình phục vụ nhanh,
+          tiện lợi và thông minh.
+        </p>
+        <a href="/menu" class="btn btn-primary">
+          KHÁM PHÁ NGAY
+        </a>
+      </div>
+
+      <div class="box-right">
+        <img src="/assets/pic/banner1.png" alt="">
+        <img src="/assets/pic/banner2.png" alt="">
+        <img src="/assets/pic/banner3.png" alt="">
+      </div>
+    </div>
+
+
+    <section id="best-seller" class="section">
+      <div class="section-head">
+        <div>
+          <p class="section-eyebrow">Signature selection</p>
+          <h3 class="section-title">Best Seller</h3>
+          <p class="section-subtitle">
+            Những món được yêu thích nhất tại Dinio — tinh gọn, tinh tế và đậm dấu ấn.
+          </p>
+        </div>
+
+        <a href="/menu" class="btn btn-cta">Explore the Menu</a>
+      </div>
+
+      <div class="best-grid">
+        <div th:replace="fragments/dish-card :: dishCard(
+      'Truffle Pasta',
+      'Sốt kem truffle, phô mai Parmesan.',
+      '149.000đ',
+      '/assets/pic/food1.jpeg',
+      'Chef’s Pick'
+      )"></div>
+
+        <div th:replace="fragments/dish-card :: dishCard(
+      'Salmon Teriyaki',
+      'Cá hồi áp chảo, sốt teriyaki.',
+      '189.000đ',
+      '/assets/pic/food2.jpeg',
+      'Hot'
+      )"></div>
+
+        <div th:replace="fragments/dish-card :: dishCard(
+      'Premium Steak',
+      'Bò mềm nướng vừa chín, sốt vang đỏ, khoai nghiền.',
+      '259.000đ',
+      '/assets/pic/food3.jpeg',
+      'Premium'
+      )"></div>
+
+        <div th:replace="fragments/dish-card :: dishCard(
+    'Matcha Dessert',
+    'Matcha Nhật, kem nhẹ, cân bằng vị ngọt thanh.',
+    '89.000đ',
+    '/assets/pic/food4.jpeg',
+    'New'
+    )"></div>
+
+        <div th:replace="fragments/dish-card :: dishCard(
+    'Seafood Risotto',
+    'Cơm Ý nấu kem, tôm mực tươi, phô mai Parmesan.',
+    '179.000đ',
+    '/assets/pic/food5.jpeg',
+    'Signature'
+    )"></div>
+
+        <div th:replace="fragments/dish-card :: dishCard(
+    'Grilled Chicken Herb',
+    'Ức gà nướng thảo mộc, ăn kèm rau củ áp chảo.',
+    '159.000đ',
+    '/assets/pic/food6.jpeg',
+    'Popular'
+    )"></div>
+
+        <div th:replace="fragments/dish-card :: dishCard(
+    'Beef Burger Deluxe',
+    'Bánh mì brioche, bò Úc, phô mai cheddar, sốt đặc biệt.',
+    '149.000đ',
+    '/assets/pic/food7.jpeg',
+    'Best Choice'
+    )"></div>
+
+        <div th:replace="fragments/dish-card :: dishCard(
+    'Classic Tiramisu',
+    'Bánh tiramisu truyền thống, cà phê espresso và cacao.',
+    '99.000đ',
+    '/assets/pic/food8.jpeg',
+    'Dessert'
+    )"></div>
+      </div>
+
+      <div th:replace="fragments/dots-navigation :: dotsNavigation(3, 1, '/menu', 'Explore More')"></div>
+
+    </section>
+
+    <section id="about" class="section">
+      <div class="section-head">
+        <div>
+          <p class="section-eyebrow">About Dinio</p>
+          <h3 class="section-title">Our Story</h3>
+          <p class="section-subtitle">
+            Một bữa ăn hiện đại nên “dễ chịu” — tinh tế, gọn gàng và đúng nhịp.
+          </p>
+        </div>
+
+        <a href="/contact" class="btn btn-cta">Reserve a Table</a>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-content">
+          <h4 class="about-title">Dinio bắt đầu từ một câu hỏi rất nhỏ.</h4>
+
+          <p class="about-text">
+            “Nếu một bữa ăn có thể vừa tinh tế, vừa nhanh gọn — mà vẫn đủ ấm áp để bạn muốn quay lại?”
+            Dinio ra đời từ ý tưởng đó.
+          </p>
+
+          <p class="about-text">
+            Chúng tôi chọn nguyên liệu theo mùa, giữ thực đơn gọn để mỗi món đều có lý do tồn tại.
+            Mỗi công thức được cân chỉnh để vị rõ ràng, trình bày sạch, và phục vụ đúng nhịp.
+          </p>
+
+          <p class="about-text">
+            Dinio không cố làm mọi thứ. Dinio chỉ làm một số thứ thật tốt:
+            <b>ngon vừa đủ, đẹp vừa đủ, nhanh vừa đủ</b>.
+          </p>
+
+          <div class="about-highlights" aria-label="Dinio values">
+            <div class="hl-item">
+              <p class="hl-title">Seasonal Menu</p>
+              <p class="hl-desc">Nguyên liệu theo mùa, thực đơn gọn, món nào cũng “đáng”.</p>
+            </div>
+            <div class="hl-item">
+              <p class="hl-title">Premium Comfort</p>
+              <p class="hl-desc">Tinh tế nhưng gần gũi — ăn ngon, không áp lực.</p>
+            </div>
+            <div class="hl-item">
+              <p class="hl-title">Smart Service</p>
+              <p class="hl-desc">Nhanh, đúng nhịp, trải nghiệm mượt từ gọi món đến lên món.</p>
+            </div>
+          </div>
+
+          <div class="about-footer">
+            <a href="/menu" class="btn btn-cta">Explore Menu</a>
+            <a href="/contact" class="btn btn-cta">Book a Table</a>
+          </div>
+        </div>
+        
+
+        <!-- Right: Visual -->
+        <div class="about-visual" aria-label="Dinio atmosphere">
+          <!-- Bạn có thể thay ảnh cho đẹp hơn -->
+          <img src="/assets/pic/about_story.jpg" alt="Dinio restaurant atmosphere">
+
+          <div class="about-quote">
+            <p class="quote-text">
+              “A modern meal should feel effortless — from the first bite to the last.”
+            </p>
+            <p class="quote-meta">— Dinio Kitchen</p>
+          </div>
+
+          <div class="about-badge">
+            <p class="badge-title">DINIO</p>
+            <p class="badge-subtitle">Modern dining • Premium taste</p>
+          </div>
+        </div>
+      </div>
+      <div th:replace="fragments/dots-navigation :: dotsNavigation(3, 1, '/menu', 'Explore More')"></div>
+
+    </section>
+    <section id="categories" class="section">
+      <div class="section-head">
+        <div>
+          <p class="section-eyebrow">Menu Categories</p>
+          <h3 class="section-title">Explore by Category</h3>
+          <p class="section-subtitle">
+            Chọn nhanh theo nhóm món — tinh gọn, đúng gu, đúng mood.
+          </p>
+        </div>
+
+        <a href="/menu" class="btn btn-cta">View Full Menu</a>
+      </div>
+
+      <div class="cat-grid">
+        <div th:replace="fragments/category-card :: categoryCard(
+      'Starters',
+      'Khai vị gọn — salad, soup, bites.',
+      '/assets/pic/starters.jpeg',
+      '/menu?cat=starter',
+      'Start light',
+      'Best pairing',
+      'Fresh',
+      false
+    )"></div>
+
+        <div th:replace="fragments/category-card :: categoryCard(
+      'Main Dishes',
+      'Steak, pasta, risotto — đậm vị & tinh tế.',
+      '/assets/pic/maindishes.jpeg',
+      '/menu?cat=main',
+      'Signature',
+      'Most loved',
+      'Premium',
+      true
+    )"></div>
+
+        <div th:replace="fragments/category-card :: categoryCard(
+      'Desserts',
+      'Ngọt thanh — tiramisu, matcha, mousse.',
+      '/assets/pic/desserts.jpeg',
+      '/menu?cat=dessert',
+      'Sweet finish',
+      'Balanced',
+      'New',
+      false
+    )"></div>
+
+        <div th:replace="fragments/category-card :: categoryCard(
+      'Drinks',
+      'Coffee, tea, mocktail — đúng nhịp bữa ăn.',
+      '/assets/pic/drink.jpeg',
+      '/menu?cat=drink',
+      'Pairings',
+      'Chill',
+      'Signature',
+      false
+    )"></div>
+      </div>
+
+      <div class="cat-footer">
+        <div class="cat-note">
+          <p class="note-title">Quick picks</p>
+          <p class="note-text">
+            Bạn có thể lọc theo “Best Seller”, “New”, “Signature” trong trang Menu.
+          </p>
+        </div>
+
+      </div>
+    </section>
+    <div th:replace="fragments/dots-navigation :: dotsNavigation(3, 1, '/menu', 'Explore More')"></div>
+
+
+    <section id="reservation" class="section">
+      <div class="section-head">
+        <div>
+          <p class="section-eyebrow">Reservation</p>
+          <h3 class="section-title">Book a Table</h3>
+          <p class="section-subtitle">
+            Đặt bàn nhanh trong 30 giây — chọn thời gian, số khách và ghi chú đặc biệt nếu cần.
+          </p>
+        </div>
+
+        <a href="/contact" class="btn btn-cta">Need help?</a>
+      </div>
+
+      <div class="res-grid">
+        <div class="res-info">
+          <h4 class="res-title">A premium meal, right on time.</h4>
+          <p class="res-text">
+            Dinio ưu tiên trải nghiệm “đúng nhịp”: xác nhận nhanh, phục vụ gọn và không gian thoải mái cho mọi cuộc hẹn.
+          </p>
+
+          <div class="res-points" aria-label="Reservation notes">
+            <div class="res-point">
+              <p class="point-title">Confirm fast</p>
+              <p class="point-desc">Xác nhận đặt bàn nhanh — ưu tiên giờ cao điểm.</p>
+            </div>
+            <div class="res-point">
+              <p class="point-title">Special requests</p>
+              <p class="point-desc">Sinh nhật, kỷ niệm, dị ứng — ghi chú để Dinio chuẩn bị.</p>
+            </div>
+            <div class="res-point">
+              <p class="point-title">Walk-in friendly</p>
+              <p class="point-desc">Có nhận khách đến trực tiếp (tuỳ tình trạng bàn).</p>
+            </div>
+          </div>
+
+          <div class="res-contact">
+            <div class="contact-chip">
+              <span class="chip-label">Hotline</span>
+              <span class="chip-value">0900 000 000</span>
+            </div>
+            <div class="contact-chip">
+              <span class="chip-label">Hours</span>
+              <span class="chip-value">10:00 – 22:00</span>
+            </div>
+            <div class="contact-chip">
+              <span class="chip-label">Location</span>
+              <span class="chip-value">Dinio • City Center</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="res-card">
+          <form class="res-form" method="post" action="/reservation">
+            <div class="form-row">
+              <label class="form-label" for="resName">Full name</label>
+              <input class="form-input" id="resName" name="name" type="text" placeholder="Your name" required>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label" for="resPhone">Phone</label>
+              <input class="form-input" id="resPhone" name="phone" type="tel" placeholder="0900..." required>
+            </div>
+
+            <div class="form-split">
+              <div class="form-row">
+                <label class="form-label" for="resDate">Date</label>
+                <input class="form-input" id="resDate" name="date" type="date" required>
+              </div>
+              <div class="form-row">
+                <label class="form-label" for="resTime">Time</label>
+                <input class="form-input" id="resTime" name="time" type="time" required>
+              </div>
+            </div>
+
+            <div class="form-split">
+              <div class="form-row">
+                <label class="form-label" for="resGuests">Guests</label>
+                <select class="form-input" id="resGuests" name="guests" required>
+                  <option value="" selected disabled>Choose</option>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                  <option>6</option>
+                  <option>7</option>
+                  <option>8+</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label class="form-label" for="resArea">Seating</label>
+                <select class="form-input" id="resArea" name="area">
+                  <option value="indoor" selected>Indoor</option>
+                  <option value="outdoor">Outdoor</option>
+                  <option value="quiet">Quiet corner</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label class="form-label" for="resNote">Note (optional)</label>
+              <textarea class="form-input form-textarea" id="resNote" name="note"
+                placeholder="Allergy, birthday, special request..."></textarea>
+            </div>
+
+            <button class="btn btn-primary res-submit" type="submit">
+              Confirm Reservation
+            </button>
+
+            <p class="res-hint">
+              Bằng cách đặt bàn, bạn đồng ý để Dinio liên hệ xác nhận qua điện thoại.
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+    <div th:replace="fragments/dots-navigation :: dotsNavigation(3, 1, '/menu', 'Explore More')"></div>
+
+    <section id="reviews" class="section">
+  <div class="section-head">
+    <div>
+      <p class="section-eyebrow">Testimonials</p>
+      <h3 class="section-title">What Guests Say</h3>
+      <p class="section-subtitle">
+        Một vài cảm nhận từ khách đã trải nghiệm Dinio — gọn, tinh tế và đúng nhịp.
+      </p>
+    </div>
+
+    <a href="/blog" class="btn btn-cta">Read More</a>
+  </div>
+
+  <div class="review-grid">
+
+    <!-- Review 1 -->
+    <div th:replace="fragments/review-card :: reviewCard(
+      5,
+      'Best Service',
+      false,
+      'Không gian rất chill, món lên nhanh mà vẫn đẹp. Steak mềm, sốt ngon và không bị ngấy.',
+      '/assets/pic/food3.jpeg',
+      'Minh Anh',
+      'Regular guest',
+      false
+    )"></div>
+
+    <!-- Review 2 (featured + accent) -->
+    <div th:replace="fragments/review-card :: reviewCard(
+      5,
+      'Signature',
+      true,
+      'Menu gọn nhưng món nào cũng có điểm nhấn. Tiramisu cực ổn, vị cân bằng, hậu vị nhẹ.',
+      '/assets/pic/food2.jpeg',
+      'Quang Huy',
+      'Food reviewer',
+      true
+    )"></div>
+
+    <!-- Review 3 -->
+    <div th:replace="fragments/review-card :: reviewCard(
+      4,
+      'Cozy Mood',
+      false,
+      'Đi hẹn hò rất hợp. Nhân viên dễ thương, tư vấn món ok. Mocktail ngon và trình bày đẹp.',
+      '/assets/pic/food1.jpeg',
+      'Thảo Vy',
+      'Couple dinner',
+      false
+    )"></div>
+
+  </div>
+
+  <div class="review-footer">
+    <div class="review-note">
+      <p class="note-title">Rating</p>
+      <p class="note-text">4.8/5 trung bình — dựa trên trải nghiệm tại Dinio.</p>
+    </div>
+
+    <a href="/contact" class="btn btn-cta">Leave a Review</a>
+  </div>
+</section>
+
+
+    <section id="location" class="section">
+      <div class="section-head">
+        <div>
+          <p class="section-eyebrow">Visit Dinio</p>
+          <h3 class="section-title">Location & Hours</h3>
+          <p class="section-subtitle">
+            Ghé Dinio để trải nghiệm bữa ăn đúng nhịp — đặt bàn trước để giữ chỗ giờ cao điểm.
+          </p>
+        </div>
+
+        <a href="/reservation" class="btn btn-cta">Reserve Now</a>
+      </div>
+
+      <div class="loc-grid">
+        <div class="loc-info">
+          <div class="loc-card">
+            <p class="loc-label">Address</p>
+            <p class="loc-value">123 Nguyen Hue, District 1, Ho Chi Minh City</p>
+            <a class="loc-link" href="https://www.google.com/maps" target="_blank" rel="noopener">
+              Open in Google Maps →
+            </a>
+          </div>
+
+          <div class="loc-card">
+            <p class="loc-label">Hours</p>
+            <div class="hours-list">
+              <div class="hour-row"><span>Mon – Fri</span><span>10:00 – 22:00</span></div>
+              <div class="hour-row"><span>Sat</span><span>09:00 – 23:00</span></div>
+              <div class="hour-row"><span>Sun</span><span>09:00 – 22:00</span></div>
+            </div>
+            <p class="loc-note">Tip: 19:00–20:30 thường đông, nên đặt bàn trước.</p>
+          </div>
+
+          <div class="loc-card">
+            <p class="loc-label">Contact</p>
+            <div class="contact-list">
+              <a class="contact-item" href="tel:0900000000">Hotline: 0900 000 000</a>
+              <a class="contact-item" href="mailto:hello@dinio.com">Email: hello@dinio.com</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: map -->
+        <div class="loc-map" aria-label="Dinio map">
+          <iframe title="Dinio location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=Ho%20Chi%20Minh%20City&output=embed">
+          </iframe>
+
+          <div class="map-badge">
+            <p class="badge-title">DINIO</p>
+            <p class="badge-subtitle">Modern dining • City Center</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div th:replace="fragments/footer :: footer"></div> 
+</body>
+
+</html>

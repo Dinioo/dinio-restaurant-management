@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+  <footer id="footer" th:fragment="footer" role="contentinfo">
+    <div class="footer-inner">
+
+      <div class="footer-top">
+
+        <div class="footer-brand">
+          <a href="/" class="footer-brand-link" aria-label="Dinio Home">
+            <img class="footer-logo" src="/assets/pic/logo.png" alt="Dinio logo" />
+          </a>
+
+          <p class="footer-desc">
+            Dinio là không gian ẩm thực hiện đại — tinh gọn trong thiết kế,
+            tinh tế trong hương vị và phục vụ đúng nhịp.
+          </p>
+
+          <div class="footer-social" aria-label="Social media">
+            <a class="social-icon" href="#" aria-label="Instagram">
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a class="social-icon" href="#" aria-label="Facebook">
+              <i class="fa-brands fa-facebook-f"></i>
+            </a>
+            <a class="social-icon" href="#" aria-label="TikTok">
+              <i class="fa-brands fa-tiktok"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-cols">
+
+          <div class="footer-col">
+            <p class="footer-heading">Explore</p>
+            <a class="footer-link" href="/menu">Menu</a>
+            <a class="footer-link" href="/blog">Blog</a>
+            <a class="footer-link" href="/reservation">Reservation</a>
+          </div>
+
+          <div class="footer-col">
+            <p class="footer-heading">Company</p>
+            <a class="footer-link" href="/about">About Dinio</a>
+            <a class="footer-link" href="/contact">Contact</a>
+            <a class="footer-link" href="/policy">Policy</a>
+          </div>
+
+          <div class="footer-col">
+            <p class="footer-heading">Contact</p>
+
+            <div class="footer-contact">
+              <span class="contact-icon">
+                <i class="fa-solid fa-phone"></i>
+              </span>
+              <a class="footer-link" href="tel:0900000000">0900 000 000</a>
+            </div>
+
+            <div class="footer-contact">
+              <span class="contact-icon">
+                <i class="fa-solid fa-envelope"></i>
+              </span>
+              <a class="footer-link" href="mailto:hello@dinio.com">
+                hello@dinio.com
+              </a>
+            </div>
+
+            <p class="footer-mini">
+              <i class="fa-solid fa-location-dot"></i>
+              123 Nguyễn Huệ, Quận 1, TP.HCM
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copy">
+          ©
+          <span th:text="${#dates.format(#dates.createNow(),'yyyy')}">2026</span>
+          Dinio Restaurant. All rights reserved.
+        </p>
+
+        <div class="footer-legal">
+          <a class="footer-link" href="/terms">Terms</a>
+          <a class="footer-link" href="/privacy">Privacy</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+</body>
+
+</html>

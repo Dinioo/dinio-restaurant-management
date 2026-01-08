@@ -1,0 +1,56 @@
+
+.dots-navigation{
+  margin-top: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
+.dots-navigation .dots{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dots-navigation .dot{
+  width: 10px;
+  height: 10px;
+  padding: 0;
+
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-1);
+
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.dots-navigation .dot:hover{
+  transform: scale(1.12);
+  border-color: var(--border-accent);
+  background: var(--surface-2);
+}
+
+.dots-navigation .dot.is-active{
+  width: 26px;
+  background: var(--accent);
+  border-color: var(--border-accent);
+}
+
+.dots-navigation .dot:focus-visible{
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.dots-navigation .btn-cta,
+.dots-navigation .btn-more{
+  padding: 12px 22px;
+  border-radius: 999px;
+}

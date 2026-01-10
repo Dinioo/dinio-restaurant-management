@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DINIO — Sign in</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/auth/login.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/components/forgot-password.css}" />
+  <script th:src="@{/assets/js/header-dropdown.js}"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+
+<body>
+  <div th:replace="~{fragments/forgot-password :: forgotModal}"></div>
+  <div th:replace="~{fragments/header :: header}"></div>
+  <main class="auth">
+    <section class="auth-shell">
+      <div class="auth-card">
+        <div class="auth-head">
+          <p class="auth-eyebrow">WELCOME BACK</p>
+          <h1 class="auth-title">Đăng nhập</h1>
+          <p class="auth-subtitle">
+            Truy cập DINIO để quản lý đặt bàn, món ăn và đơn hàng.
+          </p>
+        </div>
+
+        <form class="auth-form" th:action="@{/login}" method="post" id="loginForm">
+          <div class="auth-alert is-hidden" id="authAlert"></div>
+
+          <label class="field">
+            <span class="label">Email / SĐT</span>
+            <div class="control">
+              <i class="fa-regular fa-user"></i>
+              <input type="text" name="identifier" id="identifier" autocomplete="username" inputmode="text" required />
+            </div>
+          </label>
+
+
+
+          <label class="field">
+            <span class="label">Password</span>
+            <div class="control">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" name="password" id="password" placeholder="••••••••"
+                autocomplete="current-password" required />
+              <button type="button" class="pw-toggle" id="pwToggle" aria-label="Toggle password">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </label>
+
+          <div class="auth-row">
+            <label class="check">
+              <input type="checkbox" name="remember-me" />
+              <span>Remember me</span>
+            </label>
+
+            <a href="#" class="link" id="openForgot">Quên mật khẩu?</a>
+
+          </div>
+
+          <button class="btn-order" type="submit" id="submitBtn">
+            <span>Đăng nhập</span>
+          </button>
+
+          <p class="auth-foot">
+            Chưa có tài khoản?
+            <a class="link" th:href="@{/register}">Tạo tài khoản</a>
+          </p>
+
+          <div class="auth-divider">
+            <span>or</span>
+          </div>
+
+          <div class="auth-social">
+            <a class="social-btn" href="#" data-provider="google">
+              <i class="fa-brands fa-google"></i>
+              Continue with Google
+            </a>
+
+            <a class="social-btn" href="#" data-provider="github">
+              <i class="fa-brands fa-github"></i>
+              Continue with GitHub
+            </a>
+          </div>
+        </form>
+      </div>
+
+      <aside class="auth-visual" aria-label="Dinio visual panel">
+        <div class="visual-bg" aria-hidden="true"></div>
+
+        <div class="visual-top">
+          <div class="brand-chip">
+            <span class="dot"></span>
+            <span class="brand">DINIO</span>
+            <span class="sep">•</span>
+            <span class="tagline">Modern dining</span>
+          </div>
+
+          <h2 class="visual-title">
+            Fine dining,<br>
+            fast service.
+          </h2>
+
+          <p class="visual-sub">
+            Đặt bàn nhanh — gọi món gọn — trải nghiệm mượt.
+          </p>
+        </div>
+
+        <div class="visual-mid">
+          <div class="quote-card">
+            <p class="quote-text">
+              “Effortless dining — from the first tap to the last bite.”
+            </p>
+            <div class="quote-meta">
+              <span class="avatar-mini">DK</span>
+              <div>
+                <p class="meta-name">Dinio Kitchen</p>
+                <p class="meta-sub">Signature experience</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mini-features" aria-label="Dinio highlights">
+            <span class="mini-pill"><i class="fa-solid fa-shield-halved"></i> Secure</span>
+            <span class="mini-pill"><i class="fa-solid fa-bolt"></i> Fast</span>
+            <span class="mini-pill"><i class="fa-solid fa-bell"></i> Updates</span>
+          </div>
+        </div>
+
+        <div class="badge-strip" aria-label="Trust badges">
+          <span class="badge">Secure login</span>
+          <span class="badge">Fast checkout</span>
+          <span class="badge">Staff-friendly</span>
+        </div>
+      </aside>
+
+
+    </section>
+  </main>
+  <script th:src="@{/assets/js/auth/forgot-password.js}"></script>
+  <script th:src="@{/assets/js/auth/login.js}"></script>
+</body>
+
+</html>

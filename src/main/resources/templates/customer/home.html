@@ -9,7 +9,9 @@
   <title>DINIO - Home</title>
 
   <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
-  <link rel="stylesheet" th:href="@{/assets/css/page/home.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/customer/home.css}" />
+  <script th:src="@{/assets/js/header-dropdown.js}"></script>
+
 </head>
 
 <body>
@@ -28,7 +30,7 @@
           kết hợp hương vị tinh tế với quy trình phục vụ nhanh,
           tiện lợi và thông minh.
         </p>
-        <a href="/menu" class="btn btn-primary">
+        <a href="/menu" class="btn cta">
           KHÁM PHÁ NGAY
         </a>
       </div>
@@ -134,7 +136,7 @@
           </p>
         </div>
 
-        <a href="/contact" class="btn btn-cta">Reserve a Table</a>
+<a href="/reservation/tables" class="btn btn-cta">Reserve a Table</a>
       </div>
 
       <div class="about-grid">
@@ -258,15 +260,6 @@
     )"></div>
       </div>
 
-      <div class="cat-footer">
-        <div class="cat-note">
-          <p class="note-title">Quick picks</p>
-          <p class="note-text">
-            Bạn có thể lọc theo “Best Seller”, “New”, “Signature” trong trang Menu.
-          </p>
-        </div>
-
-      </div>
     </section>
     <div th:replace="fragments/dots-navigation :: dotsNavigation(3, 1, '/menu', 'Explore More')"></div>
 
@@ -377,7 +370,7 @@
                 placeholder="Allergy, birthday, special request..."></textarea>
             </div>
 
-            <button class="btn btn-primary res-submit" type="submit">
+            <button class="btn btn-save" type="submit">
               Confirm Reservation
             </button>
 

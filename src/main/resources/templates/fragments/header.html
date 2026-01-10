@@ -1,0 +1,41 @@
+<div th:fragment="header" id="header">
+  <a th:href="@{/}" class="logo">
+    <img th:src="@{/assets/pic/logo.png}" alt="Dinio Logo">
+  </a>
+
+  <nav id="menu">
+    <a class="item" th:href="@{/}">Home</a>
+    <a class="item" th:href="@{/menu}">Product</a>
+    <a class="item" th:href="@{/blog}">Blog</a>
+    <a class="item" th:href="@{/contact}">Contact</a>
+  </nav>
+
+  <nav id="action">
+
+    <a class="item" th:href="@{/cart}">
+      <img th:src="@{/assets/pic/element/cart.png}" alt="Cart">
+    </a>
+
+    <!-- ✅ User icon: click to open dropdown -->
+    <div class="item user-menu" id="userMenu">
+      <button class="user-btn" id="userBtn"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false">
+        <img th:src="@{/assets/pic/element/user.png}" alt="User">
+      </button>
+
+      <div class="user-dropdown" id="userDropdown" role="menu">
+        <a th:href="@{/profile}" role="menuitem">Hồ sơ</a>
+        <a th:href="@{/reservations}" role="menuitem">Đặt bàn</a>
+        <a th:href="@{/reservations/my}" role="menuitem">Lịch đặt bàn</a>
+        <a th:href="@{/orders}" role="menuitem">Đơn hàng</a>
+
+        <div class="divider"></div>
+
+        <a th:href="@{/login}">Đăng nhập</a>
+
+      </div>
+    </div>
+  </nav>
+</div>

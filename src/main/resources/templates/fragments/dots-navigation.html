@@ -1,0 +1,15 @@
+<div th:fragment="dotsNavigation(total, active, ctaLink, ctaText)"
+     class="dots-navigation">
+
+  <div class="dots" aria-label="Pages">
+    <button th:each="i : ${#numbers.sequence(1, total)}"
+            class="dot"
+            th:classappend="${i == active} ? ' is-active' : ''"
+            type="button"
+            th:attr="data-page=${i}, aria-label=${'Page ' + i}">
+    </button>
+  </div>
+
+  <a th:href="${ctaLink}" class="btn btn-cta"
+     th:text="${ctaText}">Explore More</a>
+</div>

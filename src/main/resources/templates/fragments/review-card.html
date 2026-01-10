@@ -1,0 +1,41 @@
+<div th:fragment="reviewCard(
+        rating,
+        badge,
+        badgeAccent,
+        quote,
+        avatar,
+        name,
+        meta,
+        featured
+     )"
+     class="review-card"
+     th:classappend="${featured} ? ' is-featured' : ''">
+
+  <div class="review-top">
+    <div class="review-rating" th:attr="aria-label=${rating + ' stars'}">
+      <span th:each="i : ${#numbers.sequence(1,5)}"
+            th:text="'★'"
+            th:classappend="${i > rating} ? ' is-dim' : ''"></span>
+    </div>
+
+    <span class="review-badge"
+          th:classappend="${badgeAccent} ? ' is-accent' : ''"
+          th:text="${badge}">
+    </span>
+  </div>
+
+  <p class="review-quote" th:text="${quote}">
+    Review content
+  </p>
+
+  <div class="review-user">
+    <img class="review-avatar"
+         th:src="${avatar}"
+         th:alt="${name + ' avatar'}">
+    <div>
+      <p class="user-name" th:text="${name}">Name</p>
+      <p class="user-meta" th:text="${meta}">Meta</p>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DINIO — 404</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/error.css}" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+
+<body class="error-page">
+  <div th:replace="~{fragments/header :: header}"></div>
+
+  <main class="error">
+    <section class="error-shell">
+
+      <div class="error-card">
+        <div class="error-badge">
+          <span class="dot"></span>
+          <span class="brand">DINIO</span>
+          <span class="sep">•</span>
+          <span class="muted">Not found</span>
+        </div>
+
+        <p class="error-code">404</p>
+        <h1 class="error-title">Trang này không có trong menu</h1>
+        <p class="error-subtitle">
+          Có thể link sai hoặc trang đã được đổi vị trí.
+        </p>
+
+        <div class="error-actions">
+          <a class="btn btn-cta" th:href="@{/}">
+            <i class="fa-solid fa-house"></i>
+            Về Home
+          </a>
+          <a class="btn btn-ghost" th:href="@{/menu}">
+            <i class="fa-solid fa-utensils"></i>
+            Xem Menu
+          </a>
+        </div>
+      </div>
+
+      <aside class="error-visual" aria-label="Dinio visual">
+        <div class="visual-bg" aria-hidden="true"></div>
+        <div class="visual-card">
+          <p class="visual-kicker">DINIO</p>
+          <h2>Modern dining.</h2>
+          <p>Quay lại menu để chọn món yêu thích.</p>
+          <div class="visual-pills">
+            <span class="pill"><i class="fa-solid fa-star"></i> Best Seller</span>
+            <span class="pill"><i class="fa-solid fa-mug-hot"></i> Drinks</span>
+            <span class="pill"><i class="fa-solid fa-cake-candles"></i> Desserts</span>
+          </div>
+        </div>
+      </aside>
+
+    </section>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

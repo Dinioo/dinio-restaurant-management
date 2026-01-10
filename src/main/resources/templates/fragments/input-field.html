@@ -1,0 +1,72 @@
+<!-- TEXT INPUT -->
+<div th:fragment="text(label, id, name, placeholder, required)">
+  <div class="field">
+    <label th:for="${id}">
+      <span th:text="${label}"></span>
+      <span th:if="${required}" class="required">*</span>
+    </label>
+
+    <input
+      th:id="${id}"
+      th:name="${name}"
+      type="text"
+      th:placeholder="${placeholder}"
+      th:attr="required=${required}" />
+  </div>
+</div>
+
+
+<!-- NUMBER INPUT -->
+<div th:fragment="number(label, id, name, placeholder, required, min, step)">
+  <div class="field">
+    <label th:for="${id}">
+      <span th:text="${label}"></span>
+      <span th:if="${required}" class="required">*</span>
+    </label>
+
+    <input
+      th:id="${id}"
+      th:name="${name}"
+      type="number"
+      th:min="${min}"
+      th:step="${step}"
+      th:placeholder="${placeholder}"
+      th:attr="required=${required}" />
+  </div>
+</div>
+
+
+<!-- TEXTAREA -->
+<div th:fragment="textarea(label, id, name, placeholder, rows, required)">
+  <div class="field">
+    <label th:for="${id}">
+      <span th:text="${label}"></span>
+      <span th:if="${required}" class="required">*</span>
+    </label>
+
+    <textarea
+      th:id="${id}"
+      th:name="${name}"
+      th:rows="${rows}"
+      th:placeholder="${placeholder}"
+      th:attr="required=${required}"></textarea>
+  </div>
+</div>
+
+
+<!-- FILE INPUT -->
+<div th:fragment="file(label, id, name, required, accept)">
+  <div class="field">
+    <label th:for="${id}">
+      <span th:text="${label}"></span>
+      <span th:if="${required}" class="required">*</span>
+    </label>
+
+    <input
+      th:id="${id}"
+      th:name="${name}"
+      type="file"
+      th:accept="${accept}"
+      th:attr="required=${required}" />
+  </div>
+</div>

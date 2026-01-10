@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DINIO — Điều khoản sử dụng</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/customer/legal.css}" />
+  <script th:src="@{/assets/js/header-dropdown.js}"></script>
+
+</head>
+
+<body>
+  <div th:replace="~{fragments/header :: header}"></div>
+
+  <!-- HERO (full width) -->
+  <header class="legal-hero">
+    <div class="legal-hero-bg" aria-hidden="true"></div>
+    <div class="legal-hero-inner">
+      <p class="legal-kicker">LEGAL • DINIO</p>
+      <h1 class="legal-h1">Điều khoản sử dụng</h1>
+      <p class="legal-lead">
+        Tóm tắt rõ ràng để bạn sử dụng DINIO yên tâm — đặt bàn nhanh, trải nghiệm mượt.
+      </p>
+
+      <div class="legal-chips" aria-label="Highlights">
+        <span class="chip">Đặt bàn & xác nhận</span>
+        <span class="chip">Trách nhiệm tài khoản</span>
+        <span class="chip">Cập nhật điều khoản</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT (full width section) -->
+  <main class="legal-wrap">
+    <section class="legal-layout">
+      <!-- LEFT CONTENT -->
+      <article class="legal-content">
+        <div class="legal-callout">
+          <p class="callout-title">Tóm tắt nhanh</p>
+          <ul class="callout-list">
+            <li>Bạn cung cấp thông tin đúng và bảo mật tài khoản.</li>
+            <li>Đặt bàn có thể cần xác nhận (nhất là giờ cao điểm).</li>
+            <li>Menu/giá có thể thay đổi theo mùa; DINIO hiển thị theo thời điểm.</li>
+          </ul>
+        </div>
+
+        <section id="scope" class="legal-section">
+          <h2>1. Phạm vi áp dụng</h2>
+          <p>
+            Điều khoản này áp dụng khi bạn truy cập và sử dụng DINIO cho các chức năng như
+            đặt bàn, theo dõi đặt chỗ và trải nghiệm dịch vụ nhà hàng.
+          </p>
+        </section>
+
+        <section id="account" class="legal-section">
+          <h2>2. Tài khoản & bảo mật</h2>
+          <div class="legal-grid">
+            <div class="card">
+              <p class="card-title">Thông tin chính xác</p>
+              <p class="card-text">Tên, email/SĐT dùng để liên hệ xác nhận đặt bàn.</p>
+            </div>
+            <div class="card">
+              <p class="card-title">Bảo mật đăng nhập</p>
+              <p class="card-text">Không chia sẻ mật khẩu. Đăng xuất khi dùng máy lạ.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="booking" class="legal-section">
+          <h2>3. Đặt bàn</h2>
+          <p>
+            DINIO có thể liên hệ để xác nhận, điều chỉnh giờ hoặc số khách trong trường hợp
+            nhà hàng quá tải hoặc cần tối ưu sắp xếp bàn.
+          </p>
+          <div class="note">
+            <p><b>Lưu ý:</b> Nếu bạn đến trễ, nhà hàng có thể giữ bàn trong một khoảng thời gian hợp lý.</p>
+          </div>
+        </section>
+
+        <section id="use" class="legal-section">
+          <h2>4. Quy tắc sử dụng</h2>
+          <ul class="bullets">
+            <li>Không spam/đặt ảo/gây gián đoạn hệ thống.</li>
+            <li>Không khai báo thông tin giả mạo hoặc gây ảnh hưởng người khác.</li>
+            <li>Tôn trọng nhân viên và quy định phục vụ tại nhà hàng.</li>
+          </ul>
+        </section>
+
+        <section id="content" class="legal-section">
+          <h2>5. Nội dung, hình ảnh và giá</h2>
+          <p>
+            Hình ảnh chỉ mang tính minh hoạ. Menu/giá có thể thay đổi theo mùa hoặc tuỳ chi nhánh.
+            DINIO luôn cố gắng cập nhật theo thời điểm.
+          </p>
+        </section>
+
+        <section id="changes" class="legal-section">
+          <h2>6. Cập nhật điều khoản</h2>
+          <p>
+            Chúng tôi có thể cập nhật điều khoản để phù hợp vận hành. Phiên bản mới có hiệu lực
+            khi được đăng tải trên website.
+          </p>
+        </section>
+
+        <!-- FAQ (gọn nhưng “nhiều nội dung”) -->
+        <section id="faq" class="legal-section">
+          <h2>FAQ</h2>
+
+          <details class="faq">
+            <summary>Đặt bàn có cần tạo tài khoản không?</summary>
+            <p>Có thể tuỳ flow của m. Thường DINIO cho đặt nhanh, nhưng tạo tài khoản giúp quản lý lịch sử đặt bàn.</p>
+          </details>
+
+          <details class="faq">
+            <summary>Nhà hàng có gọi xác nhận không?</summary>
+            <p>Có thể. Đặc biệt giờ cao điểm hoặc khi bạn có ghi chú (dị ứng, sinh nhật…).</p>
+          </details>
+
+          <details class="faq">
+            <summary>Menu/giá thay đổi thì sao?</summary>
+            <p>DINIO sẽ cập nhật theo mùa. Giá tại thời điểm bạn xác nhận đặt/đặt món là giá áp dụng.</p>
+          </details>
+        </section>
+
+        <!-- CTA -->
+        <section class="legal-cta">
+          <div class="cta-card">
+            <div>
+              <p class="cta-title">Cần hỗ trợ nhanh?</p>
+              <p class="cta-sub">Liên hệ DINIO để được giải đáp về đặt bàn và tài khoản.</p>
+            </div>
+            <div class="cta-actions">
+              <a class="btn btn-cta" th:href="@{/contact}">Liên hệ</a>
+              <a class="link" th:href="@{/privacy}">Xem Chính sách bảo mật</a>
+            </div>
+          </div>
+        </section>
+      </article>
+
+      <!-- RIGHT SIDEBAR / TOC -->
+      <aside class="legal-aside" aria-label="Mục lục">
+        <div class="toc">
+          <p class="toc-title">Mục lục</p>
+          <nav class="toc-links">
+            <a href="#scope">Phạm vi</a>
+            <a href="#account">Tài khoản</a>
+            <a href="#booking">Đặt bàn</a>
+            <a href="#use">Quy tắc</a>
+            <a href="#content">Nội dung</a>
+            <a href="#changes">Cập nhật</a>
+            <a href="#faq">FAQ</a>
+          </nav>
+
+          <div class="toc-mini">
+            <p class="mini-title">Liên quan</p>
+            <a class="mini-link" th:href="@{/privacy}">Chính sách bảo mật</a>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

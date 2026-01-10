@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<article class="category-card"
+         th:fragment="categoryCard(title, desc, img, href, tag, chip1, chip2, featured)"
+         th:classappend="${featured} ? ' is-featured' : ''">
+
+  <a class="cat-card-link" th:href="${href}">
+    <div class="cat-media">
+      <img th:src="${img}" th:alt="${title}">
+      <span class="cat-tag" th:text="${tag}">Signature</span>
+    </div>
+
+    <div class="cat-body">
+      <h4 class="cat-title" th:text="${title}">Main Dishes</h4>
+      <p class="cat-desc" th:text="${desc}">Steak, pasta, risotto…</p>
+
+      <div class="cat-meta">
+        <span class="meta-chip" th:text="${chip1}">Most loved</span>
+        <span class="meta-chip" th:text="${chip2}">Premium</span>
+      </div>
+    </div>
+  </a>
+
+</article>
+
+</body>
+</html>

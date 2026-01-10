@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DINIO — Create account</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/auth/register.css}" />
+  <script th:src="@{/assets/js/header-dropdown.js}"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+</head>
+
+<body class="is-auth">
+
+  <div th:replace="~{fragments/header :: header}"></div>
+
+  <main class="auth">
+    <section class="auth-shell">
+
+      <div class="auth-card">
+        <div class="auth-head">
+          <p class="auth-eyebrow">CREATE ACCOUNT</p>
+          <h1 class="auth-title">Đăng ký</h1>
+          <p class="auth-subtitle">
+            Tạo tài khoản để đặt bàn nhanh hơn và theo dõi đơn hàng.
+          </p>
+        </div>
+
+        <form class="auth-form" th:action="@{/register}" method="post" id="registerForm">
+          <div class="auth-alert is-hidden" id="authAlert"></div>
+
+          <!-- Full name -->
+          <label class="field">
+            <span class="label">Họ và tên</span>
+            <div class="control">
+              <i class="fa-regular fa-id-card"></i>
+              <input type="text" name="fullName" id="fullName" autocomplete="name" required />
+            </div>
+          </label>
+
+          <label class="field">
+            <span class="label">Email / SĐT</span>
+            <div class="control">
+              <i class="fa-regular fa-user"></i>
+              <input type="text" name="identifier" id="identifier" autocomplete="username" inputmode="text" required />
+            </div>
+          </label>
+
+          <label class="field">
+            <span class="label">Mật khẩu</span>
+            <div class="control">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" name="password" id="password" autocomplete="new-password" required />
+              <button type="button" class="pw-toggle" id="pwToggle1" aria-label="Toggle password">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </label>
+
+          <label class="field">
+            <span class="label">Nhập lại mật khẩu</span>
+            <div class="control">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" name="confirmPassword" id="confirmPassword" autocomplete="new-password" required />
+              <button type="button" class="pw-toggle" id="pwToggle2" aria-label="Toggle confirm password">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </label>
+
+          <div class="auth-row">
+            <label class="check">
+              <input type="checkbox" id="terms" required />
+              <span>
+                Tôi đồng ý với
+                <a class="link" th:href="@{/terms}">Điều khoản</a>
+                &
+                <a class="link" th:href="@{/privacy}">Chính sách</a>
+              </span>
+            </label>
+          </div>
+
+          <button class="btn-order" type="submit" id="submitBtn">
+            <span>Tạo tài khoản</span>
+          </button>
+
+          <p class="auth-foot">
+            Đã có tài khoản?
+            <a class="link" th:href="@{/login}">Đăng nhập</a>
+          </p>
+
+          <div class="auth-divider">
+            <span>or</span>
+          </div>
+
+          <div class="auth-social">
+            <a class="social-btn" href="#" data-provider="google">
+              <i class="fa-brands fa-google"></i>
+              Sign up with Google
+            </a>
+
+            <a class="social-btn" href="#" data-provider="github">
+              <i class="fa-brands fa-github"></i>
+              Sign up with GitHub
+            </a>
+          </div>
+        </form>
+      </div>
+
+      <aside class="auth-visual" aria-label="Dinio visual panel">
+        <div class="visual-bg" aria-hidden="true"></div>
+
+        <div class="visual-top">
+          <div class="brand-chip">
+            <span class="dot"></span>
+            <span class="brand">DINIO</span>
+            <span class="sep">•</span>
+            <span class="tagline">Member perks</span>
+          </div>
+
+          <h2 class="visual-title">
+            Your table,<br>
+            one tap away.
+          </h2>
+
+          <p class="visual-sub">
+            Lưu thông tin đặt bàn, xem lịch sử đơn và nhận ưu đãi theo mùa.
+          </p>
+        </div>
+
+        <div class="visual-mid">
+          <div class="quote-card">
+            <p class="quote-text">
+              “Join Dinio — simple booking, smooth experience.”
+            </p>
+            <div class="quote-meta">
+              <span class="avatar-mini">DM</span>
+              <div>
+                <p class="meta-name">Dinio Members</p>
+                <p class="meta-sub">Early access perks</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mini-features" aria-label="Member benefits">
+            <span class="mini-pill"><i class="fa-solid fa-calendar-check"></i> Quick booking</span>
+            <span class="mini-pill"><i class="fa-solid fa-receipt"></i> Order history</span>
+            <span class="mini-pill"><i class="fa-solid fa-tag"></i> Seasonal offers</span>
+          </div>
+        </div>
+
+        <div class="badge-strip" aria-label="Trust badges">
+          <span class="badge">Privacy-first</span>
+          <span class="badge">Fast signup</span>
+          <span class="badge">Secure</span>
+        </div>
+      </aside>
+
+    </section>
+  </main>
+
+  <script th:src="@{/assets/js/auth/register.js}"></script>
+</body>
+
+</html>

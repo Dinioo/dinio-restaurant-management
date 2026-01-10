@@ -1,0 +1,328 @@
+/* ===== LEGAL PRO — full width, modern ===== */
+
+.legal-hero{
+  position: relative;
+  padding: 46px 0 26px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.legal-hero-bg{
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1000px 520px at 18% 10%, rgba(239,191,88,0.18), transparent 60%),
+    linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.80)),
+    url("/assets/pic/auth/auth-visual.jpg");
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.03);
+  filter: saturate(0.95);
+}
+
+.legal-hero-bg.is-privacy{
+  background:
+    radial-gradient(1000px 520px at 18% 10%, rgba(239,191,88,0.18), transparent 60%),
+    linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.80)),
+    url("/assets/pic/auth/auth-visual.jpg");
+}
+
+.legal-hero-inner{
+  position: relative;
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  padding: 0 133px;
+}
+
+@media (max-width: 1100px){
+  .legal-hero-inner{ padding: 0 40px; }
+}
+@media (max-width: 640px){
+  .legal-hero-inner{ padding: 0 16px; }
+}
+
+.legal-kicker{
+  margin: 0 0 10px;
+  font-size: 12px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+}
+
+.legal-h1{
+  margin: 0 0 10px;
+  font-size: 42px;
+  line-height: 1.05;
+  color: rgba(255,255,255,0.95);
+}
+
+.legal-lead{
+  margin: 0 0 14px;
+  max-width: 70ch;
+  color: rgba(255,255,255,0.75);
+}
+
+.legal-chips{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip{
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  font-size: 12px;
+  color: rgba(255,255,255,0.88);
+}
+
+/* ===== WRAP ===== */
+.legal-wrap{
+  padding: 26px 0 76px;
+}
+
+.legal-layout{
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  padding: 0 133px;
+
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 18px;
+  align-items: start;
+}
+
+@media (max-width: 1100px){
+  .legal-layout{ padding: 0 40px; }
+}
+@media (max-width: 920px){
+  .legal-layout{
+    grid-template-columns: 1fr;
+    padding: 0 16px;
+  }
+}
+
+/* ===== CONTENT ===== */
+.legal-content{
+  display: grid;
+  gap: 16px;
+}
+
+.legal-callout{
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 18px;
+  padding: 14px 14px;
+}
+
+.callout-title{
+  margin: 0 0 10px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.92);
+}
+
+.callout-list{
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(255,255,255,0.72);
+}
+.callout-list li{ margin: 6px 0; }
+
+.legal-section{
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.legal-section h2{
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: rgba(255,255,255,0.92);
+}
+
+.legal-section p{
+  margin: 0;
+  color: rgba(255,255,255,0.70);
+  line-height: 1.7;
+}
+
+.legal-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+@media (max-width: 640px){
+  .legal-grid{ grid-template-columns: 1fr; }
+}
+
+.card{
+  background: rgba(0,0,0,0.22);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 12px;
+}
+
+.card-title{
+  margin: 0 0 6px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.90);
+}
+.card-text{
+  margin: 0;
+  color: rgba(255,255,255,0.70);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.note{
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(239,191,88,0.08);
+  border: 1px solid rgba(239,191,88,0.18);
+  color: rgba(255,255,255,0.78);
+}
+
+.bullets{
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: rgba(255,255,255,0.70);
+}
+.bullets li{ margin: 6px 0; }
+
+/* FAQ */
+.faq{
+  background: rgba(0,0,0,0.22);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 12px;
+}
+.faq + .faq{ margin-top: 10px; }
+.faq summary{
+  cursor: pointer;
+  font-weight: 600;
+  color: rgba(255,255,255,0.88);
+}
+.faq p{
+  margin-top: 10px;
+  color: rgba(255,255,255,0.70);
+}
+
+/* CTA */
+.legal-cta{
+  margin-top: 4px;
+}
+
+.cta-card{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+
+  border-radius: 18px;
+  padding: 16px;
+
+  background: rgba(239,191,88,0.10);
+  border: 1px solid rgba(239,191,88,0.22);
+}
+
+.cta-title{
+  margin: 0 0 6px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.92);
+}
+.cta-sub{
+  margin: 0;
+  color: rgba(255,255,255,0.75);
+}
+
+.cta-actions{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* reuse link */
+.link{
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 13px;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: opacity .18s ease, text-decoration-color .18s ease;
+}
+.link:hover{ text-decoration: underline; opacity: .95; }
+.link:active{ opacity: .85; }
+
+/* ===== ASIDE / TOC ===== */
+.legal-aside{
+  position: sticky;
+  top: 92px; /* gần header */
+  height: fit-content;
+}
+
+@media (max-width: 920px){
+  .legal-aside{ position: static; }
+}
+
+.toc{
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 18px;
+  padding: 14px;
+}
+
+.toc-title{
+  margin: 0 0 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.90);
+}
+
+.toc-links{
+  display: grid;
+  gap: 8px;
+}
+
+.toc-links a{
+  text-decoration: none;
+  color: rgba(255,255,255,0.74);
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: rgba(0,0,0,0.18);
+}
+.toc-links a:hover{
+  border-color: rgba(239,191,88,0.22);
+  color: rgba(255,255,255,0.92);
+}
+
+.toc-mini{
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.10);
+}
+.mini-title{
+  margin: 0 0 8px;
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  opacity: .75;
+}
+.mini-link{
+  display: inline-block;
+  text-decoration: none;
+  color: var(--accent);
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(239,191,88,0.10);
+  border: 1px solid rgba(239,191,88,0.20);
+}
+.mini-link:hover{
+  border-color: rgba(239,191,88,0.35);
+}

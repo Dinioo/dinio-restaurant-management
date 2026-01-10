@@ -1,0 +1,18 @@
+<div th:fragment="selectField(id, name, label, options, selected, required)" class="field">
+
+  <label th:for="${id}">
+    <span th:text="${label}">Label</span>
+    <span th:if="${required}" style="opacity:.6">*</span>
+  </label>
+
+  <select th:id="${id}"
+          th:name="${name}"
+          th:required="${required}">
+    <option th:each="opt : ${options}"
+            th:value="${opt.value}"
+            th:text="${opt.text}"
+            th:selected="${opt.value == selected}">
+    </option>
+  </select>
+
+</div>

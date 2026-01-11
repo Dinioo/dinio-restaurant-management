@@ -4,10 +4,10 @@
   </a>
 
   <nav id="menu">
-    <a class="item" th:href="@{/}">Home</a>
-    <a class="item" th:href="@{/menu}">Product</a>
-    <a class="item" th:href="@{/blog}">Blog</a>
-    <a class="item" th:href="@{/contact}">Contact</a>
+    <a class="item" th:href="@{/}">Trang chủ</a>
+    <a class="item" th:href="@{/menu}">Thực đơn</a>
+    <a class="item" th:href="@{/blog}">Câu chuyện</a>
+    <a class="item" th:href="@{/contact}">Liên hệ</a>
   </nav>
 
   <nav id="action">
@@ -16,7 +16,6 @@
       <img th:src="@{/assets/pic/element/cart.png}" alt="Cart">
     </a>
 
-    <!-- ✅ User icon: click to open dropdown -->
     <div class="item user-menu" id="userMenu">
       <button class="user-btn" id="userBtn"
               type="button"
@@ -27,7 +26,7 @@
 
       <div class="user-dropdown" id="userDropdown" role="menu">
         <a th:href="@{/profile}" role="menuitem">Hồ sơ</a>
-        <a th:href="@{/reservations}" role="menuitem">Đặt bàn</a>
+        <a th:href="@{/reservation/tables}" role="menuitem">Đặt bàn</a>
         <a th:href="@{/reservations/my}" role="menuitem">Lịch đặt bàn</a>
         <a th:href="@{/orders}" role="menuitem">Đơn hàng</a>
 

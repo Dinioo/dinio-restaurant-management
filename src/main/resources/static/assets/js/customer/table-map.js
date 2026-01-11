@@ -1,23 +1,43 @@
-(() => {
-  const modeWrap = document.querySelector(".tm-mode");
-  if (!modeWrap) return;
+/* DINIO — TABLE MAP: Mode switch (self/other)
+   - Safe init
+   - Works with Thymeleaf fragments
+*/
 
-  const bookingMode = document.getElementById("bookingMode");
-  const modeBtns = [...modeWrap.querySelectorAll(".tm-mode-btn")];
-  const panels = [...document.querySelectorAll(".tm-panel[data-panel]")];
+(() => {
+  // ===== Debug: confirm file loaded =====
+  // Xong rồi thì bạn có thể comment 2 dòng log này lại
+  console.log("✅ table-map.js loaded");
+
+  const $ = (s, root = document) => root.querySelector(s);
+  const $$ = (s, root = document) => Array.from(root.querySelectorAll(s));
+
+  const modeWrap = $(".tm-mode");
+  if (!modeWrap) {
+    console.warn("⚠️ .tm-mode not found → skip mode-switch init");
+    return;
+  }
+
+  const bookingMode = $("#bookingMode");
+  const modeBtns = $$(".tm-mode-btn", modeWrap);
+  const panels = $$(".tm-panel[data-panel]");
+
+  if (!modeBtns.length || !panels.length) {
+    console.warn("⚠️ modeBtns/panels missing", { modeBtns: modeBtns.length, panels: panels.length });
+    return;
+  }
 
   const self = {
-    name: document.getElementById("fullName"),
-    phone: document.getElementById("phone"),
-    email: document.getElementById("email"),
+    name: $("#fullName"),
+    phone: $("#phone"),
+    email: $("#email"),
   };
 
   const other = {
-    name: document.getElementById("fullName2"),
-    phone: document.getElementById("phone2"),
-    email: document.getElementById("email2"),
-    guestName: document.getElementById("guestName"),
-    guestPhone: document.getElementById("guestPhone"),
+    name: $("#fullName2"),
+    phone: $("#phone2"),
+    email: $("#email2"),
+    guestName: $("#guestName"),
+    guestPhone: $("#guestPhone"),
   };
 
   const setActiveTab = (mode) => {
@@ -29,33 +49,44 @@
   };
 
   const setPanel = (mode) => {
-    panels.forEach((p) => p.classList.toggle("is-hidden", p.dataset.panel !== mode));
+    panels.forEach((p) => {
+      p.classList.toggle("is-hidden", p.dataset.panel !== mode);
+    });
   };
 
   const sync = (from, to) => {
-    if (from.name && to.name) to.name.value = from.name.value || "";
-    if (from.phone && to.phone) to.phone.value = from.phone.value || "";
-    if (from.email && to.email) to.email.value = from.email.value || "";
+    if (from?.name && to?.name) to.name.value = from.name.value || "";
+    if (from?.phone && to?.phone) to.phone.value = from.phone.value || "";
+    if (from?.email && to?.email) to.email.value = from.email.value || "";
   };
 
   const setMode = (mode) => {
+    if (mode !== "self" && mode !== "other") mode = "self";
+
     setActiveTab(mode);
     setPanel(mode);
 
     if (bookingMode) bookingMode.value = mode;
 
+    // Required rules
     if (other.guestName) other.guestName.required = (mode === "other");
     if (other.guestPhone) other.guestPhone.required = false;
 
+    // Sync basic info
     if (mode === "other") sync(self, other);
     else sync(other, self);
+
+    console.log("✅ mode set:", mode);
   };
 
+  // Click switch
   modeWrap.addEventListener("click", (e) => {
     const btn = e.target.closest(".tm-mode-btn");
     if (!btn) return;
     setMode(btn.dataset.mode);
   });
 
-  setMode("self");
+  // Init from hidden input (if present)
+  const initial = bookingMode?.value || "self";
+  setMode(initial);
 })();

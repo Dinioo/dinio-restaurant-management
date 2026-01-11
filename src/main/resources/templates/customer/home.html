@@ -22,7 +22,7 @@
     <div id="banner">
       <div class="box-left">
         <h2>
-          <span>Welcome to</span>
+          <span>Chào mừng đến với</span>
           <span>Dinio</span>
         </h2>
         <p>
@@ -30,7 +30,7 @@
           kết hợp hương vị tinh tế với quy trình phục vụ nhanh,
           tiện lợi và thông minh.
         </p>
-        <a href="/menu" class="btn cta">
+        <a href="/menu" class="btn btn-cta">
           KHÁM PHÁ NGAY
         </a>
       </div>
@@ -47,13 +47,13 @@
       <div class="section-head">
         <div>
           <p class="section-eyebrow">Signature selection</p>
-          <h3 class="section-title">Best Seller</h3>
+          <h3 class="section-title">Món được yêu thích</h3>
           <p class="section-subtitle">
             Những món được yêu thích nhất tại Dinio — tinh gọn, tinh tế và đậm dấu ấn.
           </p>
         </div>
 
-        <a href="/menu" class="btn btn-cta">Explore the Menu</a>
+        <a href="/menu" class="btn btn-cta">Thực đơn</a>
       </div>
 
       <div class="best-grid">
@@ -122,7 +122,7 @@
     )"></div>
       </div>
 
-      <div th:replace="fragments/dots-navigation :: dotsNavigation(3, 1, '/menu', 'Explore More')"></div>
+      <div th:replace="fragments/dots-navigation :: dotsNavigation(3, 1, '/menu', 'Xem thêm')"></div>
 
     </section>
 
@@ -130,13 +130,13 @@
       <div class="section-head">
         <div>
           <p class="section-eyebrow">About Dinio</p>
-          <h3 class="section-title">Our Story</h3>
+          <h3 class="section-title">Câu chuyện của chúng tôi</h3>
           <p class="section-subtitle">
             Một bữa ăn hiện đại nên “dễ chịu” — tinh tế, gọn gàng và đúng nhịp.
           </p>
         </div>
 
-<a href="/reservation/tables" class="btn btn-cta">Reserve a Table</a>
+<a href="/reservation/tables" class="btn btn-cta">Đặt bàn</a>
       </div>
 
       <div class="about-grid">
@@ -198,20 +198,19 @@
           </div>
         </div>
       </div>
-      <div th:replace="fragments/dots-navigation :: dotsNavigation(3, 1, '/menu', 'Explore More')"></div>
 
     </section>
     <section id="categories" class="section">
       <div class="section-head">
         <div>
           <p class="section-eyebrow">Menu Categories</p>
-          <h3 class="section-title">Explore by Category</h3>
+          <h3 class="section-title">Khám phá theo danh mục</h3>
           <p class="section-subtitle">
             Chọn nhanh theo nhóm món — tinh gọn, đúng gu, đúng mood.
           </p>
         </div>
 
-        <a href="/menu" class="btn btn-cta">View Full Menu</a>
+        <a href="/menu" class="btn btn-cta">Thực đơn</a>
       </div>
 
       <div class="cat-grid">
@@ -261,20 +260,20 @@
       </div>
 
     </section>
-    <div th:replace="fragments/dots-navigation :: dotsNavigation(3, 1, '/menu', 'Explore More')"></div>
+    <div th:replace="fragments/dots-navigation :: dotsNavigation(3, 1, '/menu', 'Xem thêm')"></div>
 
 
     <section id="reservation" class="section">
       <div class="section-head">
         <div>
           <p class="section-eyebrow">Reservation</p>
-          <h3 class="section-title">Book a Table</h3>
+          <h3 class="section-title">Đặt bàn</h3>
           <p class="section-subtitle">
             Đặt bàn nhanh trong 30 giây — chọn thời gian, số khách và ghi chú đặc biệt nếu cần.
           </p>
         </div>
 
-        <a href="/contact" class="btn btn-cta">Need help?</a>
+        <a href="/contact" class="btn btn-cta">Trợ giúp ?</a>
       </div>
 
       <div class="res-grid">
@@ -371,7 +370,7 @@
             </div>
 
             <button class="btn btn-save" type="submit">
-              Confirm Reservation
+              Xác nhận
             </button>
 
             <p class="res-hint">
@@ -381,19 +380,18 @@
         </div>
       </div>
     </section>
-    <div th:replace="fragments/dots-navigation :: dotsNavigation(3, 1, '/menu', 'Explore More')"></div>
 
     <section id="reviews" class="section">
   <div class="section-head">
     <div>
       <p class="section-eyebrow">Testimonials</p>
-      <h3 class="section-title">What Guests Say</h3>
+      <h3 class="section-title">Đánh giá</h3>
       <p class="section-subtitle">
         Một vài cảm nhận từ khách đã trải nghiệm Dinio — gọn, tinh tế và đúng nhịp.
       </p>
     </div>
 
-    <a href="/blog" class="btn btn-cta">Read More</a>
+    <a href="/blog" class="btn btn-cta">Xem thêm</a>
   </div>
 
   <div class="review-grid">
@@ -442,7 +440,7 @@
       <p class="note-text">4.8/5 trung bình — dựa trên trải nghiệm tại Dinio.</p>
     </div>
 
-    <a href="/contact" class="btn btn-cta">Leave a Review</a>
+    <a href="/contact" class="btn btn-cta">Đánh giá</a>
   </div>
 </section>
 
@@ -450,20 +448,20 @@
     <section id="location" class="section">
       <div class="section-head">
         <div>
-          <p class="section-eyebrow">Visit Dinio</p>
-          <h3 class="section-title">Location & Hours</h3>
+          <p class="section-eyebrow">Dinio</p>
+          <h3 class="section-title">Liên hệ & Giờ mở cửa</h3>
           <p class="section-subtitle">
             Ghé Dinio để trải nghiệm bữa ăn đúng nhịp — đặt bàn trước để giữ chỗ giờ cao điểm.
           </p>
         </div>
 
-        <a href="/reservation" class="btn btn-cta">Reserve Now</a>
+        <a href="/reservation" class="btn btn-cta">Đặt bàn ngay</a>
       </div>
 
       <div class="loc-grid">
         <div class="loc-info">
           <div class="loc-card">
-            <p class="loc-label">Address</p>
+            <p class="loc-label">Địa chỉ</p>
             <p class="loc-value">123 Nguyen Hue, District 1, Ho Chi Minh City</p>
             <a class="loc-link" href="https://www.google.com/maps" target="_blank" rel="noopener">
               Open in Google Maps →
@@ -471,7 +469,7 @@
           </div>
 
           <div class="loc-card">
-            <p class="loc-label">Hours</p>
+            <p class="loc-label">Thời gian</p>
             <div class="hours-list">
               <div class="hour-row"><span>Mon – Fri</span><span>10:00 – 22:00</span></div>
               <div class="hour-row"><span>Sat</span><span>09:00 – 23:00</span></div>
@@ -481,7 +479,7 @@
           </div>
 
           <div class="loc-card">
-            <p class="loc-label">Contact</p>
+            <p class="loc-label">Liên hệ</p>
             <div class="contact-list">
               <a class="contact-item" href="tel:0900000000">Hotline: 0900 000 000</a>
               <a class="contact-item" href="mailto:hello@dinio.com">Email: hello@dinio.com</a>
@@ -497,7 +495,7 @@
 
           <div class="map-badge">
             <p class="badge-title">DINIO</p>
-            <p class="badge-subtitle">Modern dining • City Center</p>
+            <p class="badge-subtitle">Ẩm thực hiện đại • Trung tâm thành phố</p>
           </div>
         </div>
       </div>

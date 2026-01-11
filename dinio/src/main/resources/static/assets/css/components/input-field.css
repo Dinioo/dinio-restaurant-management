@@ -1,0 +1,136 @@
+/* =========================
+   INPUT FIELD — DINIO (use root tokens)
+   ========================= */
+
+.field{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.field > label{
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-strong);
+  letter-spacing: .02em;
+}
+
+.field > label .required{
+  margin-left: 6px;
+  color: var(--accent);
+}
+
+/* input base */
+.field input[type="text"],
+.field input[type="number"],
+.field input[type="file"],
+.field textarea,
+.field select{
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+
+  border: 1px solid var(--border-soft);
+  background: rgba(0,0,0,0.18);
+  color: var(--text-strong);
+
+  transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+}
+
+.field textarea{
+  resize: vertical;
+  min-height: 92px;
+}
+
+.field input::placeholder,
+.field textarea::placeholder{
+  color: var(--text-muted);
+  opacity: .85;
+}
+
+/* focus: nhẹ, hợp style card */
+.field input:focus,
+.field textarea:focus,
+.field select:focus{
+  outline: none;
+  border-color: var(--accent-border);
+  background: rgba(0,0,0,0.26);
+  box-shadow: 0 0 0 4px var(--ring-accent);
+}
+
+/* Hint */
+.hint{
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+  opacity: .9;
+  line-height: 1.35;
+}
+
+/* =========================
+   FIX CHROME AUTOFILL (đỡ xanh)
+   ========================= */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill{
+  -webkit-text-fill-color: var(--text-strong) !important;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(0,0,0,0.18) inset !important;
+  box-shadow: 0 0 0px 1000px rgba(0,0,0,0.18) inset !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* =========================
+   VALIDATION (không báo đỏ từ đầu)
+   - Ưu tiên :user-invalid
+   - Fallback: form.is-submitted
+   ========================= */
+
+/* user đã tương tác mà vẫn invalid */
+.field input:user-invalid,
+.field textarea:user-invalid,
+.field select:user-invalid{
+  border-color: var(--danger-border);
+  box-shadow: 0 0 0 4px var(--ring-danger);
+}
+
+/* fallback: chỉ báo lỗi sau khi submit */
+form.is-submitted .field input:invalid,
+form.is-submitted .field textarea:invalid,
+form.is-submitted .field select:invalid{
+  border-color: var(--danger-border);
+  box-shadow: 0 0 0 4px var(--ring-danger);
+}
+
+/* =========================
+   FIELD ROW
+   ========================= */
+.field-row{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+@media (max-width: 640px){
+  .field-row{ grid-template-columns: 1fr; }
+}
+
+/* file button */
+.field input[type="file"]::-webkit-file-upload-button{
+  border: 1px solid var(--border-soft);
+  background: var(--surface-1);
+  color: var(--text-strong);
+  border-radius: 12px;
+  padding: 8px 12px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease;
+}
+
+.field input[type="file"]::-webkit-file-upload-button:hover{
+  border-color: var(--accent-border-soft);
+  background: var(--surface-2);
+}

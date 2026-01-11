@@ -11,10 +11,52 @@
   --font-weight-normal: 400;
   --font-weight-medium: 500;
 
-  --color-text: #222;
-  --color-bg: #ffffff;
-
   --line-height-base: 1.6;
+  --color-bg: #111111;
+  --color-surface: #1a1a1a;
+
+  --color-text: #f5f5f5;
+  --color-text-muted: #b3b3b3;
+
+  --color-border: rgba(255,255,255,0.08);
+  --color-accent: #efbf58;
+  --surface-1: rgba(255,255,255,0.04);
+  --surface-2: rgba(255,255,255,0.06);
+  --border-soft: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.14);
+  --text-strong: rgba(255,255,255,0.95);
+  --text-normal: rgba(255,255,255,0.92);
+  --text-muted: rgba(255,255,255,0.68);
+  --accent: var(--color-accent);
+
+  --accent-tint: rgba(239,191,88,0.14);
+  --accent-tint-hover: rgba(239,191,88,0.18);
+
+  --accent-border-soft: rgba(239,191,88,0.35);
+  --accent-border: rgba(239,191,88,0.55);
+  --accent-border-strong: rgba(239,191,88,0.75);
+  --accent-border-active: rgba(239,191,88,0.85);
+
+  --accent-solid: rgba(239,191,88,0.92);
+  --accent-solid-border: rgba(239,191,88,0.60);
+  --accent-solid-border-hover: rgba(239,191,88,0.78);
+
+  --text-on-accent: #111111;
+
+  --success: #2e8b57;
+  --danger:  #8c2633;
+
+  --success-tint: rgba(46,139,87,0.16);
+  --success-border: rgba(46,139,87,0.55);
+
+  --danger-tint: rgba(140,38,51,0.14);
+  --danger-border: rgba(140,38,51,0.55);
+
+  --ring-accent: rgba(239,191,88,0.22);
+  --ring-success: rgba(46,139,87,0.22);
+  --ring-danger: rgba(140,38,51,0.22);
+
+  --shadow-soft: 0 10px 24px rgba(0,0,0,0.35);
 }
 
 html {
@@ -35,6 +77,7 @@ body {
 
 p {
   margin-bottom: 16px;
+  color: var(--color-text-muted);
 }
 
 a {
@@ -70,4 +113,8 @@ button {
 ul,
 ol {
   list-style: none;
+}
+::selection{
+  background: rgba(239,191,88,0.22);
+  color: var(--text-strong);
 }

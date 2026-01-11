@@ -1,0 +1,17 @@
+.link{
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 13px;
+  transition: opacity .18s ease, text-decoration-color .18s ease;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.link:hover{
+  text-decoration: underline;
+  opacity: .95;
+}
+
+.link:active{
+  opacity: .85;
+}

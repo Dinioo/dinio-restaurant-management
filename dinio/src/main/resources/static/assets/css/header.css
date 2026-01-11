@@ -1,52 +1,165 @@
-
-#wrapper {
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-#header {
-    width: 100%;
-    height: 70px;
-    padding: 0 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: white;
-    flex-shrink: 0;
+#wrapper{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.logo img {
-    height: 40px;
-    width: auto;
+#header{
+  width: 100%;
+  height: 100px;
+  padding: 0 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  background: var(--badge-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-soft);
 }
 
-#menu {
-    display: flex;
+.logo img{
+  height: 40px;
+  width: auto;
+  display: block;
 }
 
-#menu a.item {
-    margin: 0 20px;
-    color: #000;
-    text-decoration: none;
-    font-weight: 500;
+#menu{
+  display: flex;
+  align-items: center;
+  gap: 28px;
 }
 
-#action {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+#menu a.item{
+  color: var(--text-normal);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  font-size: 15px;
+  letter-spacing: 0.2px;
+  padding: 8px 6px;
+  transition: color 0.2s ease;
 }
 
-#action a.item {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+#menu a.item:hover{
+  color: var(--color-accent);
 }
 
-#action img {
-    width: 30px;
-    height: 30px;
-    object-fit: contain;
-    display: block;
+#action{
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+#action a.item{
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+#action a.item:hover{
+  background: var(--border-soft);
+  transform: translateY(-1px);
+}
+
+#action img{
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  display: block;
+
+  filter: invert(1);
+  opacity: 0.95;
+}
+/* ===== Header basics (nếu m đã có thì giữ nguyên, chỉ đảm bảo #action là flex) ===== */
+#action{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Icon size (giữ đồng nhất) */
+#action .item img{
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+/* ===== User dropdown ===== */
+.user-menu{
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* button nhìn y như icon link */
+.user-btn{
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+/* Dropdown panel */
+.user-dropdown{
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+
+  min-width: 200px;
+  padding: 8px;
+  border-radius: 14px;
+
+  background: rgba(18,18,18,0.92);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.45);
+  backdrop-filter: blur(10px);
+
+  /* hidden by default */
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: 0.18s ease;
+  z-index: 999;
+}
+
+.user-dropdown.is-open{
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Items */
+.user-dropdown a{
+  display: block;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 14px;
+
+  color: #f5f5f5;
+  transition: 0.18s ease;
+}
+
+.user-dropdown a:hover{
+  background: rgba(255,255,255,0.06);
+}
+
+.user-dropdown .divider{
+  height: 1px;
+  background: rgba(255,255,255,0.10);
+  margin: 6px 8px;
+}
+
+.user-dropdown a.danger{
+  color: #ff6b6b;
 }

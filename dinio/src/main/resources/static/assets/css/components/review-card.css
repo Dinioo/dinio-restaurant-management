@@ -1,0 +1,93 @@
+.review-card{
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  padding: 18px;
+
+  transition: transform 0.25s ease,
+              border-color 0.25s ease,
+              background 0.25s ease;
+}
+
+.review-card:hover{
+  transform: translateY(-6px);
+  border-color: var(--border-accent);
+  background: var(--surface-2);
+}
+
+.review-card.is-featured{
+  border-color: var(--border-accent);
+}
+
+.review-top{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.review-rating{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+}
+
+.review-rating .is-dim{
+  opacity: 0.35;
+}
+
+.review-badge{
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 999px;
+
+  color: var(--text-normal);
+  background: var(--badge-bg);
+  border: 1px solid var(--border-strong);
+
+  backdrop-filter: blur(6px);
+}
+
+.review-badge.is-accent{
+  color: #111;
+  background: var(--accent);
+  border-color: var(--border-accent);
+}
+
+.review-quote{
+  margin: 0 0 14px;
+  color: var(--text-muted);
+  line-height: var(--line-height-base);
+  font-size: 14px;
+}
+
+.review-user{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.review-avatar{
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 1px solid var(--border-soft);
+}
+
+.user-name{
+  margin: 0;
+  color: var(--text-strong);
+  font-weight: var(--font-weight-medium);
+  font-size: 14px;
+}
+
+.user-meta{
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+}

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DINIO — Chính sách bảo mật</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/customer/legal.css}" />
+  <script th:src="@{/assets/js/header-dropdown.js}"></script>
+
+</head>
+
+<body>
+  <div th:replace="~{fragments/header :: header}"></div>
+
+  <header class="legal-hero">
+    <div class="legal-hero-bg is-privacy" aria-hidden="true"></div>
+    <div class="legal-hero-inner">
+      <p class="legal-kicker">LEGAL • DINIO</p>
+      <h1 class="legal-h1">Chính sách bảo mật</h1>
+      <p class="legal-lead">
+        DINIO chỉ thu thập những gì cần thiết để xác nhận đặt bàn và cải thiện trải nghiệm.
+      </p>
+
+      <div class="legal-chips">
+        <span class="chip">Tối thiểu dữ liệu</span>
+        <span class="chip">Không bán dữ liệu</span>
+        <span class="chip">Yêu cầu xoá/sửa</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="legal-wrap">
+    <section class="legal-layout">
+      <article class="legal-content">
+        <div class="legal-callout">
+          <p class="callout-title">Tóm tắt nhanh</p>
+          <ul class="callout-list">
+            <li>Thu thập: tên + email/SĐT + thông tin đặt bàn + ghi chú (dị ứng…)</li>
+            <li>Dùng để: xác nhận, chăm sóc trải nghiệm, cải thiện dịch vụ.</li>
+            <li>Bạn có thể yêu cầu xem/sửa/xoá dữ liệu.</li>
+          </ul>
+        </div>
+
+        <section id="data" class="legal-section">
+          <h2>1. Dữ liệu thu thập</h2>
+          <div class="legal-grid">
+            <div class="card">
+              <p class="card-title">Thông tin liên hệ</p>
+              <p class="card-text">Họ tên, email/SĐT để xác nhận đặt bàn và hỗ trợ.</p>
+            </div>
+            <div class="card">
+              <p class="card-title">Thông tin đặt bàn</p>
+              <p class="card-text">Ngày/giờ, số khách, ghi chú (dị ứng, sinh nhật...).</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="purpose" class="legal-section">
+          <h2>2. Mục đích sử dụng</h2>
+          <ul class="bullets">
+            <li>Xác nhận đặt bàn và liên hệ khi cần.</li>
+            <li>Gợi ý trải nghiệm phù hợp (tuỳ chọn).</li>
+            <li>Cải thiện chất lượng vận hành & dịch vụ.</li>
+          </ul>
+        </section>
+
+        <section id="storage" class="legal-section">
+          <h2>3. Lưu trữ & bảo mật</h2>
+          <p>
+            Dữ liệu được bảo vệ bằng các biện pháp kỹ thuật phù hợp. Chỉ nhân sự liên quan
+            tới vận hành/CSKH mới được truy cập khi cần thiết.
+          </p>
+          <div class="note">
+            <p><b>Tip:</b> Bạn nên dùng mật khẩu mạnh và không chia sẻ tài khoản.</p>
+          </div>
+        </section>
+
+        <section id="sharing" class="legal-section">
+          <h2>4. Chia sẻ dữ liệu</h2>
+          <p>
+            DINIO không bán dữ liệu. Chỉ chia sẻ khi cần cho vận hành (ví dụ dịch vụ gửi email)
+            hoặc theo yêu cầu pháp luật.
+          </p>
+        </section>
+
+        <section id="cookies" class="legal-section">
+          <h2>5. Cookie</h2>
+          <p>
+            Cookie có thể được dùng để duy trì đăng nhập và cải thiện trải nghiệm. Bạn có thể tắt cookie trong trình duyệt.
+          </p>
+        </section>
+
+        <section id="rights" class="legal-section">
+          <h2>6. Quyền của bạn</h2>
+          <ul class="bullets">
+            <li>Yêu cầu xem dữ liệu</li>
+            <li>Yêu cầu chỉnh sửa</li>
+            <li>Yêu cầu xoá dữ liệu</li>
+          </ul>
+        </section>
+
+        <section class="legal-cta">
+          <div class="cta-card">
+            <div>
+              <p class="cta-title">Bạn muốn xoá/sửa dữ liệu?</p>
+              <p class="cta-sub">Gửi yêu cầu qua email hỗ trợ để DINIO xử lý nhanh.</p>
+            </div>
+            <div class="cta-actions">
+              <a class="btn btn-cta" href="mailto:hello@dinio.com">Email hỗ trợ</a>
+              <a class="link" th:href="@{/terms}">Xem Điều khoản sử dụng</a>
+            </div>
+          </div>
+        </section>
+      </article>
+
+      <aside class="legal-aside">
+        <div class="toc">
+          <p class="toc-title">Mục lục</p>
+          <nav class="toc-links">
+            <a href="#data">Dữ liệu</a>
+            <a href="#purpose">Mục đích</a>
+            <a href="#storage">Bảo mật</a>
+            <a href="#sharing">Chia sẻ</a>
+            <a href="#cookies">Cookie</a>
+            <a href="#rights">Quyền của bạn</a>
+          </nav>
+
+          <div class="toc-mini">
+            <p class="mini-title">Liên quan</p>
+            <a class="mini-link" th:href="@{/terms}">Điều khoản sử dụng</a>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

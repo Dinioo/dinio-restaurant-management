@@ -31,8 +31,11 @@ public class Customer {
     @Column(name = "Phone", nullable = false, length = 30, columnDefinition = "NVARCHAR(30)")
     private String phone;
 
-    @Column(name = "Email", length = 120, columnDefinition = "NVARCHAR(120)")
+    @Column(name = "Email", length = 120, unique=true, columnDefinition = "NVARCHAR(120)")
     private String email;
+
+    @Column(name = "PasswordHash", nullable = false, length = 255)
+    private String passwordHash;
 
     @Column(name = "CreatedAt", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -52,6 +55,7 @@ public class Customer {
     public String getFullName() { return fullName; }
     public String getPhone() { return phone; }
     public String getEmail() { return email; }
+    public String getPasswordHash() { return passwordHash; }
     public LocalDateTime getCreatedAt() { return createdAt; }
 
     @JsonIgnore
@@ -63,4 +67,6 @@ public class Customer {
     public void setEmail(String email) { this.email = email; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public void setReservations(List<Reservation> reservations) { this.reservations = reservations; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
 }
+    

@@ -47,6 +47,18 @@ public class Reservation {
     @Column(name = "Note", length = 500, columnDefinition = "NVARCHAR(500)")
     private String note;
 
+    @Column(name = "IsForOther", nullable = false)
+    private Boolean isForOther = false;
+
+    @Column(name = "GuestName", length = 120, columnDefinition = "NVARCHAR(120)")
+    private String guestName; // bắt buộc khi isForOther=true
+
+    @Column(name = "GuestPhone", length = 30, columnDefinition = "NVARCHAR(30)")
+    private String guestPhone; 
+
+    @Column(name = "GuestNote", length = 500, columnDefinition = "NVARCHAR(500)")
+    private String guestNote; 
+
     @Enumerated(EnumType.STRING)
     @Column(name = "Status", nullable = false, length = 30)
     private ReservationStatus status = ReservationStatus.PENDING;
@@ -67,6 +79,10 @@ public class Reservation {
     public LocalDateTime getReservedAt() { return reservedAt; }
     public Integer getPartySize() { return partySize; }
     public String getNote() { return note; }
+    public Boolean getIsForOther() { return isForOther; }
+    public String getGuestName() { return guestName; }
+    public String getGuestPhone() { return guestPhone; }
+    public String getGuestNote() { return guestNote; }
     public ReservationStatus getStatus() { return status; }
     public LocalDateTime getCreatedAt() { return createdAt; }
 
@@ -86,6 +102,10 @@ public class Reservation {
     public void setReservedAt(LocalDateTime reservedAt) { this.reservedAt = reservedAt; }
     public void setPartySize(Integer partySize) { this.partySize = partySize; }
     public void setNote(String note) { this.note = note; }
+    public void setIsForOther(Boolean isForOther) { this.isForOther = isForOther; }
+    public void setGuestName(String guestName) { this.guestName = guestName; }
+    public void setGuestPhone(String guestPhone) { this.guestPhone = guestPhone; }
+    public void setGuestNote(String guestNote) { this.guestNote = guestNote; }
     public void setStatus(ReservationStatus status) { this.status = status; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }

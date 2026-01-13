@@ -17,10 +17,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import ut.edu.dinio.pojo.enums.ItemTag;
-import jakarta.persistence.Lob;
 import ut.edu.dinio.pojo.enums.SpiceLevel;
 
 @Entity
@@ -72,11 +72,22 @@ public class MenuItem {
 
     public MenuItem() {}
 
-    public MenuItem(MenuCategory category, String name, BigDecimal basePrice) {
-        this.category = category;
-        this.name = name;
-        this.basePrice = basePrice;
-    }
+    public MenuItem(MenuCategory category,String name,String description,BigDecimal basePrice,String imageUrl,Set<ItemTag> itemTags,String ingredients,Integer calories,SpiceLevel spiceLevel,Boolean isActive,Boolean isAvailable
+) {
+    this.category = category;
+    this.name = name;
+    this.description = description;
+    this.basePrice = basePrice;
+    this.imageUrl = imageUrl;
+
+    if (itemTags != null) this.itemTags = itemTags;
+    this.ingredients = ingredients;
+    this.calories = calories;
+
+    if (spiceLevel != null) this.spiceLevel = spiceLevel;
+    if (isActive != null) this.isActive = isActive;
+    if (isAvailable != null) this.isAvailable = isAvailable;
+}
 
     public Integer getId() { return id; }
     public String getName() { return name; }

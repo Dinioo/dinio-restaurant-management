@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 import java.util.EnumSet;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import jakarta.persistence.EntityManager;
@@ -48,6 +50,9 @@ public class SeedDataRunner implements CommandLineRunner {
 
     @PersistenceContext
     private EntityManager em;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -182,9 +187,9 @@ public class SeedDataRunner implements CommandLineRunner {
         // 3) Customers + Reservations 
         // =========================================================
         Customer c1 = new Customer("Lê Minh Anh", "0901000111", "minhanh@gmail.com");
-        c1.setPasswordHash("hash_customer_1");
+        c1.setPasswordHash(passwordEncoder.encode("hash_customer_1"));
         Customer c2 = new Customer("Trần Quốc Huy", "0902000222", "quochuy@gmail.com");
-        c2.setPasswordHash("hash_customer_2");
+        c2.setPasswordHash(passwordEncoder.encode("hash_customer_2"));
         em.persist(c1);
         em.persist(c2);
 

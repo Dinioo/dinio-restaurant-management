@@ -26,15 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  document.querySelectorAll(".social-btn").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      const provider = btn.dataset.provider || "provider";
-      showAlert(`(${provider}) Chưa cấu hình OAuth. Hiện tại nút chỉ để demo UI.`);
-      setTimeout(hideAlert, 2600);
-    });
-  });
-
   form?.addEventListener("submit", (e) => {
     hideAlert();
 

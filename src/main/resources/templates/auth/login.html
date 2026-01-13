@@ -76,14 +76,14 @@
           </div>
 
           <div class="auth-social">
-            <a class="social-btn" href="#" data-provider="google">
+            <a class="social-btn" th:href="@{/oauth2/authorization/google}">
               <i class="fa-brands fa-google"></i>
               Continue with Google
             </a>
 
-            <a class="social-btn" href="#" data-provider="github">
-              <i class="fa-brands fa-github"></i>
-              Continue with GitHub
+            <a class="social-btn" th:href="@{/oauth2/authorization/facebook}">
+                <i class="fa-brands fa-facebook"></i>
+                Continue with Facebook
             </a>
           </div>
         </form>

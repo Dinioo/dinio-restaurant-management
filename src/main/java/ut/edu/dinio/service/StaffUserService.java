@@ -1,12 +1,14 @@
 package ut.edu.dinio.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import ut.edu.dinio.pojo.StaffUser;
 import ut.edu.dinio.pojo.enums.UserStatus;
 import ut.edu.dinio.repositories.StaffUserRepository;
-import java.util.Optional;
 
 @Service
 public class StaffUserService {
@@ -20,7 +22,7 @@ public class StaffUserService {
     public StaffUser loginStaff(String identifier, String rawPassword) {
         Optional<StaffUser> staffOpt;
 
-         staffOpt = staffRepository.findByUsername(identifier);
+        staffOpt = staffRepository.findByUsername(identifier);
         if (staffOpt.isPresent()) {
             StaffUser staff = staffOpt.get();
 

@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+
 import ut.edu.dinio.service.CustomOAuth2UserService;
 
 @Configuration
@@ -28,7 +29,6 @@ public class SecurityConfig {
             .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/profile/**", "/account/**", "/order-history/**").authenticated() 
-                
                 .anyRequest().permitAll() 
             )
 
@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .usernameParameter("identifier") 
                 .passwordParameter("password")
                 .defaultSuccessUrl("/", true) 
+                .loginProcessingUrl("/fake_login_process")
                 .permitAll()
             )
 

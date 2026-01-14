@@ -283,7 +283,7 @@ body.is-auth{
   background-image:
     radial-gradient(900px 520px at 22% 16%, var(--accent-tint-hover), transparent 60%),
     linear-gradient(to bottom, rgba(0,0,0,0.10), rgba(0,0,0,0.60)),
-    url("/assets/pic/auth-visual.jpg");
+    url("../../pic/auth-visual.jpg");
   background-size: cover;
   background-position: center;
   transform: scale(1.04);

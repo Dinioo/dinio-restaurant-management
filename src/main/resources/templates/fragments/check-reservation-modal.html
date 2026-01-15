@@ -1,0 +1,30 @@
+<div th:fragment="checkReservationModal"
+     class="fp-modal is-hidden"
+     id="crModal"
+     aria-hidden="true">
+
+  <div class="fp-backdrop" data-close="1"></div>
+
+  <div class="fp-panel cr-panel" role="dialog" aria-modal="true" aria-labelledby="crTitle">
+    <div class="fp-head">
+      <h3 class="fp-title" id="crTitle">Bạn đã đặt bàn chưa?</h3>
+      <button class="fp-x" type="button" data-close="1" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <p class="fp-sub">
+      Để gọi món, hệ thống cần biết bạn đã có bàn đặt trước hay chưa.
+    </p>
+
+    <div class="cr-actions">
+      <button class="btn-order" type="button" id="crYesBtn">
+        Đã đặt bàn
+      </button>
+
+      <button class="btn-light" type="button" id="crNoBtn">
+        Chưa đặt bàn
+      </button>
+    </div>
+  </div>
+</div>

@@ -11,12 +11,19 @@
   <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
   <link rel="stylesheet" th:href="@{/assets/css/customer/home.css}" />
   <script th:src="@{/assets/js/header-dropdown.js}"></script>
+  <script th:src="@{/assets/js/customer/dish-detail-modal.js}"></script>
+  <script th:src="@{/assets/js/customer/check-reservation-modal.js}"></script>
+
+
 
 </head>
 
 <body>
 
   <div th:replace="fragments/header :: header"></div>
+  <div th:replace="~{fragments/dish-detail-modal :: dishDetailModal}"></div>
+  <div th:replace="~{fragments/check-reservation-modal :: checkReservationModal}"></div>
+
 
   <main class="container">
     <div id="banner">
@@ -53,7 +60,7 @@
           </p>
         </div>
 
-        <a href="/menu" class="btn btn-cta">Thực đơn</a>
+        <a href="/dinio/menu" class="btn btn-cta">Thực đơn</a>
       </div>
 
       <div class="best-grid">
@@ -136,7 +143,7 @@
           </p>
         </div>
 
-<a href="/reservation/tables" class="btn btn-cta">Đặt bàn</a>
+<a href="/dinio/reservation/tables" class="btn btn-cta">Đặt bàn</a>
       </div>
 
       <div class="about-grid">
@@ -174,8 +181,8 @@
           </div>
 
           <div class="about-footer">
-            <a href="/menu" class="btn btn-cta">Explore Menu</a>
-            <a href="/contact" class="btn btn-cta">Book a Table</a>
+            <a href="/dinio/menu" class="btn btn-cta">Explore Menu</a>
+            <a href="/dinio/reservation/tables" class="btn btn-cta">Book a Table</a>
           </div>
         </div>
         
@@ -210,7 +217,7 @@
           </p>
         </div>
 
-        <a href="/menu" class="btn btn-cta">Thực đơn</a>
+        <a href="/dinio/menu" class="btn btn-cta">Thực đơn</a>
       </div>
 
       <div class="cat-grid">

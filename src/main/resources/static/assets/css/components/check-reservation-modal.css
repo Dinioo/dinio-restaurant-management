@@ -1,0 +1,113 @@
+/* =========================
+   CHECK RESERVATION MODAL
+   (match OTP/reset style)
+   ========================= */
+
+#crModal.fp-modal{
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.is-hidden{ display:none !important; }
+
+#crModal .fp-backdrop{
+  position:absolute;
+  inset:0;
+  background: rgba(0,0,0,.55);
+}
+
+#crModal .fp-panel{
+  position: relative;
+  z-index: 1;
+
+  width: min(560px, calc(100% - 32px));
+  padding: 18px 18px 16px;
+  border-radius: 18px;
+
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
+}
+
+#crModal .fp-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom: 8px;
+}
+
+#crModal .fp-title{
+  margin:0;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+#crModal .fp-sub{
+  margin: 0 0 14px;
+  font-size: 13px;
+  opacity: .85;
+  color: var(--text);
+}
+
+#crModal .fp-x{
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: .85;
+  display:grid;
+  place-items:center;
+}
+#crModal .fp-x:hover{
+  background: var(--surface-2);
+  opacity: 1;
+}
+
+/* Actions */
+#crModal .cr-actions{
+  display: grid;
+  gap: 10px;
+}
+
+/* nút phụ: giống theme nhưng không đổi màu brand */
+#crModal .cr-ghost{
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-2);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 700;
+  opacity: .95;
+}
+
+#crModal .cr-ghost:hover{
+  opacity: 1;
+  border-color: rgba(202,165,106,.35);
+}
+
+#crModal .cr-hint{
+  margin: 10px 0 0;
+  font-size: 12px;
+  opacity: .75;
+  text-align: center;
+  color: var(--text);
+}
+
+@media (max-width: 520px){
+  #crModal .fp-panel{
+    padding: 16px 14px 14px;
+    border-radius: 16px;
+  }
+}

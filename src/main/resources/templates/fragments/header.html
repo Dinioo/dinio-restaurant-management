@@ -1,6 +1,6 @@
 <div th:fragment="header" id="header">
   <a th:href="@{/}" class="logo">
-    <img th:src="@{/assets/pic/logo.png}" alt="Dinio Logo">
+    <img th:src="@{/assets/pic/logo.jpg}" alt="Dinio Logo">
   </a>
 
   <nav id="menu">
@@ -17,10 +17,7 @@
     </a>
 
     <div class="item user-menu" id="userMenu">
-      <button class="user-btn" id="userBtn"
-              type="button"
-              aria-haspopup="menu"
-              aria-expanded="false">
+      <button class="user-btn" id="userBtn" type="button" aria-haspopup="menu" aria-expanded="false">
         <img th:src="@{/assets/pic/element/user.png}" alt="User">
       </button>
 
@@ -32,7 +29,20 @@
 
         <div class="divider"></div>
 
-        <a th:href="@{/login}">Đăng nhập</a>
+        <a th:if="${session.currentUser == null and session.currentStaff == null}" th:href="@{/login}" role="menuitem">
+          Đăng nhập
+        </a>
+
+        <form th:if="${session.currentUser != null or session.currentStaff != null}" th:action="@{/logout}"
+          method="post" style="margin:0;">
+          <button type="submit" class="dropdown-logout" role="menuitem"
+            style="all:unset; cursor:pointer; display:block; width:100%; padding:10px 12px;">
+            Đăng xuất
+          </button>
+        </form>
+
+
+
 
       </div>
     </div>

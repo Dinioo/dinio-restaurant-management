@@ -10,11 +10,15 @@
     <link rel="stylesheet" th:href="@{/assets/css/customer/table-map.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <script th:src="@{/assets/js/header-dropdown.js}"></script>
-    <script th:src="@{/assets/js/customer/table-map.js}" defer></script>
+    <script th:src="@{/assets/js/customer/preorder-after-reservation-modal.js}" defer></script>
+    <script th:src="@{/assets/js/customer/reservation-submit-popup.js}" defer></script>
+
 </head>
 
 <body>
     <div th:replace="~{fragments/header :: header}"></div>
+    <div th:replace="~{fragments/preorder-after-reservation-modal :: preorderAfterReservationModal}"></div>
+
 
     <main class="container">
 
@@ -358,8 +362,8 @@
                         <div class="tm-drawer-card">
                             <div class="tm-drawer-head">
                                 <div>
-                                    <p class="tm-drawer-kicker">Your selection</p>
-                                    <h3 class="tm-drawer-title">Reserve in seconds</h3>
+                                    <p class="tm-drawer-kicker">Thông tin đặt bàn</p>
+                                    <Chi class="tm-drawer-title">REVIEW</h3>
                                 </div>
 
                                 <button class="icon-btn" type="button" id="btnClearPick" title="Clear selection"
@@ -401,26 +405,26 @@
 
                                 <div class="tm-panel" data-panel="self">
                                     <div class="tm-field">
-                                        <label for="fullName">Full name *</label>
+                                        <label for="fullName">Họ và tên *</label>
                                         <input id="fullName" name="fullName" type="text" placeholder=""
                                             required />
                                     </div>
 
                                     <div class="tm-field">
-                                        <label for="phone">Phone *</label>
+                                        <label for="phone">SĐT *</label>
                                         <!-- th:value="${user.phone}" -->
                                         <input id="phone" name="phone" type="tel" placeholder="" required />
                                     </div>
 
                                     <div class="tm-field">
-                                        <label for="email">Email (optional)</label>
+                                        <label for="email">Email</label>
                                         <input id="email" name="email" type="email" placeholder="" />
                                     </div>
 
                                     <div class="tm-field">
-                                        <label for="note">Note (optional)</label>
+                                        <label for="note">Ghi chú</label>
                                         <textarea id="note" name="note" rows="3"
-                                            placeholder="Allergy, birthday, quiet corner..."></textarea>
+                                            placeholder=""></textarea>
                                     </div>
                                 </div>
 
@@ -432,18 +436,18 @@
                                         </div>
 
                                         <div class="tm-field">
-                                            <label for="fullName2">Full name *</label>
+                                            <label for="fullName2">Họ và tên *</label>
                                             <input id="fullName2" name="fullName" type="text" placeholder=""
                                                 required />
                                         </div>
 
                                         <div class="tm-field">
-                                            <label for="phone2">Phone *</label>
+                                            <label for="phone2">SĐT *</label>
                                             <input id="phone2" name="phone" type="tel" placeholder="" required />
                                         </div>
 
                                         <div class="tm-field">
-                                            <label for="email2">Email (optional)</label>
+                                            <label for="email2">Email</label>
                                             <input id="email2" name="email" type="email" placeholder="" />
                                         </div>
                                     </div>
@@ -456,18 +460,18 @@
                                         </div>
 
                                         <div class="tm-field">
-                                            <label for="guestName">Guest name *</label>
+                                            <label for="guestName">Họ và tên *</label>
                                             <input id="guestName" name="guestName" type="text"
                                                 placeholder="" />
                                         </div>
 
                                         <div class="tm-field">
-                                            <label for="guestPhone">Guest phone (optional)</label>
+                                            <label for="guestPhone">SĐT</label>
                                             <input id="guestPhone" name="guestPhone" type="tel" placeholder="" />
                                         </div>
 
                                         <div class="tm-field">
-                                            <label for="note2">Note (optional)</label>
+                                            <label for="note2">Ghi chú</label>
                                             <textarea id="note2" name="note" rows="3"
                                                 placeholder=""></textarea>
                                         </div>
@@ -475,18 +479,18 @@
                                 </div>
 
                                 <button class="btn-save" type="submit" id="btnSubmitReserve" disabled>
-                                    Confirm Reservation
+                                    Đặt bàn
                                 </button>
 
                                 <p class="tm-hint">
-                                    By booking, you agree Dinio may contact you to confirm.
+                                    Bằng việc đặt bàn, bạn đồng ý để Dinio liên hệ xác nhận khi cần.
                                 </p>
                             </form>
 
 
                             <div class="tm-mini">
                                 <i class="fa-solid fa-circle-info"></i>
-                                <span>Select a table first, then fill your info.</span>
+                                <span>Vui lòng chọn bàn trước, sau đó điền thông tin.</span>
                             </div>
                         </div>
                     </aside>
@@ -498,7 +502,8 @@
     </main>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
-    
+    <script th:src="@{/assets/js/customer/table-map.js}" defer></script>
+
 </body>
 
 </html>

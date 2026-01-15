@@ -2,7 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<article class="dish-card" th:fragment="dishCard(title, desc, price, img, badge)">
+<article class="dish-card"
+         th:fragment="dishCard(title, desc, price, img, badge)"
+         th:attr="data-title=${title},
+                  data-desc=${desc},
+                  data-price=${price},
+                  data-img=${img},
+                  data-badge=${badge}">
   <div class="dish-media">
     <img th:src="${img}" th:alt="${title}" />
     <span class="dish-badge" th:text="${badge}">Hot</span>
@@ -14,7 +20,7 @@
 
     <div class="dish-foot">
       <span class="dish-price" th:text="${price}">0đ</span>
-      <a href="/menu" class="btn btn-order">Đặt ngay</a>
+      <button type="button" class="btn btn-order js-dish-detail">Chi tiết</button>
     </div>
   </div>
 </article>

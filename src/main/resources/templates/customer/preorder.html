@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DINIO - Pre-order</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/customer/preorder.css}" />
+
+  <script th:src="@{/assets/js/header-dropdown.js}"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+
+<body>
+  <div th:replace="~{fragments/header :: header}"></div>
+
+  <main>
+
+    <section id="preorder-head" class="section">
+      <div class="menu-container">
+        <div class="menu-head-card">
+          <p class="section-eyebrow">PRE-ORDER</p>
+          <h2 class="section-title">Đặt món trước cho lịch đặt bàn</h2>
+          <p class="section-subtitle">
+            Bạn đã đặt bàn thành công. Hãy chọn món muốn dùng trước để bếp chuẩn bị sẵn — giúp phục vụ nhanh hơn khi bạn đến.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="preorder-tools" class="section">
+      <div class="menu-container">
+        <div class="menu-toolbar">
+          <div class="menu-search">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input id="menuSearch" type="text" placeholder="Tìm món ăn, nguyên liệu..." />
+            <button class="search-clear" type="button" aria-label="Clear">✕</button>
+          </div>
+
+          <div class="menu-toolbar-right">
+            <select class="menu-sort" aria-label="Sort menu">
+              <option value="recommended">Gợi ý</option>
+              <option value="low">Giá: Thấp → Cao</option>
+              <option value="high">Giá: Cao → Thấp</option>
+              <option value="newest">Mới nhất</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="preorder-layout" class="section">
+      <div class="menu-container">
+        <div class="menu-shell">
+
+          <aside class="menu-side" aria-label="Reservation info">
+            <div class="side-card">
+
+              <div class="tm-drawer-head">
+                <div>
+                  <p class="tm-drawer-kicker">Thông tin đặt bàn</p>
+                  <h3 class="tm-drawer-title">REVIEW</h3>
+                </div>
+
+                <!-- ✅ đừng /dinio ở đây -->
+                <a class="icon-btn" th:href="@{/reservations/my}" title="Về lịch đặt" aria-label="Back">
+                  <i class="fa-solid fa-arrow-left"></i>
+                </a>
+              </div>
+
+              <div class="tm-picked">
+                <div class="pick-row"><span class="pick-label">Mã đặt bàn</span><b id="pickCode">—</b></div>
+                <div class="pick-row"><span class="pick-label">Table</span><b id="pickTable">—</b></div>
+                <div class="pick-row"><span class="pick-label">Area</span><b id="pickArea">—</b></div>
+                <div class="pick-row"><span class="pick-label">Seats</span><b id="pickSeats">—</b></div>
+                <div class="pick-row"><span class="pick-label">Time</span><b id="pickTime">—</b></div>
+              </div>
+
+              <div class="side-divider"></div>
+
+              <div style="display:grid; gap:10px;">
+                <a class="btn btn-order" href="#" id="btnGoCheckout">Xem giỏ đặt trước</a>
+
+                <!-- ✅ đừng /dinio -->
+                <a class="ghost-link" th:href="@{/reservations/my}" style="text-align:center;">
+                  Không đặt trước → về Lịch đặt của tôi
+                </a>
+              </div>
+
+            </div>
+          </aside>
+
+          <div class="menu-main">
+
+            <div class="menu-main-head">
+              <p class="menu-count">Đang hiển thị <b>0</b> món</p>
+              <a class="ghost-link" th:href="@{/preorder}">Reset</a>
+            </div>
+
+            <div class="menu-sections">
+              <section class="menu-section" data-section="starter">
+                <div class="menu-section-head">
+                  <h3>Starters</h3>
+                  <span class="section-hint">Món khai vị</span>
+                </div>
+
+                <div class="menu-grid">
+                  <div class="dish-wrap" data-cat="starter" data-tags="new" data-name="bruschetta" data-price="79000" data-new="1">
+                    <div th:replace="~{fragments/dish-card :: dishCard(
+                      'Bruschetta',
+                      'Bánh mì nướng, cà chua, basil.',
+                      '79.000đ',
+                      'assets/pic/food1.jpeg',
+                      'New'
+                    )}"></div>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+
+  <script th:src="@{/assets/js/customer/preorder.js}" defer></script>
+</body>
+
+</html>

@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   form?.addEventListener("submit", async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     hideAlert();
 
     const vIdentifier = (identifierInput.value || "").trim();
@@ -46,53 +46,55 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const originalBtnText = submitBtn.querySelector("span").textContent;
-    
+
     submitBtn.disabled = true;
     submitBtn.style.opacity = "0.85";
     submitBtn.querySelector("span").textContent = "Đang xử lý...";
 
     try {
-        const formData = new FormData();
-        formData.append("identifier", vIdentifier); 
-        formData.append("password", vPw);
+      const formData = new FormData();
+      formData.append("identifier", vIdentifier);
+      formData.append("password", vPw);
 
-        const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content');
-        const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content');
+      const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content');
+      const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content');
 
-        const headers = {};
-        if (csrfToken && csrfHeader) {
-            headers[csrfHeader] = csrfToken;
+      const headers = {};
+      if (csrfToken && csrfHeader) {
+        headers[csrfHeader] = csrfToken;
+      }
+
+      const actionUrl = form.getAttribute("action");
+
+      const response = await fetch(actionUrl, {
+        method: "POST",
+        headers: headers,
+        body: formData,
+        credentials: "same-origin"
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        window.location.href = data.redirectUrl || "/";
+      } else {
+        const errorText = await response.text();
+        try {
+          const errJson = JSON.parse(errorText);
+          showAlert(errJson.message || "Đăng nhập thất bại.");
+        } catch {
+          console.error("Server returned HTML instead of JSON:", errorText);
+          showAlert("Tài khoản hoặc mật khẩu không đúng.");
         }
-
-        const actionUrl = form.getAttribute("action");
-
-        const response = await fetch(actionUrl, {
-            method: "POST",
-            headers: headers,
-            body: formData
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            window.location.href = data.redirectUrl || "/";
-        } else {
-            const errorText = await response.text();
-            try {
-                const errJson = JSON.parse(errorText);
-                showAlert(errJson.message || "Đăng nhập thất bại.");
-            } catch {
-                console.error("Server returned HTML instead of JSON:", errorText);
-                showAlert("Tài khoản hoặc mật khẩu không đúng.");
-            }
-        }
-      } catch (error) {
-        console.error("Login error:", error);
-        showAlert("Lỗi kết nối máy chủ. Vui lòng thử lại.");
-    } 
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      showAlert("Lỗi kết nối máy chủ. Vui lòng thử lại.");
+    }
     finally {
       submitBtn.disabled = false;
-      submitBtn.style.opacity = "0.85";
-      submitBtn.querySelector("span").textContent = "Đang đăng nhập...";
-      }
-    });
+      submitBtn.style.opacity = "1";
+      submitBtn.querySelector("span").textContent = originalBtnText; // ✅ restore đúng
+    }
+
+  });
 });

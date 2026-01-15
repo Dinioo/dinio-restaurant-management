@@ -20,10 +20,9 @@
     <section id="myres-head" class="section">
       <div class="menu-container">
         <div class="menu-head-card">
-          <p class="section-eyebrow">ACCOUNT</p>
+          <p class="section-eyebrow">Reservation History</p>
           <h2 class="section-title">Lịch đặt của tôi</h2>
           <p class="section-subtitle">
-            Theo dõi đặt bàn sắp tới & lịch sử. Có thể hủy khi chưa đến giờ ăn (theo quy định).
           </p>
         </div>
       </div>
@@ -32,10 +31,9 @@
     <!-- TOOLBAR -->
     <section id="myres-tools" class="section">
       <div class="menu-container">
-
         <div class="myres-tools">
 
-          <!-- ROW 1: SEARCH (no outer box) -->
+          <!-- Search -->
           <div class="myres-search-row">
             <div class="myres-search">
               <i class="fa-solid fa-magnifying-glass"></i>
@@ -43,18 +41,9 @@
             </div>
           </div>
 
-          <!-- ROW 2: Tabs + chip + filters (one box) -->
+          <!-- Tabs + filters -->
           <div class="myres-bar">
             <div class="myres-left">
-              <div class="myres-tabs" role="tablist" aria-label="Reservations tabs">
-                <button class="btn btn-order" type="button" data-tab="upcoming" aria-selected="true">
-                  Sắp tới
-                </button>
-                <button class="btn btn-order" type="button" data-tab="past" aria-selected="false">
-                  Đã qua
-                </button>
-              </div>
-
               <div class="myres-chip">
                 <i class="fa-solid fa-circle-info"></i>
                 <span>Hủy nếu còn ≥ <b id="leadMinutesText">30</b> phút</span>
@@ -78,26 +67,19 @@
                 <option value="vip">VIP</option>
                 <option value="outdoor">Outdoor</option>
               </select>
-
-              <select id="sortBy" class="myres-select" aria-label="Sort">
-                <option value="timeAsc" selected>Sớm → Muộn</option>
-                <option value="timeDesc">Muộn → Sớm</option>
-              </select>
             </div>
           </div>
 
         </div>
-
       </div>
     </section>
 
-
+    <!-- LIST -->
     <section id="myres-list" class="section">
       <div class="menu-container">
+
         <div class="myres-summary">
-          <div class="myres-count">
-            <span id="countText">0</span> đặt bàn
-          </div>
+          <div class="myres-count"><span id="countText">0</span> đặt bàn</div>
 
           <div class="myres-legend">
             <span class="lg"><i class="dot is-pending"></i> Pending</span>
@@ -107,6 +89,7 @@
           </div>
         </div>
 
+        <!-- empty state -->
         <div class="myres-empty is-hidden" id="emptyState">
           <div class="myres-empty-card">
             <div class="empty-icon">
@@ -114,188 +97,129 @@
             </div>
             <h3>Không có kết quả</h3>
             <p>Thử đổi tab / bộ lọc hoặc tìm kiếm từ khóa khác.</p>
-            <a class="btn btn-primary" href="/reservation/tables">Đặt bàn ngay</a>
+            <a class="btn btn-primary" href="/dinio/reservation/tables">Đặt bàn ngay</a>
           </div>
         </div>
 
-        <div class="myres-grid" id="myresGrid">
+        <!-- list container -->
+        <div class="myres-grid myres-list" id="myresGrid">
 
-          <!-- 101 -->
-          <article class="myres-card" data-id="101" data-code="RSV-2026-001" data-status="CONFIRMED" data-area="floor1"
-            data-table="T08" data-party="2" data-datetime="2026-01-10T19:30" data-bucket="upcoming">
-            <div class="myres-card-head">
-              <div>
+          <!-- ====== ITEM SAMPLE (giữ data-*) ====== -->
+          <article class="myres-row"
+            data-id="101" data-code="RSV-2026-001" data-status="CONFIRMED" data-area="floor1"
+            data-table="T08" data-party="2" data-datetime="2026-01-10T19:30" data-bucket="upcoming"
+            data-note="Góc yên tĩnh, không hành">
+
+            <div class="myres-row-left">
+              <div class="myres-row-top">
                 <h3 class="myres-code">RSV-2026-001</h3>
+                <span class="myres-pill is-confirmed">Confirmed</span>
               </div>
-              <span class="btn btn-save">Confirmed</span>
+
+              <div class="myres-row-sub">
+                <span class="myres-kv"><i class="fa-regular fa-clock"></i> <b class="kv-val">2026-01-10 • 19:30</b></span>
+                <span class="myres-kv"><i class="fa-solid fa-chair"></i> <b class="kv-val">T08</b></span>
+                <span class="myres-kv"><i class="fa-solid fa-layer-group"></i> <b class="kv-val">Tầng 1</b></span>
+                <span class="myres-kv"><i class="fa-solid fa-user-group"></i> <b class="kv-val">2 khách</b></span>
+              </div>
             </div>
 
-            <div class="myres-meta">
-              <div class="meta-row"><span class="meta-label">Bàn</span><b class="meta-value">T08</b></div>
-              <div class="meta-row"><span class="meta-label">Khu vực</span><b class="meta-value">Tầng 1</b></div>
-              <div class="meta-row"><span class="meta-label">Số khách</span><b class="meta-value">2</b></div>
-              <div class="meta-row"><span class="meta-label">Thời gian</span><b class="meta-value">2026-01-10 •
-                  19:30</b></div>
-            </div>
-
-            <div class="myres-note">
-              <i class="fa-regular fa-note-sticky"></i>
-              <span>Góc yên tĩnh, không hành</span>
-            </div>
-
-            <div class="myres-actions">
-              <a class="btn btn-light" href="/reservations/106">Xem</a>
-              <button class="btn btn-cancel" type="button" data-id="106" data-code="RSV-2026-013">Hủy</button>
-            </div>
+              <button class="btn-light" type="button" data-action="view">Xem</button>
+              <button class="btn-cancel" type="button" data-action="cancel">Hủy</button>
           </article>
 
-          <!-- 102 -->
-          <article class="myres-card" data-id="102" data-code="RSV-2026-002" data-status="PENDING" data-area="floor2"
-            data-table="F204" data-party="6" data-datetime="2026-01-11T18:15" data-bucket="upcoming">
-            <div class="myres-card-head">
-              <div>
+          <article class="myres-row"
+            data-id="102" data-code="RSV-2026-002" data-status="PENDING" data-area="floor2"
+            data-table="F204" data-party="6" data-datetime="2026-01-11T18:15" data-bucket="upcoming"
+            data-note="Sinh nhật – cần nến nhỏ">
+
+            <div class="myres-row-left">
+              <div class="myres-row-top">
                 <h3 class="myres-code">RSV-2026-002</h3>
+                <span class="myres-pill is-pending">Pending</span>
               </div>
-              <span class="btn btn-warning">Pending</span>
+
+              <div class="myres-row-sub">
+                <span class="myres-kv"><i class="fa-regular fa-clock"></i> <b class="kv-val">2026-01-11 • 18:15</b></span>
+                <span class="myres-kv"><i class="fa-solid fa-chair"></i> <b class="kv-val">F204</b></span>
+                <span class="myres-kv"><i class="fa-solid fa-layer-group"></i> <b class="kv-val">Tầng 2</b></span>
+                <span class="myres-kv"><i class="fa-solid fa-user-group"></i> <b class="kv-val">6 khách</b></span>
+              </div>
             </div>
 
-            <div class="myres-meta">
-              <div class="meta-row"><span class="meta-label">Bàn</span><b class="meta-value">F204</b></div>
-              <div class="meta-row"><span class="meta-label">Khu vực</span><b class="meta-value">Tầng 2</b></div>
-              <div class="meta-row"><span class="meta-label">Số khách</span><b class="meta-value">6</b></div>
-              <div class="meta-row"><span class="meta-label">Thời gian</span><b class="meta-value">2026-01-11 •
-                  18:15</b></div>
-            </div>
-
-            <div class="myres-note">
-              <i class="fa-regular fa-note-sticky"></i>
-              <span>Sinh nhật – cần nến nhỏ</span>
-            </div>
-
-            <div class="myres-actions">
-              <a class="btn btn-light" href="/reservations/106">Xem</a>
-              <button class="btn btn-cancel" type="button" data-id="106" data-code="RSV-2026-013">Hủy</button>
-            </div>
+            <button class="btn-light" type="button" data-action="view">Xem</button>
+            <button class="btn-cancel" type="button" data-action="cancel">Hủy</button>
           </article>
 
-          <!-- 103 -->
-          <article class="myres-card" data-id="103" data-code="RSV-2025-221" data-status="COMPLETED" data-area="vip"
-            data-table="V03" data-party="8" data-datetime="2025-12-20T20:00" data-bucket="past">
-            <div class="myres-card-head">
-              <div>
+          <article class="myres-row"
+            data-id="103" data-code="RSV-2025-221" data-status="COMPLETED" data-area="vip"
+            data-table="V03" data-party="8" data-datetime="2025-12-20T20:00" data-bucket="past"
+            data-note="Phòng riêng">
+
+            <div class="myres-row-left">
+              <div class="myres-row-top">
                 <h3 class="myres-code">RSV-2025-221</h3>
+                <span class="myres-pill is-completed">Completed</span>
               </div>
-              <span class="btn btn-light">Completed</span>
+
+              <div class="myres-row-sub">
+                <span class="myres-kv"><i class="fa-regular fa-clock"></i> <b class="kv-val">2025-12-20 • 20:00</b></span>
+                <span class="myres-kv"><i class="fa-solid fa-chair"></i> <b class="kv-val">V03</b></span>
+                <span class="myres-kv"><i class="fa-solid fa-layer-group"></i> <b class="kv-val">VIP</b></span>
+                <span class="myres-kv"><i class="fa-solid fa-user-group"></i> <b class="kv-val">8 khách</b></span>
+              </div>
             </div>
 
-            <div class="myres-meta">
-              <div class="meta-row"><span class="meta-label">Bàn</span><b class="meta-value">V03</b></div>
-              <div class="meta-row"><span class="meta-label">Khu vực</span><b class="meta-value">VIP</b></div>
-              <div class="meta-row"><span class="meta-label">Số khách</span><b class="meta-value">8</b></div>
-              <div class="meta-row"><span class="meta-label">Thời gian</span><b class="meta-value">2025-12-20 •
-                  20:00</b></div>
-            </div>
-
-            <div class="myres-note">
-              <i class="fa-regular fa-note-sticky"></i>
-              <span>Phòng riêng</span>
-            </div>
-
-            <div class="myres-actions">
-              <a class="btn btn-light" href="/reservations/106">Xem</a>
-              <button class="btn btn-cancel" type="button" data-id="106" data-code="RSV-2026-013">Hủy</button>
+            <div class="myres-row-actions">
+              <button class="btn btn-light myres-act" type="button" data-action="view">Xem</button>
+              <button class="btn btn-cancel myres-act" type="button" data-action="cancel">Hủy</button>
             </div>
           </article>
 
-          <!-- 104 -->
-          <article class="myres-card" data-id="104" data-code="RSV-2025-198" data-status="CANCELLED" data-area="outdoor"
-            data-table="O02" data-party="4" data-datetime="2025-11-02T17:45" data-bucket="past">
-            <div class="myres-card-head">
-              <div>
+          <article class="myres-row"
+            data-id="104" data-code="RSV-2025-198" data-status="CANCELLED" data-area="outdoor"
+            data-table="O02" data-party="4" data-datetime="2025-11-02T17:45" data-bucket="past"
+            data-note="">
+
+            <div class="myres-row-left">
+              <div class="myres-row-top">
                 <h3 class="myres-code">RSV-2025-198</h3>
+                <span class="myres-pill is-cancelled">Cancelled</span>
               </div>
-              <span class="btn btn-cancel">Cancelled</span>
-            </div>
 
-            <div class="myres-meta">
-              <div class="meta-row"><span class="meta-label">Bàn</span><b class="meta-value">O02</b></div>
-              <div class="meta-row"><span class="meta-label">Khu vực</span><b class="meta-value">Outdoor</b></div>
-              <div class="meta-row"><span class="meta-label">Số khách</span><b class="meta-value">4</b></div>
-              <div class="meta-row"><span class="meta-label">Thời gian</span><b class="meta-value">2025-11-02 •
-                  17:45</b></div>
-            </div>
-
-            <div class="myres-actions">
-              <a class="btn btn-light" href="/reservations/106">Xem</a>
-              <button class="btn btn-cancel" type="button" data-id="106" data-code="RSV-2026-013">Hủy</button>
-            </div>
-          </article>
-
-          <!-- 105 -->
-          <article class="myres-card" data-id="105" data-code="RSV-2026-010" data-status="CONFIRMED" data-area="floor3"
-            data-table="F307" data-party="3" data-datetime="2026-01-15T12:00" data-bucket="upcoming">
-            <div class="myres-card-head">
-              <div>
-                <h3 class="myres-code">RSV-2026-010</h3>
+              <div class="myres-row-sub">
+                <span class="myres-kv"><i class="fa-regular fa-clock"></i> <b class="kv-val">2025-11-02 • 17:45</b></span>
+                <span class="myres-kv"><i class="fa-solid fa-chair"></i> <b class="kv-val">O02</b></span>
+                <span class="myres-kv"><i class="fa-solid fa-layer-group"></i> <b class="kv-val">Outdoor</b></span>
+                <span class="myres-kv"><i class="fa-solid fa-user-group"></i> <b class="kv-val">4 khách</b></span>
               </div>
-              <span class="btn btn-save">Confirmed</span>
             </div>
 
-            <div class="myres-meta">
-              <div class="meta-row"><span class="meta-label">Bàn</span><b class="meta-value">F307</b></div>
-              <div class="meta-row"><span class="meta-label">Khu vực</span><b class="meta-value">Tầng 3</b></div>
-              <div class="meta-row"><span class="meta-label">Số khách</span><b class="meta-value">3</b></div>
-              <div class="meta-row"><span class="meta-label">Thời gian</span><b class="meta-value">2026-01-15 •
-                  12:00</b></div>
-            </div>
-
-            <div class="myres-actions">
-              <a class="btn btn-light" href="/reservations/106">Xem</a>
-              <button class="btn btn-cancel" type="button" data-id="106" data-code="RSV-2026-013">Hủy</button>
-            </div>
-          </article>
-
-          <!-- 106 -->
-          <article class="myres-card" data-id="106" data-code="RSV-2026-013" data-status="PENDING" data-area="floor1"
-            data-table="T03" data-party="4" data-datetime="2026-01-16T20:15" data-bucket="upcoming">
-            <div class="myres-card-head">
-              <div>
-                <h3 class="myres-code">RSV-2026-013</h3>
-              </div>
-              <span class="btn btn-warning">Pending</span>
-            </div>
-            <div class="myres-meta">
-              <div class="meta-row"><span class="meta-label">Bàn</span><b class="meta-value">T03</b></div>
-              <div class="meta-row"><span class="meta-label">Khu vực</span><b class="meta-value">Tầng 1</b></div>
-              <div class="meta-row"><span class="meta-label">Số khách</span><b class="meta-value">4</b></div>
-              <div class="meta-row"><span class="meta-label">Thời gian</span><b class="meta-value">2026-01-16 •
-                  20:15</b></div>
-            </div>
-
-            <div class="myres-actions">
-              <a class="btn btn-light" href="/reservations/106">Xem</a>
-              <button class="btn btn-cancel" type="button" data-id="106" data-code="RSV-2026-013">Hủy</button>
+            <div class="myres-row-actions">
+              <button class="btn btn-light myres-act" type="button" data-action="view">Xem</button>
+              <button class="btn btn-cancel myres-act" type="button" data-action="cancel">Hủy</button>
             </div>
           </article>
 
         </div>
-
       </div>
     </section>
+          <div th:replace="fragments/dots-navigation :: dotsNavigation(3, 1, '/dinio/reservations/my', 'Xem thêm')"></div>
+
   </main>
 
   <div th:replace="~{fragments/footer :: footer}"></div>
 
-  <!-- Modal cancel -->
   <div class="myres-modal is-hidden" id="cancelModal" aria-hidden="true">
-    <div class="myres-backdrop" data-close></div>
+    <div class="myres-backdrop" data-close="1"></div>
+
     <div class="myres-panel" role="dialog" aria-modal="true" aria-labelledby="cancelTitle">
       <div class="myres-panel-head">
         <div>
           <p class="myres-panel-kicker">CANCEL</p>
           <h3 class="myres-panel-title" id="cancelTitle">Xác nhận hủy đặt bàn</h3>
         </div>
-        <button class="icon-btn" type="button" data-close aria-label="Close">
+        <button class="icon-btn" type="button" data-close="1" aria-label="Close">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -305,15 +229,14 @@
       </p>
 
       <div class="myres-panel-actions">
-        <button class="btn btn-ghost" type="button" data-close>Quay lại</button>
-        <button class="btn btn-danger" type="button" id="btnConfirmCancel">Hủy đặt</button>
+        <button class="btn-light" type="button" data-close="1">Quay lại</button>
+        <button class="btn-cancel" type="button" id="btnConfirmCancel">Hủy</button>
       </div>
     </div>
   </div>
 
-  <!-- ================= VIEW RESERVATION MODAL ================= -->
   <div class="myres-modal is-hidden" id="viewModal" aria-hidden="true">
-    <div class="myres-backdrop" data-close></div>
+    <div class="myres-backdrop" data-close="1"></div>
 
     <div class="myres-panel" role="dialog" aria-modal="true" aria-labelledby="viewTitle">
       <div class="myres-panel-head">
@@ -321,14 +244,13 @@
           <p class="myres-panel-kicker">RESERVATION</p>
           <h3 class="myres-panel-title" id="viewTitle">Chi tiết đặt bàn</h3>
         </div>
-        <button class="icon-btn" type="button" data-close>
+        <button class="icon-btn" type="button" data-close="1">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <!-- SUMMARY -->
       <div class="myres-meta">
-        <div class="meta-row"><span class="meta-label">Mã đặt bàn</span><b id="vCode">—</b></div>
+        <div class="meta-row"><span class="meta-label">Mã</span><b id="vCode">—</b></div>
         <div class="meta-row"><span class="meta-label">Trạng thái</span><b id="vStatus">—</b></div>
         <div class="meta-row"><span class="meta-label">Bàn</span><b id="vTable">—</b></div>
         <div class="meta-row"><span class="meta-label">Khu vực</span><b id="vArea">—</b></div>
@@ -336,44 +258,20 @@
         <div class="meta-row"><span class="meta-label">Thời gian</span><b id="vTime">—</b></div>
       </div>
 
-      <!-- CONTACT INFO -->
-      <form>
-        <div class="myres-form-grid">
-          <div class="tm-field">
-            <label>Họ tên</label>
-            <input type="text" placeholder="Nguyễn Văn A" />
-          </div>
+      <div class="myres-note-view" id="vNoteWrap">
+        <i class="fa-regular fa-note-sticky"></i>
+        <span id="vNote">—</span>
+      </div>
 
-          <div class="tm-field">
-            <label>Số điện thoại</label>
-            <input type="tel" placeholder="0909 000 111" />
-          </div>
-
-          <div class="tm-field">
-            <label>Email</label>
-            <input type="email" placeholder="guest@email.com" />
-          </div>
-
-          <div class="tm-field span-2">
-            <label>Ghi chú</label>
-            <textarea placeholder="Góc yên tĩnh, không hành..."></textarea>
-          </div>
-        </div>
-      </form>
-
-
-      <!-- ACTIONS -->
       <div class="myres-panel-actions">
-        <button class="btn btn-light" data-close>Đóng</button>
-        <button class="btn btn-cancel" id="btnCancelFromView">
-          Hủy đặt bàn
-        </button>
+        <button class="btn btn-light" type="button" data-close="1">Đóng</button>
+        <button class="btn btn-cancel" type="button" id="btnCancelFromView">Hủy</button>
       </div>
     </div>
   </div>
 
-
-  <script th:src="@{dinio/assets/js/customer/reservations-my.js}"></script>
+  <!-- ✅ ĐÚNG path + defer -->
+  <script th:src="@{/assets/js/customer/reservations-my.js}" defer></script>
 </body>
 
 </html>

@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DINIO - Hồ sơ cá nhân</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+  <link rel="stylesheet" th:href="@{/assets/css/customer/profile-customer.css}">
+
+  <script th:src="@{/assets/js/header-dropdown.js}"></script>
+  <script th:src="@{/assets/js/customer/profile-customer.js}" defer></script>
+</head>
+
+<body>
+  <div th:replace="fragments/header :: header"></div>
+
+  <main class="menu-container">
+
+    <section id="profile-head" class="section">
+      <div class="menu-head-card">
+        <p class="section-eyebrow">ACCOUNT</p>
+        <h3 class="section-title">Hồ sơ cá nhân</h3>
+      </div>
+    </section>
+
+    <section id="profile-tools" class="section">
+      <div class="profile-toolbar">
+        <div class="profile-toolbar-left">
+          <div class="profile-pill is-active" data-tab="profile">Hồ sơ</div>
+          <div class="profile-pill" data-tab="email">Đổi email</div>
+          <div class="profile-pill" data-tab="password">Đổi mật khẩu</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="profile-layout" class="section">
+      <div class="menu-shell">
+
+        <aside class="menu-side">
+          <div class="side-card profile-side">
+            <div class="profile-side-head">
+              <div class="side-title">Tổng quan</div>
+              <button class="btn btn-light" type="button" id="btnChangeAvatar">Đổi ảnh</button>
+            </div>
+
+            <div class="profile-summary">
+              <div class="profile-avatar">
+                <img id="avatarImg" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=900&q=80" alt="Avatar">
+              </div>
+
+              <div class="profile-summary-meta">
+                <p class="profile-name" id="sumName">Nguyễn Văn A</p>
+                <p class="profile-sub" id="sumPhone">SĐT: 0901 234 567</p>
+                <p class="profile-sub" id="sumEmail">Email: nguyenvana@gmail.com</p>
+
+                <div class="profile-badge">
+                  <span class="profile-badge-dot"></span>
+                  <span id="sumTier">Premium Member</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="side-divider"></div>
+
+            <div class="profile-kv">
+              <div class="profile-kv-row"><span>Mã khách hàng</span><b id="sumCode">DN-01982</b></div>
+              <div class="profile-kv-row"><span>Điểm tích lũy</span><b id="sumPoint">1,280</b></div>
+              <div class="profile-kv-row"><span>Ngày tham gia</span><b id="sumJoin">12/10/2024</b></div>
+            </div>
+          </div>
+        </aside>
+
+        <section class="profile-main">
+          <div class="profile-card">
+            <div class="profile-card-head">
+              <div>
+                <p class="profile-card-title" id="rightTitle">Cập nhật thông tin</p>
+              </div>
+            </div>
+
+            <div class="profile-panel is-active" id="panel-profile">
+              <form class="profile-form" id="profileForm">
+                <div class="profile-formgrid">
+                  <div class="profile-field">
+                    <label class="profile-label">Họ & Tên</label>
+                    <input class="profile-input" id="fullName" type="text" placeholder="">
+                  </div>
+
+                  <div class="profile-field">
+                    <label class="profile-label">Số điện thoại</label>
+                    <input class="profile-input" id="phone" type="tel" placeholder="">
+                    <div class="profile-hint">Chỉ số và dấu cách là hợp lệ.</div>
+                  </div>
+
+                  <div class="profile-field">
+                    <label class="profile-label">Ngày sinh</label>
+                    <input class="profile-input" id="dob" type="date">
+                  </div>
+
+                  <div class="profile-field">
+                    <label class="profile-label">Giới tính</label>
+                    <select class="profile-input" id="gender">
+                      <option value="">— Chọn —</option>
+                      <option value="male">Nam</option>
+                      <option value="female">Nữ</option>
+                      <option value="other">Khác</option>
+                    </select>
+                  </div>
+
+                  <div class="profile-field profile-span-2">
+                    <label class="profile-label">Địa chỉ</label>
+                    <input class="profile-input" id="address" type="text" placeholder="">
+                  </div>
+
+                  <div class="profile-field profile-span-2">
+                    <label class="profile-label">Ghi chú</label>
+                    <textarea class="profile-input profile-textarea" id="note" placeholder=""></textarea>
+                  </div>
+                </div>
+
+                <div class="profile-actions">
+                  <div class="profile-actions-right">
+                    <button class="btn btn-cancel" type="reset">Huỷ</button>
+                    <button class="btn btn-save" type="submit">Lưu</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="profile-panel" id="panel-email">
+              <form class="profile-form" id="emailForm">
+                <div class="profile-formgrid">
+                  <div class="profile-field profile-span-2">
+                    <label class="profile-label">Email hiện tại</label>
+                    <input class="profile-input" id="currentEmail" type="email" disabled>
+                  </div>
+
+                  <div class="profile-field profile-span-2">
+                    <label class="profile-label">Email mới</label>
+                    <input class="profile-input" id="newEmail" type="email" placeholder="">
+                  </div>
+
+                  <div class="profile-field profile-span-2">
+                    <label class="profile-label">Mật khẩu hiện tại</label>
+                    <input class="profile-input" id="emailPassword" type="password" placeholder="">
+                  </div>
+                </div>
+
+                <div class="profile-actions">
+                  <div class="profile-actions-right">
+                    <button class="btn btn-light" type="submit">Đổi email</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="profile-panel" id="panel-password">
+              <form class="profile-form" id="passwordForm">
+                <div class="profile-formgrid">
+                  <div class="profile-field profile-span-2">
+                    <label class="profile-label">Mật khẩu hiện tại</label>
+                    <input class="profile-input" id="oldPassword" type="password" placeholder="">
+                  </div>
+
+                  <div class="profile-field">
+                    <label class="profile-label">Mật khẩu mới</label>
+                    <input class="profile-input" id="newPassword" type="password" placeholder="">
+                  </div>
+
+                  <div class="profile-field">
+                    <label class="profile-label">Nhập lại mật khẩu mới</label>
+                    <input class="profile-input" id="confirmPassword" type="password" placeholder="">
+                  </div>
+                </div>
+
+                <div class="profile-actions">
+                  <div class="profile-actions-right">
+                    <button class="btn btn-light" type="submit">Đổi mật khẩu</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+    </section>
+
+  </main>
+
+  <div th:replace="fragments/footer :: footer"></div>
+
+  <input id="avatarFile" type="file" accept="image/*" hidden>
+
+  <div class="toast" id="toast">
+    <div class="icon"></div>
+    <div>
+      <div class="msg" id="toastMsg"></div>
+      <div class="muted" id="toastHint"></div>
+    </div>
+  </div>
+</body>
+</html>

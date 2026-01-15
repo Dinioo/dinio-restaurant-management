@@ -1,0 +1,76 @@
+#preOrderModal.fp-modal{
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+#preOrderModal.is-hidden{ display:none !important; }
+
+#preOrderModal .fp-backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+}
+
+#preOrderModal .fp-panel{
+  position: relative;
+  z-index: 1;
+
+  width: min(560px, calc(100% - 32px));
+  padding: 18px 18px 16px;
+  border-radius: 18px;
+
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
+}
+
+#preOrderModal .preo-sub{
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.55;
+  opacity: .9;
+  color: var(--text);
+}
+
+#preOrderModal .preo-actions{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+#preOrderModal .preo-ghost{
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-2);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 800;
+  opacity: .95;
+}
+
+#preOrderModal .preo-ghost:hover{
+  opacity: 1;
+  border-color: rgba(202,165,106,.35);
+}
+
+#preOrderModal .preo-hint{
+  margin: 12px 0 0;
+  font-size: 12px;
+  opacity: .75;
+  color: var(--text);
+}
+
+/* Mobile */
+@media (max-width: 520px){
+  #preOrderModal .preo-actions{
+    grid-template-columns: 1fr;
+  }
+}

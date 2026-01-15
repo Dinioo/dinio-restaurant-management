@@ -27,12 +27,7 @@
     opacity .2s ease;
 }
 
-.btn:hover{
-  transform: translateY(-1px);
-  background: var(--surface-2);
-  border-color: var(--border-strong);
-  box-shadow: var(--shadow-soft);
-}
+
 
 .btn:active{
   transform: translateY(0);
@@ -103,23 +98,32 @@
   font-size: 13px;
   font-weight: 800;
 
-  background: var(--accent-solid);
+  background: rgb(239,191,88);
   border: 1px solid var(--accent-solid-border);
   color: var(--text-on-accent);
 
+  isolation: isolate;
+  will-change: transform;
+
   transition:
     transform .16s ease,
-    filter .2s ease,
     box-shadow .2s ease,
     border-color .2s ease;
 }
 
 .btn-order:hover{
-  transform: translateY(-1px);
-  filter: brightness(0.98);
+  transform: translateY(-1px) scale(1.02);
   border-color: var(--accent-solid-border-hover);
-  box-shadow: var(--shadow-soft);
+  box-shadow:
+    0 6px 16px rgba(239,191,88,0.35),
+    0 0 0 1px rgba(239,191,88,0.55);
 }
+
+.btn-order:active{
+  transform: translateY(0) scale(1);
+}
+
+
 .btn-light{
   height: 40px;
   padding: 0 18px;

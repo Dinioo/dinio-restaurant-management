@@ -1,6 +1,5 @@
 @import url(base.css);
 @import url(layout.css);
-@import url(components.css);
 @import url(header.css);
 @import url(footer.css);
 @import url("components/dish-card.css");
@@ -10,3 +9,6 @@
 @import url("components/dots-navigation.css");
 @import url("components/input-field.css");
 @import url("components/links.css");
+@import url("components/dish-detail-modal.css");
+@import url("components/check-reservation-modal.css");
+@import url("components/preorder-after-reservation-modal.css");

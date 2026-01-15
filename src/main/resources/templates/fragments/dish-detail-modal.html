@@ -1,0 +1,37 @@
+<div th:fragment="dishDetailModal"
+     class="fp-modal is-hidden"
+     id="dishModal"
+     aria-hidden="true">
+
+  <div class="fp-backdrop" data-close="1"></div>
+
+  <div class="fp-panel dish-panel" role="dialog" aria-modal="true" aria-labelledby="dishModalTitle">
+    <div class="fp-head">
+      <h3 class="fp-title" id="dishModalTitle">Chi tiết món ăn</h3>
+      <button class="fp-x" type="button" data-close="1" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="dish-modal-body">
+      <div class="dish-modal-media" id="dishModalMedia">
+        <img id="dishModalImg" alt="Dish image" />
+        <span class="dish-modal-badge" id="dishModalBadge">Hot</span>
+      </div>
+
+      <div class="dish-modal-info" id="dishModalInfo">
+        <h4 class="dish-modal-name" id="dishModalName">Tên món</h4>
+        <p class="dish-modal-desc" id="dishModalDesc">Mô tả</p>
+
+        <div class="dish-modal-foot">
+          <span class="dish-modal-price" id="dishModalPrice">0đ</span>
+        </div>
+
+        <div class="dish-modal-actions">
+          <button type="button" class="btn-cancel" data-close="1">Thoát</button>
+          <button type="button" class="btn-order" id="dishOrderNowBtn">Đặt ngay</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

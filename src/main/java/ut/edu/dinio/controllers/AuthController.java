@@ -29,7 +29,7 @@ public class AuthController {
     private StaffUserService staffService;
 
     @GetMapping("/who-am-i")
-    @ResponseBody 
+    @ResponseBody
     public String whoAmI(Authentication auth) {
         if (auth == null || !auth.isAuthenticated() || auth.getPrincipal().equals("anonymousUser")) {
             return "Server nói: Bạn là KHÁCH (Chưa đăng nhập)";
@@ -40,16 +40,19 @@ public class AuthController {
 
     @GetMapping("/login")
     public String loginPage(HttpSession session) {
-        if (session.getAttribute("currentUser") != null) return "redirect:/";
-        if (session.getAttribute("currentStaff") != null) return "redirect:/admin/dashboard";
+        if (session.getAttribute("currentUser") != null)
+            return "redirect:/";
+        if (session.getAttribute("currentStaff") != null)
+            return "redirect:/admin/dashboard";
         return "auth/login";
     }
 
     @PostMapping("/login")
-    @ResponseBody 
-    public ResponseEntity<?> handleUnifiedLogin(@RequestParam(name = "identifier", required = false) String identifier, @RequestParam(name = "password", required = false) String password, HttpSession session) {
-        
-        Map<String, String> response = new HashMap<>(); 
+    @ResponseBody
+    public ResponseEntity<?> handleUnifiedLogin(@RequestParam(name = "identifier", required = false) String identifier,
+            @RequestParam(name = "password", required = false) String password, HttpSession session) {
+
+        Map<String, String> response = new HashMap<>();
 
         if (identifier == null || identifier.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             return ResponseEntity.badRequest().body("{\"message\": \"Vui lòng nhập đầy đủ thông tin!\"}");
@@ -58,26 +61,26 @@ public class AuthController {
         Customer customer = customerService.login(identifier, password);
         if (customer != null) {
             session.setAttribute("currentUser", customer);
-            session.setMaxInactiveInterval(30 * 60); 
+            session.setMaxInactiveInterval(30 * 60);
 
             response.put("status", "success");
-            response.put("redirectUrl", "/dinio"); 
-            return ResponseEntity.ok(response); 
-        } 
-        
+            response.put("redirectUrl", "/dinio");
+            return ResponseEntity.ok(response);
+        }
+
         StaffUser staff = staffService.loginStaff(identifier, password);
         if (staff != null) {
             if (staff.getRole() == null || staff.getRole().getName() == null) {
-                 return ResponseEntity.badRequest().body("{\"message\": \"Tài khoản chưa được cấp quyền!\"}");
+                return ResponseEntity.badRequest().body("{\"message\": \"Tài khoản chưa được cấp quyền!\"}");
             }
 
             session.setAttribute("currentStaff", staff);
-            session.setMaxInactiveInterval(8 * 60 * 60); 
+            session.setMaxInactiveInterval(8 * 60 * 60);
 
             String dashboardUrl = determineRedirectUrl(staff.getRole().getName());
-            
+
             response.put("status", "success");
-            response.put("redirectUrl", dashboardUrl); 
+            response.put("redirectUrl", dashboardUrl);
             return ResponseEntity.ok(response);
         }
 
@@ -87,31 +90,36 @@ public class AuthController {
     private String determineRedirectUrl(RoleName roleName) {
         switch (roleName) {
             case ADMIN:
-                return "redirect:/admin/dashboard";
+                return "/admin/dashboard";
             case KITCHEN:
-                return "redirect:/kitchen/orders";
+                return "/kitchen/orders";
             case CASHIER_MANAGER:
-                return "redirect:/cashier/orders";
+                return "/cashier/orders";
             case WAITER:
-                return "redirect:/waiter/tables";
+                return "/waiter/tables";
             default:
-                return "redirect:/admin/home";
+                return "/admin/home";
         }
     }
 
-  @GetMapping("/logout")
+    @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/login?logout"; 
+        return "redirect:/login?logout";
     }
 
-  @GetMapping("/register")
-  public String register() {
-    return "auth/register";
-  }
+    @GetMapping("/register")
+    public String register() {
+        return "auth/register";
+    }
 
-  @GetMapping("/forgot-password")
-  public String forgotPassword() {
-    return "auth/forgot-password";
-  }
+    @GetMapping("/forgot-password")
+    public String forgotPassword() {
+        return "auth/forgot-password";
+    }
+    @GetMapping("/profile")
+public String profilePage() {
+    return "customer/profile";
+}
+
 }

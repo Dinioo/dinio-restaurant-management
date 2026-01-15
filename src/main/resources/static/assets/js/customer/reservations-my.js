@@ -1,281 +1,242 @@
 (() => {
-  const $ = (s, r = document) => r.querySelector(s);
-  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const $ = (s, root = document) => root.querySelector(s);
+  const $$ = (s, root = document) => Array.from(root.querySelectorAll(s));
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const CANCEL_LEAD_MINUTES = 60; // bạn đổi tuỳ ý
-    const leadText = $("#leadMinutesText");
-    if (leadText) leadText.textContent = String(CANCEL_LEAD_MINUTES);
+  const grid = $("#myresGrid");
+  if (!grid) return;
 
-    const grid = $("#myresGrid");
-    const emptyState = $("#emptyState");
-    const countText = $("#countText");
+  // controls
+  const tabs = $$(".myres-tab");
+  const searchInput = $("#myresSearch");
+  const btnClearSearch = $("#btnClearSearch");
+  const filterStatus = $("#filterStatus");
+  const filterArea = $("#filterArea");
+  const sortBy = $("#sortBy");
+  const countText = $("#countText");
+  const emptyState = $("#emptyState");
 
-    const qInput = $("#myresSearch");
-    const filterStatus = $("#filterStatus");
-    const filterArea = $("#filterArea");
-    const sortBy = $("#sortBy");
-    const tabs = $$(".myres-tabs .btn.btn-order[data-tab]");
+  // modals
+  const cancelModal = $("#cancelModal");
+  const viewModal = $("#viewModal");
 
-    const cancelModal = $("#cancelModal");
-    const cancelCode = $("#cancelCode");
-    const btnConfirmCancel = $("#btnConfirmCancel");
+  const cancelCodeEl = $("#cancelCode");
+  const btnConfirmCancel = $("#btnConfirmCancel");
 
-    const viewModal = $("#viewModal");
-    const btnCancelFromView = $("#btnCancelFromView");
+  const vCode = $("#vCode");
+  const vStatus = $("#vStatus");
+  const vTable = $("#vTable");
+  const vArea = $("#vArea");
+  const vGuests = $("#vGuests");
+  const vTime = $("#vTime");
+  const vNote = $("#vNote");
+  const vNoteWrap = $("#vNoteWrap");
+  const btnCancelFromView = $("#btnCancelFromView");
 
-    const vCode = $("#vCode");
-    const vStatus = $("#vStatus");
-    const vTable = $("#vTable");
-    const vArea = $("#vArea");
-    const vGuests = $("#vGuests");
-    const vTime = $("#vTime");
+  let activeTab = "upcoming";
+  let pendingCancel = { id: null, code: null };
 
-    if (!grid || !qInput || !filterStatus || !filterArea || !sortBy) {
-      console.warn("[myres] Missing elements. Check ids: myresGrid, myresSearch, filterStatus, filterArea, sortBy");
+  const norm = (str) => (str || "").toString().trim().toLowerCase();
+
+  const statusLabel = (s) => {
+    const x = (s || "").toUpperCase();
+    if (x === "PENDING") return "Pending";
+    if (x === "CONFIRMED") return "Confirmed";
+    if (x === "CANCELLED") return "Cancelled";
+    if (x === "COMPLETED") return "Completed";
+    return s || "—";
+  };
+
+  const areaLabel = (a) => {
+    const x = (a || "").toLowerCase();
+    if (x === "floor1") return "Tầng 1";
+    if (x === "floor2") return "Tầng 2";
+    if (x === "floor3") return "Tầng 3";
+    if (x === "vip") return "VIP";
+    if (x === "outdoor") return "Outdoor";
+    return a || "—";
+  };
+
+  // ===== Modal helpers =====
+  const openModal = (el) => {
+    if (!el) return;
+    el.classList.remove("is-hidden");
+    el.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeModal = (el) => {
+    if (!el) return;
+    el.classList.add("is-hidden");
+    el.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  };
+
+  // close by backdrop / [data-close]
+  document.addEventListener("click", (e) => {
+    const closeBtn = e.target.closest("[data-close]");
+    if (closeBtn) {
+      const modal = e.target.closest(".myres-modal");
+      if (modal) closeModal(modal);
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    closeModal(cancelModal);
+    closeModal(viewModal);
+  });
+
+  // ===== Filter + sort =====
+  const getRows = () => $$(".myres-row", grid);
+
+  const rowMatches = (row) => {
+    const bucket = row.dataset.bucket || "";
+    if (bucket !== activeTab) return false;
+
+    const q = norm(searchInput?.value);
+    if (q) {
+      const hay = norm(
+        `${row.dataset.code} ${row.dataset.table} ${row.dataset.area} ${row.dataset.party} ${row.dataset.datetime}`
+      );
+      if (!hay.includes(q)) return false;
+    }
+
+    const s = (filterStatus?.value || "all").toLowerCase();
+    if (s !== "all" && norm(row.dataset.status) !== s) return false;
+
+    const a = (filterArea?.value || "all").toLowerCase();
+    if (a !== "all" && norm(row.dataset.area) !== a) return false;
+
+    return true;
+  };
+
+  const apply = () => {
+    const rows = getRows();
+
+    // sort visible rows by datetime
+    const sortMode = (sortBy?.value || "timeAsc");
+    const sorted = rows.slice().sort((r1, r2) => {
+      const t1 = Date.parse(r1.dataset.datetime || "") || 0;
+      const t2 = Date.parse(r2.dataset.datetime || "") || 0;
+      return sortMode === "timeDesc" ? (t2 - t1) : (t1 - t2);
+    });
+
+    // re-append in sorted order (keeps DOM stable)
+    sorted.forEach(r => grid.appendChild(r));
+
+    let visibleCount = 0;
+    rows.forEach((row) => {
+      const show = rowMatches(row);
+      row.style.display = show ? "" : "none";
+      if (show) visibleCount++;
+    });
+
+    if (countText) countText.textContent = String(visibleCount);
+    if (emptyState) emptyState.classList.toggle("is-hidden", visibleCount !== 0);
+  };
+
+  // ===== Tabs =====
+  const setTab = (tab) => {
+    activeTab = tab === "past" ? "past" : "upcoming";
+    tabs.forEach((b) => {
+      const on = b.dataset.tab === activeTab;
+      b.classList.toggle("is-active", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    apply();
+  };
+
+  tabs.forEach((b) => {
+    b.addEventListener("click", () => setTab(b.dataset.tab));
+  });
+
+  // ===== Controls events =====
+  searchInput?.addEventListener("input", apply);
+  filterStatus?.addEventListener("change", apply);
+  filterArea?.addEventListener("change", apply);
+  sortBy?.addEventListener("change", apply);
+
+  btnClearSearch?.addEventListener("click", () => {
+    if (searchInput) searchInput.value = "";
+    apply();
+    searchInput?.focus();
+  });
+
+  // ===== Row actions (event delegation) =====
+  grid.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-action]");
+    if (!btn) return;
+
+    const row = e.target.closest(".myres-row");
+    if (!row) return;
+
+    const action = btn.dataset.action;
+    const id = row.dataset.id;
+    const code = row.dataset.code;
+
+    if (action === "view") {
+      // fill view modal
+      vCode.textContent = code || "—";
+      vStatus.textContent = statusLabel(row.dataset.status);
+      vTable.textContent = row.dataset.table || "—";
+      vArea.textContent = areaLabel(row.dataset.area);
+      vGuests.textContent = `${row.dataset.party || "—"}`;
+      vTime.textContent = (row.dataset.datetime || "").replace("T", " • ") || "—";
+
+      const note = (row.dataset.note || "").trim();
+      if (note) {
+        vNoteWrap.style.display = "";
+        vNote.textContent = note;
+      } else {
+        vNoteWrap.style.display = "none";
+      }
+
+      // store for cancel from view
+      btnCancelFromView.dataset.id = id || "";
+      btnCancelFromView.dataset.code = code || "";
+
+      openModal(viewModal);
       return;
     }
 
-    let activeTab = "upcoming";
-    let pendingCancelCard = null;
-    let currentViewCard = null;
-
-    const toTs = (dt) => {
-      const t = new Date(dt + ":00").getTime();
-      return Number.isFinite(t) ? t : 0;
-    };
-
-    const canCancel = (card) => {
-      const status = (card.dataset.status || "").toUpperCase();
-      if (status === "CANCELLED" || status === "COMPLETED") return false;
-
-      const dt = card.dataset.datetime;
-      if (!dt) return false;
-
-      return (toTs(dt) - Date.now()) >= CANCEL_LEAD_MINUTES * 60 * 1000;
-    };
-
-    const matchesSearch = (card, q) => {
-      if (!q) return true;
-      q = q.toLowerCase();
-
-      const code = (card.dataset.code || "").toLowerCase();
-      const table = (card.dataset.table || "").toLowerCase();
-      const area = (card.dataset.area || "").toLowerCase();
-
-      return code.includes(q) || table.includes(q) || area.includes(q);
-    };
-
-    const getCancelBtn = (card) => $(".myres-actions button.btn-cancel", card);
-    const getViewBtn = (card) => $(".myres-actions a.btn-light", card);
-
-    const statusLabel = (st) => {
-      st = (st || "").toUpperCase();
-      const map = { PENDING: "Pending", CONFIRMED: "Confirmed", CANCELLED: "Cancelled", COMPLETED: "Completed" };
-      return map[st] || st || "—";
-    };
-
-    const areaLabel = (ar) => {
-      ar = (ar || "").toLowerCase();
-      const map = {
-        floor1: "Tầng 1",
-        floor2: "Tầng 2",
-        floor3: "Tầng 3",
-        vip: "VIP",
-        outdoor: "Outdoor",
-      };
-      return map[ar] || ar || "—";
-    };
-
-    const fmtTime = (dt) => (dt ? dt.replace("T", " • ") : "—");
-
-    const openModal = (modal) => {
-      if (!modal) return;
-      modal.classList.remove("is-hidden");
-      modal.setAttribute("aria-hidden", "false");
-    };
-
-    const closeModal = (modal) => {
-      if (!modal) return;
-      modal.classList.add("is-hidden");
-      modal.setAttribute("aria-hidden", "true");
-    };
-
-    const bindModalClose = (modal) => {
-      if (!modal) return;
-      modal.addEventListener("click", (e) => {
-        if (e.target.matches("[data-close]") || e.target.closest("[data-close]")) closeModal(modal);
-      });
-    };
-
-    bindModalClose(cancelModal);
-    bindModalClose(viewModal);
-
-    function apply() {
-      const q = (qInput.value || "").trim();
-      const st = (filterStatus.value || "all").toUpperCase();
-      const ar = (filterArea.value || "all").toLowerCase();
-      const sort = sortBy.value || "timeAsc";
-
-      const cards = $$(".myres-card", grid);
-      let visible = [];
-
-      for (const card of cards) {
-        const bucket = (card.dataset.bucket || "upcoming").toLowerCase();
-        const status = (card.dataset.status || "").toUpperCase();
-        const area = (card.dataset.area || "").toLowerCase();
-
-        let ok = true;
-        if (bucket !== activeTab) ok = false;
-        if (st !== "ALL" && status !== st) ok = false;
-        if (ar !== "all" && area !== ar) ok = false;
-        if (!matchesSearch(card, q)) ok = false;
-
-        card.style.display = ok ? "" : "none";
-        if (ok) visible.push(card);
-      }
-
-      visible.sort((a, b) => {
-        const ta = toTs(a.dataset.datetime || "1970-01-01T00:00");
-        const tb = toTs(b.dataset.datetime || "1970-01-01T00:00");
-        return sort === "timeAsc" ? ta - tb : tb - ta;
-      });
-      visible.forEach((c) => grid.appendChild(c));
-
-      if (countText) countText.textContent = String(visible.length);
-      if (emptyState) emptyState.classList.toggle("is-hidden", visible.length !== 0);
-
-      visible.forEach((card) => {
-        const btn = getCancelBtn(card);
-        if (!btn) return;
-
-        const disabled = !canCancel(card);
-        btn.disabled = disabled;
-        btn.title = disabled
-          ? `Chỉ hủy khi còn ≥ ${CANCEL_LEAD_MINUTES} phút hoặc không ở trạng thái Completed/Cancelled.`
-          : "Hủy đặt";
-      });
-    }
-
-    if (tabs.length) {
-      tabs.forEach((t) => t.classList.remove("is-active"));
-      const first = tabs.find((t) => (t.dataset.tab || "") === "upcoming") || tabs[0];
-      first.classList.add("is-active");
-      activeTab = (first.dataset.tab || "upcoming").toLowerCase();
-
-      tabs.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          tabs.forEach((b) => b.classList.remove("is-active"));
-          btn.classList.add("is-active");
-          activeTab = (btn.dataset.tab || "upcoming").toLowerCase();
-          apply();
-        });
-      });
-    }
-
-    qInput.addEventListener("input", apply);
-    filterStatus.addEventListener("change", apply);
-    filterArea.addEventListener("change", apply);
-    sortBy.addEventListener("change", apply);
-
-    const openCancelForCard = (card) => {
-      if (!card) return;
-
-      if (!canCancel(card)) return;
-
-      pendingCancelCard = card;
-      const code = card.dataset.code || "—";
-      if (cancelCode) cancelCode.textContent = code;
+    if (action === "cancel") {
+      pendingCancel = { id, code };
+      cancelCodeEl.textContent = code || "—";
       openModal(cancelModal);
-    };
+      return;
+    }
+  });
 
-    grid.addEventListener("click", (e) => {
-      const btn = e.target.closest(".myres-actions button.btn-cancel");
-      if (!btn) return;
+  // cancel from view -> open cancel modal
+  btnCancelFromView?.addEventListener("click", () => {
+    const id = btnCancelFromView.dataset.id;
+    const code = btnCancelFromView.dataset.code;
+    closeModal(viewModal);
+    pendingCancel = { id, code };
+    cancelCodeEl.textContent = code || "—";
+    openModal(cancelModal);
+  });
 
-      const card = btn.closest(".myres-card");
-      if (!card) return;
+  // confirm cancel (demo)
+  btnConfirmCancel?.addEventListener("click", async () => {
+    // TODO: bạn sẽ thay bằng fetch POST /reservations/{id}/cancel hoặc form submit
+    // demo UI: set status cancelled + ẩn nút hủy
+    const row = getRows().find(r => r.dataset.id === pendingCancel.id);
+    if (row) {
+      row.dataset.status = "CANCELLED";
 
-      if (btn.disabled) return;
-      openCancelForCard(card);
-    });
-
-    btnConfirmCancel?.addEventListener("click", () => {
-      if (!pendingCancelCard) return;
-
-      pendingCancelCard.dataset.status = "CANCELLED";
-      const badge = $(".myres-card-head span.btn", pendingCancelCard);
-      if (badge) {
-        badge.className = "btn btn-cancel";
-        badge.textContent = "Cancelled";
+      // update pill
+      const pill = $(".myres-pill", row);
+      if (pill) {
+        pill.className = "myres-pill is-cancelled";
+        pill.textContent = "Cancelled";
       }
+    }
 
-      const btn = getCancelBtn(pendingCancelCard);
-      if (btn) btn.disabled = true;
-
-      pendingCancelCard = null;
-      closeModal(cancelModal);
-      apply();
-
-      if (currentViewCard && currentViewCard === pendingCancelCard) {
-        fillViewModal(currentViewCard);
-      }
-    });
-
-    const fillViewModal = (card) => {
-      if (!card) return;
-
-      if (vCode) vCode.textContent = card.dataset.code || "—";
-      if (vStatus) vStatus.textContent = statusLabel(card.dataset.status);
-      if (vTable) vTable.textContent = card.dataset.table || "—";
-      if (vArea) vArea.textContent = areaLabel(card.dataset.area);
-      if (vGuests) vGuests.textContent = card.dataset.party || "—";
-      if (vTime) vTime.textContent = fmtTime(card.dataset.datetime);
-
-      const note = card.querySelector(".myres-note span")?.textContent || "";
-      const noteTa = $("textarea", viewModal);
-      if (noteTa) noteTa.value = note;
-
-      if (btnCancelFromView) {
-        const st = (card.dataset.status || "").toUpperCase();
-        const hide = st === "CANCELLED" || st === "COMPLETED";
-        btnCancelFromView.classList.toggle("is-hidden", hide);
-        btnCancelFromView.disabled = !canCancel(card);
-        btnCancelFromView.title = btnCancelFromView.disabled
-          ? `Chỉ hủy khi còn ≥ ${CANCEL_LEAD_MINUTES} phút hoặc không ở trạng thái Completed/Cancelled.`
-          : "Hủy đặt";
-      }
-    };
-
-    grid.addEventListener("click", (e) => {
-      const a = e.target.closest(".myres-actions a.btn-light");
-      if (!a) return;
-
-      e.preventDefault();
-
-      const card = a.closest(".myres-card");
-      if (!card) return;
-
-      currentViewCard = card;
-      fillViewModal(card);
-      openModal(viewModal);
-    });
-
-    btnCancelFromView?.addEventListener("click", (e) => {
-      e.preventDefault();
-      if (!currentViewCard) return;
-
-      closeModal(viewModal);
-      openCancelForCard(currentViewCard);
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key !== "Escape") return;
-      if (cancelModal && !cancelModal.classList.contains("is-hidden")) closeModal(cancelModal);
-      if (viewModal && !viewModal.classList.contains("is-hidden")) closeModal(viewModal);
-      pendingCancelCard = null;
-    });
-
+    closeModal(cancelModal);
     apply();
   });
+
+  // init
+  setTab("upcoming");
 })();

@@ -4,7 +4,7 @@
    =============================== */
 
 /* ===== anti horizontal scroll ===== */
-html, body{ overflow-x: hidden; }
+html, body { overflow-x: hidden; }
 
 /* ===== SHELL ===== */
 .tm-shell{
@@ -12,7 +12,6 @@ html, body{ overflow-x: hidden; }
   grid-template-columns: 1.35fr 0.65fr;
   gap: 18px;
   align-items: stretch;
-
   max-width: 100%;
   overflow-x: hidden;
 }
@@ -155,8 +154,6 @@ html, body{ overflow-x: hidden; }
   color: var(--text-strong);
 }
 
-/* ✅ removed .tm-note entirely */
-
 /* ===== AREAS ===== */
 .tm-areas{
   display:flex;
@@ -212,7 +209,7 @@ html, body{ overflow-x: hidden; }
 .tm-table{
   appearance: none;
   border: 1px solid var(--border-soft);
-  background: var(--surface-1);
+  background: var(--surface-1); /* default */
   color: var(--text-normal);
   border-radius: 18px;
   padding: 12px 10px;
@@ -223,7 +220,7 @@ html, body{ overflow-x: hidden; }
   flex-direction: column;
   gap: 6px;
 
-  /* ✅ no transform animation */
+  /* giữ transition như bạn đang có (không thêm hiệu ứng mới) */
   transition: border-color .12s ease, background .12s ease, box-shadow .12s ease;
 }
 
@@ -233,9 +230,7 @@ html, body{ overflow-x: hidden; }
   background: var(--surface-2);
 }
 
-.tm-table:focus{
-  outline: none;
-}
+.tm-table:focus{ outline: none; }
 
 .tm-table:focus-visible{
   border-color: var(--accent-border);
@@ -259,22 +254,33 @@ html, body{ overflow-x: hidden; }
   color: var(--text-muted);
 }
 
-/* statuses */
-.tm-table.is-available{ border-color: var(--accent-border-soft); }
-.tm-table.is-vip{
-  border-color: var(--accent-border);
-  background: var(--accent-tint);
-}
-.tm-table.is-reserved{
-  border-color: var(--border-soft);
-  background: rgba(255,255,255,0.02);
-  opacity: .7;
+/* ===========================
+   ✅ Status backgrounds
+   =========================== */
+
+/* Còn trống */
+.tm-table.is-available{
+  border-color: var(--accent-border-soft);
+  background: var(--tm-bg-available);
 }
 
-/* selected */
+/* VIP (khác nhẹ so với available) */
+.tm-table.is-vip{
+  border-color: var(--accent-border);
+  background: var(--tm-bg-vip);
+}
+
+/* Đã đặt */
+.tm-table.is-reserved{
+  border-color: var(--border-soft);
+  background: var(--tm-bg-reserved);
+  opacity: .72;
+}
+
+/* Đang chọn */
 .tm-table.is-selected{
   border-color: var(--accent-border-active);
-  background: rgba(255,255,255,0.10);
+  background: var(--tm-bg-selected);
   box-shadow: 0 0 0 4px var(--ring-accent);
 }
 
@@ -283,14 +289,6 @@ html, body{ overflow-x: hidden; }
   position: sticky;
   top: 96px;
 }
-
-/* Nếu bạn muốn drawer không "đi theo" khi scroll, bật block dưới */
-/*
-.tm-drawer{
-  position: static;
-  top: auto;
-}
-*/
 
 .tm-drawer-card{
   background: var(--surface-1);

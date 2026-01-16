@@ -73,18 +73,25 @@ document.addEventListener("DOMContentLoaded", () => {
       fpSubmitBtn.textContent = "Đang gửi...";
     }
 
-    // ✅ MOCK delay 600ms cho giống gửi thật
-    await new Promise((r) => setTimeout(r, 600));
+  try {
+      const response = await fetch('/dinio/api/forgot-password/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email })
+      });
+      const result = await response.text();
 
-    // giả lập “gửi OTP OK”
-    closeModal();
-
-    // otp.js sẽ expose hàm này
-    if (typeof window.openOtpModal === "function") {
-      window.openOtpModal(email);
-    } else {
-      alert("Chưa load otp.js hoặc thiếu #fpOtpModal");
-    }
+      if (response.ok) {
+          closeModal();
+          if (typeof window.openOtpModal === "function") {
+              window.openOtpModal(email);
+          }
+      } else {
+          showAlert(result, true); 
+      }
+  } catch (error) {
+      showAlert("Lỗi kết nối server.", true);
+  }
 
     if (fpSubmitBtn) {
       fpSubmitBtn.disabled = false;

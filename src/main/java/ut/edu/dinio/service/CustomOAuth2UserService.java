@@ -1,20 +1,26 @@
 package ut.edu.dinio.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
+import jakarta.servlet.http.HttpSession;
 import ut.edu.dinio.pojo.Customer;
 import ut.edu.dinio.repositories.CustomerRepository;
-import java.util.Optional;
 
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private HttpSession session;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -39,12 +45,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             newCustomer.setFullName(name);
             newCustomer.setPhone(provider.toUpperCase() + "_ACCOUNT"); 
             newCustomer.setPasswordHash("$2a$10$DUMMYPASSWORD_DO_NOT_USE"); 
-            
             customerRepository.save(newCustomer);
+            session.setAttribute("currentUser", newCustomer);
         } else {
             Customer existingCustomer = customerOpt.get();
             existingCustomer.setFullName(name);
             customerRepository.save(existingCustomer);
+            session.setAttribute("currentUser", existingCustomer);
         }
 
         return oauth2User;

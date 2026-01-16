@@ -1,5 +1,6 @@
 package ut.edu.dinio.service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,28 @@ public class CustomerService implements UserDetailsService {
             }
         }
         return null;
+    }
+
+    public String registerCustomer(String fullName, String identifier, String password) {
+        if (customerRepository.findByIdentifier(identifier).isPresent()) {
+            return "Tài khoản (Email hoặc Số điện thoại) đã tồn tại!";
+        }
+
+        Customer customer = new Customer();
+        customer.setFullName(fullName);
+        
+        if (identifier.contains("@")) {
+            customer.setEmail(identifier);
+            customer.setPhone("N/A"); 
+        } else {
+            customer.setPhone(identifier);
+        }
+        
+        customer.setPasswordHash(passwordEncoder.encode(password));
+        customer.setCreatedAt(LocalDateTime.now());
+
+        customerRepository.save(customer);
+        return "success";
     }
 
     public Customer findByEmail(String email) {

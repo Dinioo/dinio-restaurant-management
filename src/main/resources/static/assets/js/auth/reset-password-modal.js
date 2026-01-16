@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggle2 = document.getElementById("fpConfirmPwToggle");
 
   let currentEmail = "";
+  let currentOtp = "";
 
   const showAlert = (msg, isError = true) => {
     if (!alertBox) return;
@@ -29,8 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
     alertBox.classList.remove("error");
   };
 
-  const openResetModal = (email) => {
+  const openResetModal = (email, otp) => {
     currentEmail = email || "";
+    currentOtp = otp || "";
     if (emailPreview) emailPreview.textContent = email || "email";
 
     modal.classList.remove("is-hidden");
@@ -97,21 +99,35 @@ document.addEventListener("DOMContentLoaded", () => {
       submitBtn.textContent = "Đang xử lý...";
     }
 
-    await new Promise(r => setTimeout(r, 600));
+    try {
+      const response = await fetch('/dinio/api/forgot-password/reset', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+              email: currentEmail, 
+              otp: currentOtp, 
+              newPassword: p1 
+          })
+      });
+      const result = await response.text();
 
-    showAlert("Đổi mật khẩu thành công! (mock)", false);
-
-    setTimeout(() => {
-      closeResetModal();
-      window.location.href = "/login";
-    }, 400);
+      if (response.ok) {
+          showAlert("Đổi mật khẩu thành công!", false);
+          setTimeout(() => {
+              closeResetModal();
+              window.location.href = "/login";
+          }, 1500);
+      } else {
+          showAlert(result, true);
+      }
+  } catch (error) {
+      showAlert("Lỗi hệ thống.", true);
+  }
 
     if (submitBtn) {
       submitBtn.disabled = false;
       submitBtn.style.opacity = "1";
       submitBtn.textContent = original;
     }
-
-    console.log("Reset password for:", currentEmail, "newPw:", p1);
   });
 });

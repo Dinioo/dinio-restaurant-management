@@ -89,18 +89,23 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    await new Promise((r) => setTimeout(r, 500));
-    if (otp === "123456") {
-      showAlert("Xác minh OTP thành công! (mock)", false);
+    try {
+      const response = await fetch('/dinio/api/forgot-password/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: currentEmail, otp: otp })
+      });
+      const result = await response.text();
 
-      setTimeout(() => {
-        window.closeOtpModal?.();
-        window.openResetModal?.(currentEmail);
-      }, 350);
-
-    } else {
-      showAlert("OTP không đúng (mock). Thử 123456.", true);
-    }
+      if (response.ok) {
+          window.closeOtpModal?.();
+          window.openResetModal?.(currentEmail, otp); 
+      } else {
+          showAlert(result, true);
+      }
+  } catch (error) {
+      showAlert("Lỗi hệ thống.", true);
+  }
 
   });
 

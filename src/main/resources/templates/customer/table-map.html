@@ -2,508 +2,497 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DINIO - Book a Table</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DINIO - Book a Table</title>
 
-    <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
-    <link rel="stylesheet" th:href="@{/assets/css/customer/table-map.css}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <script th:src="@{/assets/js/header-dropdown.js}"></script>
-    <script th:src="@{/assets/js/customer/preorder-after-reservation-modal.js}" defer></script>
-    <script th:src="@{/assets/js/customer/reservation-submit-popup.js}" defer></script>
-
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/customer/table-map.css}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script th:src="@{/assets/js/header-dropdown.js}"></script>
+  <script th:src="@{/assets/js/customer/preorder-after-reservation-modal.js}" defer></script>
+  <script th:src="@{/assets/js/customer/reservation-submit-popup.js}" defer></script>
 </head>
 
 <body>
-    <div th:replace="~{fragments/header :: header}"></div>
-    <div th:replace="~{fragments/preorder-after-reservation-modal :: preorderAfterReservationModal}"></div>
+  <div th:replace="~{fragments/header :: header}"></div>
+  <div th:replace="~{fragments/preorder-after-reservation-modal :: preorderAfterReservationModal}"></div>
 
+  <main class="container">
 
-    <main class="container">
+    <section id="tablemap-head" class="section">
+      <div class="menu-container">
+        <div class="menu-head-card">
+          <p class="section-eyebrow">RESERVATION</p>
+          <h2 class="section-title">Lựa chọn bàn của bạn</h2>
+          <p class="section-subtitle">
+            Chọn khu vực, khung giờ và bàn lý tưởng cho trải nghiệm ẩm thực của bạn.
+          </p>
+        </div>
+      </div>
+    </section>
 
-        <section id="tablemap-head" class="section">
-            <div class="menu-container">
-                <div class="menu-head-card">
-                    <p class="section-eyebrow">RESERVATION</p>
-                    <h2 class="section-title">Lựa chọn bàn của bạn</h2>
-                    <p class="section-subtitle">
-                        Chọn khu vực, khung giờ và bàn lý tưởng cho trải nghiệm ẩm thực của bạn.
-                    </p>
-                </div>
+    <section id="tablemap-tools" class="section">
+      <div class="menu-container">
+        <div class="tm-toolbar">
+
+          <div class="tm-filters">
+            <div class="tm-field">
+              <label for="resDate">Ngày</label>
+              <input id="resDate" type="date" />
             </div>
-        </section>
 
-        <section id="tablemap-tools" class="section">
-            <div class="menu-container">
-                <div class="tm-toolbar">
+            <div class="tm-field">
+              <label for="resTime">Thời gian</label>
+              <input id="resTime" type="time" />
+            </div>
 
-                    <div class="tm-filters">
-                        <div class="tm-field">
-                            <label for="resDate">Ngày</label>
-                            <input id="resDate" type="date" />
-                        </div>
+            <div class="tm-field">
+              <label for="resGuests">Số khách</label>
+              <select id="resGuests">
+                <option value="1">1</option>
+                <option value="2" selected>2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8+</option>
+              </select>
+            </div>
 
-                        <div class="tm-field">
-                            <label for="resTime">Thời gian</label>
-                            <input id="resTime" type="time" />
-                        </div>
+            <div class="tm-field">
+              <label for="resArea">Khu vực</label>
+              <select id="resArea" name="area">
+                <option value="all" selected>Tất cả</option>
+                <option value="floor1">Tầng 1</option>
+                <option value="floor2">Tầng 2</option>
+                <option value="floor3">Tầng 3</option>
+                <option value="vip">VIP</option>
+                <option value="outdoor">Outdoor</option>
+              </select>
+            </div>
+          </div>
 
-                        <div class="tm-field">
-                            <label for="resGuests">Số khách</label>
-                            <select id="resGuests">
-                                <option value="1">1</option>
-                                <option value="2" selected>2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="7">7</option>
-                                <option value="8">8+</option>
-                            </select>
-                        </div>
+          <div class="tm-toolbar-right">
+            <div class="tm-legend" aria-label="Legend">
+              <span class="lg"><i class="dot is-available"></i> Còn trống</span>
+              <span class="lg"><i class="dot is-reserved"></i> Đã đặt</span>
+              <span class="lg"><i class="dot is-vip"></i> VIP</span>
+              <span class="lg"><i class="dot is-selected"></i> Đang chọn</span>
+            </div>
+          </div>
 
-                        <div class="tm-field">
-                            <label for="resArea">Khu vực</label>
+        </div>
+      </div>
+    </section>
 
-                            <select id="resArea" name="area">
-                                <option value="all" selected>Tất cả</option>
-                                <option value="floor1">Tầng 1</option>
-                                <option value="floor2">Tầng 2</option>
-                                <option value="floor3">Tầng 3</option>
-                                <option value="vip">VIP</option>
-                                <option value="outdoor">Outdoor</option>
-                            </select>
+    <section id="tablemap-layout" class="section">
+      <div class="menu-container">
 
-                        </div>
+        <div class="tm-shell">
+
+          <div class="tm-map" aria-label="Table map">
+            <div class="tm-map-head">
+              <div>
+                <p class="tm-kicker">Floor plan</p>
+                <h3 class="tm-title">Tình trạng bàn</h3>
+              </div>
+              <p class="tm-note">Vui lòng chọn số khách để gợi ý bàn phù hợp.</p>
+            </div>
+
+            <div class="tm-areas" id="tmAreas">
+
+              <!-- FLOOR 1 -->
+              <section class="tm-area" data-area="floor1">
+                <div class="tm-area-head">
+                  <h4>Tầng 1</h4>
+                  <span class="tm-area-sub">Bar • Sôi động</span>
+                </div>
+
+                <div class="tm-grid">
+                  <button class="tm-table" type="button" data-area="floor1" data-id="T01" data-code="T01" data-seats="2"
+                    data-status="AVAILABLE">
+                    <span class="t-code">T01</span><span class="t-meta">2 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor1" data-id="T02" data-code="T02" data-seats="4"
+                    data-status="RESERVED">
+                    <span class="t-code">T02</span><span class="t-meta">4 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor1" data-id="T03" data-code="T03" data-seats="4"
+                    data-status="AVAILABLE">
+                    <span class="t-code">T03</span><span class="t-meta">4 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor1" data-id="T04" data-code="T04" data-seats="4"
+                    data-status="AVAILABLE">
+                    <span class="t-code">T04</span><span class="t-meta">4 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor1" data-id="T05" data-code="T05" data-seats="2"
+                    data-status="AVAILABLE">
+                    <span class="t-code">T05</span><span class="t-meta">2 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor1" data-id="T06" data-code="T06" data-seats="2"
+                    data-status="RESERVED">
+                    <span class="t-code">T06</span><span class="t-meta">2 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor1" data-id="T07" data-code="T07" data-seats="4"
+                    data-status="AVAILABLE">
+                    <span class="t-code">T07</span><span class="t-meta">4 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor1" data-id="T08" data-code="T08" data-seats="6"
+                    data-status="AVAILABLE">
+                    <span class="t-code">T08</span><span class="t-meta">6 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor1" data-id="T09" data-code="T09" data-seats="2"
+                    data-status="RESERVED">
+                    <span class="t-code">T09</span><span class="t-meta">2 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor1" data-id="T10" data-code="T10" data-seats="4"
+                    data-status="AVAILABLE">
+                    <span class="t-code">T10</span><span class="t-meta">4 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor1" data-id="T11" data-code="T11" data-seats="2"
+                    data-status="AVAILABLE">
+                    <span class="t-code">T11</span><span class="t-meta">2 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor1" data-id="T12" data-code="T12" data-seats="6"
+                    data-status="AVAILABLE">
+                    <span class="t-code">T12</span><span class="t-meta">6 chỗ</span>
+                  </button>
+                </div>
+              </section>
+
+              <!-- FLOOR 2 -->
+              <section class="tm-area" data-area="floor2">
+                <div class="tm-area-head">
+                  <h4>Tầng 2</h4>
+                  <span class="tm-area-sub">Center • Cân bằng</span>
+                </div>
+
+                <div class="tm-grid">
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F201" data-code="F201" data-seats="2"
+                    data-status="AVAILABLE">
+                    <span class="t-code">F201</span><span class="t-meta">2 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F202" data-code="F202" data-seats="4"
+                    data-status="AVAILABLE">
+                    <span class="t-code">F202</span><span class="t-meta">4 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F203" data-code="F203" data-seats="4"
+                    data-status="RESERVED">
+                    <span class="t-code">F203</span><span class="t-meta">4 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F204" data-code="F204" data-seats="6"
+                    data-status="AVAILABLE">
+                    <span class="t-code">F204</span><span class="t-meta">6 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F205" data-code="F205" data-seats="2"
+                    data-status="AVAILABLE">
+                    <span class="t-code">F205</span><span class="t-meta">2 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F206" data-code="F206" data-seats="8"
+                    data-status="AVAILABLE">
+                    <span class="t-code">F206</span><span class="t-meta">8 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F207" data-code="F207" data-seats="6"
+                    data-status="RESERVED">
+                    <span class="t-code">F207</span><span class="t-meta">6 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F208" data-code="F208" data-seats="4"
+                    data-status="AVAILABLE">
+                    <span class="t-code">F208</span><span class="t-meta">4 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F209" data-code="F209" data-seats="2"
+                    data-status="AVAILABLE">
+                    <span class="t-code">F209</span><span class="t-meta">2 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F210" data-code="F210" data-seats="4"
+                    data-status="AVAILABLE">
+                    <span class="t-code">F210</span><span class="t-meta">4 chỗ</span>
+                  </button>
+                </div>
+              </section>
+
+              <!-- FLOOR 3 -->
+              <section class="tm-area" data-area="floor3">
+                <div class="tm-area-head">
+                  <h4>Tầng 3</h4>
+                  <span class="tm-area-sub">Yên tĩnh • Tầm nhìn đẹp</span>
+                </div>
+
+                <div class="tm-grid">
+                  <button class="tm-table" type="button" data-area="floor3" data-id="F301" data-code="F301" data-seats="2"
+                    data-status="AVAILABLE">
+                    <span class="t-code">F301</span><span class="t-meta">2 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor3" data-id="F302" data-code="F302" data-seats="2"
+                    data-status="AVAILABLE">
+                    <span class="t-code">F302</span><span class="t-meta">2 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor3" data-id="F303" data-code="F303" data-seats="4"
+                    data-status="RESERVED">
+                    <span class="t-code">F303</span><span class="t-meta">4 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor3" data-id="F304" data-code="F304" data-seats="4"
+                    data-status="AVAILABLE">
+                    <span class="t-code">F304</span><span class="t-meta">4 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor3" data-id="F305" data-code="F305" data-seats="6"
+                    data-status="AVAILABLE">
+                    <span class="t-code">F305</span><span class="t-meta">6 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor3" data-id="F306" data-code="F306" data-seats="6"
+                    data-status="RESERVED">
+                    <span class="t-code">F306</span><span class="t-meta">6 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="floor3" data-id="F307" data-code="F307" data-seats="8"
+                    data-status="AVAILABLE">
+                    <span class="t-code">F307</span><span class="t-meta">8 chỗ</span>
+                  </button>
+                </div>
+              </section>
+
+              <!-- VIP -->
+              <section class="tm-area" data-area="vip">
+                <div class="tm-area-head">
+                  <h4>VIP</h4>
+                  <span class="tm-area-sub">Riêng tư • Ánh sáng ấm</span>
+                </div>
+
+                <div class="tm-grid">
+                  <button class="tm-table" type="button" data-area="vip" data-id="V01" data-code="V01" data-seats="4"
+                    data-status="VIP_AVAILABLE">
+                    <span class="t-code">V01</span><span class="t-meta">4 chỗ • VIP</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="vip" data-id="V02" data-code="V02" data-seats="4"
+                    data-status="VIP_AVAILABLE">
+                    <span class="t-code">V02</span><span class="t-meta">4 chỗ • VIP</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="vip" data-id="V03" data-code="V03" data-seats="8"
+                    data-status="VIP_AVAILABLE">
+                    <span class="t-code">V03</span><span class="t-meta">8 chỗ • VIP</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="vip" data-id="V04" data-code="V04" data-seats="10"
+                    data-status="VIP_AVAILABLE">
+                    <span class="t-code">V04</span><span class="t-meta">10 chỗ • VIP</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="vip" data-id="V05" data-code="V05" data-seats="10"
+                    data-status="VIP_AVAILABLE">
+                    <span class="t-code">V05</span><span class="t-meta">10 chỗ • VIP</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="vip" data-id="V06" data-code="V06" data-seats="10"
+                    data-status="VIP_AVAILABLE">
+                    <span class="t-code">V06</span><span class="t-meta">10 chỗ • VIP</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="vip" data-id="V07" data-code="V07" data-seats="10"
+                    data-status="VIP_AVAILABLE">
+                    <span class="t-code">V07</span><span class="t-meta">10 chỗ • VIP</span>
+                  </button>
+                </div>
+              </section>
+
+              <!-- OUTDOOR -->
+              <section class="tm-area" data-area="outdoor">
+                <div class="tm-area-head">
+                  <h4>Outdoor</h4>
+                  <span class="tm-area-sub">Gió trời • Thư giãn</span>
+                </div>
+
+                <div class="tm-grid">
+                  <button class="tm-table" type="button" data-area="outdoor" data-id="O01" data-code="O01" data-seats="2"
+                    data-status="AVAILABLE">
+                    <span class="t-code">O01</span><span class="t-meta">2 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="outdoor" data-id="O02" data-code="O02" data-seats="4"
+                    data-status="AVAILABLE">
+                    <span class="t-code">O02</span><span class="t-meta">4 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="outdoor" data-id="O03" data-code="O03" data-seats="4"
+                    data-status="RESERVED">
+                    <span class="t-code">O03</span><span class="t-meta">4 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="outdoor" data-id="O04" data-code="O04" data-seats="6"
+                    data-status="AVAILABLE">
+                    <span class="t-code">O04</span><span class="t-meta">6 chỗ</span>
+                  </button>
+
+                  <button class="tm-table" type="button" data-area="outdoor" data-id="O05" data-code="O05" data-seats="2"
+                    data-status="AVAILABLE">
+                    <span class="t-code">O05</span><span class="t-meta">2 chỗ</span>
+                  </button>
+                </div>
+              </section>
+
+            </div>
+          </div>
+
+          <aside class="tm-drawer" aria-label="Booking panel">
+            <div class="tm-drawer-card">
+              <div class="tm-drawer-head">
+                <div>
+                  <p class="tm-drawer-kicker">Thông tin đặt bàn</p>
+                  <h3 class="tm-drawer-title">REVIEW</h3>
+                </div>
+
+                <button class="icon-btn" type="button" id="btnClearPick" title="Clear selection" aria-label="Clear">
+                  <i class="fa-solid fa-rotate-left"></i>
+                </button>
+              </div>
+
+              <div class="tm-picked">
+                <div class="pick-row"><span class="pick-label">Table</span><b id="pickTable">—</b></div>
+                <div class="pick-row"><span class="pick-label">Area</span><b id="pickArea">—</b></div>
+                <div class="pick-row"><span class="pick-label">Seats</span><b id="pickSeats">—</b></div>
+                <div class="pick-row"><span class="pick-label">Time</span><b id="pickTime">—</b></div>
+              </div>
+
+              <div class="tm-divider"></div>
+
+              <div class="tm-mode" role="tablist" aria-label="Reservation mode">
+                <button type="button" class="tm-mode-btn is-active" data-mode="self" role="tab" aria-selected="true">
+                  Đặt bàn
+                </button>
+                <button type="button" class="tm-mode-btn" data-mode="other" role="tab" aria-selected="false">
+                  Đặt hộ
+                </button>
+                <input type="hidden" name="bookingMode" id="bookingMode" value="self" />
+              </div>
+
+              <form class="tm-form" method="post" action="/reservations" id="reserveForm">
+                <input type="hidden" name="tableId" id="fTableId" />
+                <input type="hidden" name="area" id="fArea" />
+                <input type="hidden" name="date" id="fDate" />
+                <input type="hidden" name="time" id="fTime" />
+                <input type="hidden" name="partySize" id="fGuests" />
+
+                <div class="tm-panel" data-panel="self">
+                  <div class="tm-field">
+                    <label for="fullName">Họ và tên *</label>
+                    <input id="fullName" name="fullName" type="text" placeholder="" required />
+                  </div>
+
+                  <div class="tm-field">
+                    <label for="phone">SĐT *</label>
+                    <input id="phone" name="phone" type="tel" placeholder="" required />
+                  </div>
+
+                  <div class="tm-field">
+                    <label for="email">Email</label>
+                    <input id="email" name="email" type="email" placeholder="" />
+                  </div>
+
+                  <div class="tm-field">
+                    <label for="note">Ghi chú</label>
+                    <textarea id="note" name="note" rows="3" placeholder=""></textarea>
+                  </div>
+                </div>
+
+                <div class="tm-panel is-hidden" data-panel="other">
+                  <div class="tm-slab">
+                    <div class="tm-slab-title">
+                      <i class="fa-solid fa-user"></i>
+                      <span>Thông tin người đặt</span>
                     </div>
 
-                    <div class="tm-toolbar-right">
-                        <div class="tm-legend" aria-label="Legend">
-                            <span class="lg"><i class="dot is-available"></i> Còn trống</span>
-                            <span class="lg"><i class="dot is-reserved"></i> Đã đặt</span>
-                            <span class="lg"><i class="dot is-vip"></i> VIP</span>
-                            <span class="lg"><i class="dot is-selected"></i> Đang chọn</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="tablemap-layout" class="section">
-            <div class="menu-container">
-
-                <div class="tm-shell">
-
-                    <div class="tm-map" aria-label="Table map">
-
-                        <div class="tm-map-head">
-                            <div>
-                                <p class="tm-kicker">Floor plan</p>
-                                <h3 class="tm-title">Tình trạng bàn</h3>
-                            </div>
-                            <p class="tm-note">Vui lòng chọn số khách để gợi ý bàn phù hợp.</p>
-                        </div>
-
-                        <div class="tm-areas" id="tmAreas">
-
-                            <section class="tm-area" data-area="floor1">
-                                <div class="tm-area-head">
-                                    <h4>Tầng 1</h4>
-                                    <span class="tm-area-sub">Bar • Sôi động</span>
-                                </div>
-
-                                <div class="tm-grid">
-                                    <button class="tm-table" type="button" data-area="floor1" data-id="T01"
-                                        data-code="T01" data-seats="2" data-status="AVAILABLE">
-                                        <span class="t-code">T01</span><span class="t-meta">2 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor1" data-id="T02"
-                                        data-code="T02" data-seats="4" data-status="RESERVED">
-                                        <span class="t-code">T02</span><span class="t-meta">4 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor1" data-id="T03"
-                                        data-code="T03" data-seats="4" data-status="AVAILABLE">
-                                        <span class="t-code">T03</span><span class="t-meta">4 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor1" data-id="T04"
-                                        data-code="T04" data-seats="4" data-status="AVAILABLE">
-                                        <span class="t-code">T04</span><span class="t-meta">4 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor1" data-id="T05"
-                                        data-code="T05" data-seats="2" data-status="AVAILABLE">
-                                        <span class="t-code">T05</span><span class="t-meta">2 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor1" data-id="T06"
-                                        data-code="T06" data-seats="2" data-status="RESERVED">
-                                        <span class="t-code">T06</span><span class="t-meta">2 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor1" data-id="T07"
-                                        data-code="T07" data-seats="4" data-status="AVAILABLE">
-                                        <span class="t-code">T07</span><span class="t-meta">4 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor1" data-id="T08"
-                                        data-code="T08" data-seats="6" data-status="AVAILABLE">
-                                        <span class="t-code">T08</span><span class="t-meta">6 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor1" data-id="T09"
-                                        data-code="T09" data-seats="2" data-status="RESERVED">
-                                        <span class="t-code">T09</span><span class="t-meta">2 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor1" data-id="T10"
-                                        data-code="T10" data-seats="4" data-status="AVAILABLE">
-                                        <span class="t-code">T10</span><span class="t-meta">4 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor1" data-id="T11"
-                                        data-code="T11" data-seats="2" data-status="AVAILABLE">
-                                        <span class="t-code">T11</span><span class="t-meta">2 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor1" data-id="T12"
-                                        data-code="T12" data-seats="6" data-status="AVAILABLE">
-                                        <span class="t-code">T12</span><span class="t-meta">6 chỗ</span>
-                                    </button>
-                                </div>
-                            </section>
-
-                            <section class="tm-area" data-area="floor2">
-                                <div class="tm-area-head">
-                                    <h4>Tầng 2</h4>
-                                    <span class="tm-area-sub">Center • Cân bằng</span>
-                                </div>
-
-                                <div class="tm-grid">
-                                    <button class="tm-table" type="button" data-area="floor2" data-id="F201"
-                                        data-code="F201" data-seats="2" data-status="AVAILABLE">
-                                        <span class="t-code">F201</span><span class="t-meta">2 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor2" data-id="F202"
-                                        data-code="F202" data-seats="4" data-status="AVAILABLE">
-                                        <span class="t-code">F202</span><span class="t-meta">4 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor2" data-id="F203"
-                                        data-code="F203" data-seats="4" data-status="RESERVED">
-                                        <span class="t-code">F203</span><span class="t-meta">4 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor2" data-id="F204"
-                                        data-code="F204" data-seats="6" data-status="AVAILABLE">
-                                        <span class="t-code">F204</span><span class="t-meta">6 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor2" data-id="F205"
-                                        data-code="F205" data-seats="2" data-status="AVAILABLE">
-                                        <span class="t-code">F205</span><span class="t-meta">2 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor2" data-id="F206"
-                                        data-code="F206" data-seats="8" data-status="AVAILABLE">
-                                        <span class="t-code">F206</span><span class="t-meta">8 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor2" data-id="F207"
-                                        data-code="F207" data-seats="6" data-status="RESERVED">
-                                        <span class="t-code">F207</span><span class="t-meta">6 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor2" data-id="F208"
-                                        data-code="F208" data-seats="4" data-status="AVAILABLE">
-                                        <span class="t-code">F208</span><span class="t-meta">4 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor2" data-id="F209"
-                                        data-code="F209" data-seats="2" data-status="AVAILABLE">
-                                        <span class="t-code">F209</span><span class="t-meta">2 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor2" data-id="F210"
-                                        data-code="F210" data-seats="4" data-status="AVAILABLE">
-                                        <span class="t-code">F210</span><span class="t-meta">4 chỗ</span>
-                                    </button>
-                                </div>
-                            </section>
-
-                            <section class="tm-area" data-area="floor3">
-                                <div class="tm-area-head">
-                                    <h4>Tầng 3</h4>
-                                    <span class="tm-area-sub">Yên tĩnh • Tầm nhìn đẹp</span>
-                                </div>
-
-                                <div class="tm-grid">
-                                    <button class="tm-table" type="button" data-area="floor3" data-id="F301"
-                                        data-code="F301" data-seats="2" data-status="AVAILABLE">
-                                        <span class="t-code">F301</span><span class="t-meta">2 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor3" data-id="F302"
-                                        data-code="F302" data-seats="2" data-status="AVAILABLE">
-                                        <span class="t-code">F302</span><span class="t-meta">2 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor3" data-id="F303"
-                                        data-code="F303" data-seats="4" data-status="RESERVED">
-                                        <span class="t-code">F303</span><span class="t-meta">4 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor3" data-id="F304"
-                                        data-code="F304" data-seats="4" data-status="AVAILABLE">
-                                        <span class="t-code">F304</span><span class="t-meta">4 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor3" data-id="F305"
-                                        data-code="F305" data-seats="6" data-status="AVAILABLE">
-                                        <span class="t-code">F305</span><span class="t-meta">6 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor3" data-id="F306"
-                                        data-code="F306" data-seats="6" data-status="RESERVED">
-                                        <span class="t-code">F306</span><span class="t-meta">6 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="floor3" data-id="F307"
-                                        data-code="F307" data-seats="8" data-status="AVAILABLE">
-                                        <span class="t-code">F307</span><span class="t-meta">8 chỗ</span>
-                                    </button>
-                                </div>
-                            </section>
-
-                            <section class="tm-area" data-area="vip">
-                                <div class="tm-area-head">
-                                    <h4>VIP</h4>
-                                    <span class="tm-area-sub">Riêng tư • Ánh sáng ấm</span>
-                                </div>
-
-                                <div class="tm-grid">
-                                    <button class="tm-table" type="button" data-area="vip" data-id="V01" data-code="V01"
-                                        data-seats="4" data-status="VIP_AVAILABLE">
-                                        <span class="t-code">V01</span><span class="t-meta">4 chỗ • VIP</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="vip" data-id="V01" data-code="V01"
-                                        data-seats="4" data-status="VIP_AVAILABLE">
-                                        <span class="t-code">V02</span><span class="t-meta">4 chỗ • VIP</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="vip" data-id="V03" data-code="V03"
-                                        data-seats="8" data-status="VIP_AVAILABLE">
-                                        <span class="t-code">V03</span><span class="t-meta">8 chỗ • VIP</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="vip" data-id="V04" data-code="V04"
-                                        data-seats="10" data-status="VIP_AVAILABLE">
-                                        <span class="t-code">V04</span><span class="t-meta">10 chỗ • VIP</span>
-                                    </button>
-                                    <button class="tm-table" type="button" data-area="vip" data-id="V05" data-code="V05"
-                                        data-seats="10" data-status="VIP_AVAILABLE">
-                                        <span class="t-code">V05</span><span class="t-meta">10 chỗ • VIP</span>
-                                    </button>
-                                    <button class="tm-table" type="button" data-area="vip" data-id="V06" data-code="V06"
-                                        data-seats="10" data-status="VIP_AVAILABLE">
-                                        <span class="t-code">V06</span><span class="t-meta">10 chỗ • VIP</span>
-                                    </button>
-                                    <button class="tm-table" type="button" data-area="vip" data-id="V07" data-code="V07"
-                                        data-seats="10" data-status="VIP_AVAILABLE">
-                                        <span class="t-code">V07</span><span class="t-meta">10 chỗ • VIP</span>
-                                    </button>
-                                </div>
-                            </section>
-
-                            <!-- ========= OUTDOOR ========= -->
-                            <section class="tm-area" data-area="outdoor">
-                                <div class="tm-area-head">
-                                    <h4>Outdoor</h4>
-                                    <span class="tm-area-sub">Gió trời • Thư giãn</span>
-                                </div>
-
-                                <div class="tm-grid">
-                                    <button class="tm-table" type="button" data-area="outdoor" data-id="O01"
-                                        data-code="O01" data-seats="2" data-status="AVAILABLE">
-                                        <span class="t-code">O01</span><span class="t-meta">2 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="outdoor" data-id="O02"
-                                        data-code="O02" data-seats="4" data-status="AVAILABLE">
-                                        <span class="t-code">O02</span><span class="t-meta">4 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="outdoor" data-id="O03"
-                                        data-code="O03" data-seats="4" data-status="RESERVED">
-                                        <span class="t-code">O03</span><span class="t-meta">4 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="outdoor" data-id="O04"
-                                        data-code="O04" data-seats="6" data-status="AVAILABLE">
-                                        <span class="t-code">O04</span><span class="t-meta">6 chỗ</span>
-                                    </button>
-
-                                    <button class="tm-table" type="button" data-area="outdoor" data-id="O05"
-                                        data-code="O05" data-seats="2" data-status="AVAILABLE">
-                                        <span class="t-code">O05</span><span class="t-meta">2 chỗ</span>
-                                    </button>
-                                </div>
-                            </section>
-
-                        </div>
+                    <div class="tm-field">
+                      <label for="fullName2">Họ và tên *</label>
+                      <input id="fullName2" name="fullName" type="text" placeholder="" required />
                     </div>
 
-                    <aside class="tm-drawer" aria-label="Booking panel">
-                        <div class="tm-drawer-card">
-                            <div class="tm-drawer-head">
-                                <div>
-                                    <p class="tm-drawer-kicker">Thông tin đặt bàn</p>
-                                    <Chi class="tm-drawer-title">REVIEW</h3>
-                                </div>
+                    <div class="tm-field">
+                      <label for="phone2">SĐT *</label>
+                      <input id="phone2" name="phone" type="tel" placeholder="" required />
+                    </div>
 
-                                <button class="icon-btn" type="button" id="btnClearPick" title="Clear selection"
-                                    aria-label="Clear">
-                                    <i class="fa-solid fa-rotate-left"></i>
-                                </button>
-                            </div>
+                    <div class="tm-field">
+                      <label for="email2">Email</label>
+                      <input id="email2" name="email" type="email" placeholder="" />
+                    </div>
+                  </div>
 
-                            <div class="tm-picked">
-                                <div class="pick-row"><span class="pick-label">Table</span><b id="pickTable">—</b></div>
-                                <div class="pick-row"><span class="pick-label">Area</span><b id="pickArea">—</b></div>
-                                <div class="pick-row"><span class="pick-label">Seats</span><b id="pickSeats">—</b></div>
-                                <div class="pick-row"><span class="pick-label">Time</span><b id="pickTime">—</b></div>
-                            </div>
+                  <div class="tm-slab">
+                    <div class="tm-slab-title">
+                      <i class="fa-solid fa-user-group"></i>
+                      <span>Thông tin khách đến</span>
+                    </div>
 
-                            <div class="tm-divider"></div>
+                    <div class="tm-field">
+                      <label for="guestName">Họ và tên *</label>
+                      <input id="guestName" name="guestName" type="text" placeholder="" />
+                    </div>
 
-                            <div class="tm-divider"></div>
+                    <div class="tm-field">
+                      <label for="guestPhone">SĐT</label>
+                      <input id="guestPhone" name="guestPhone" type="tel" placeholder="" />
+                    </div>
 
-                            <div class="tm-mode" role="tablist" aria-label="Reservation mode">
-                                <button type="button" class="tm-mode-btn is-active" data-mode="self" role="tab"
-                                    aria-selected="true">
-                                    Đặt bàn
-                                </button>
-                                <button type="button" class="tm-mode-btn" data-mode="other" role="tab"
-                                    aria-selected="false">
-                                    Đặt hộ
-                                </button>
-
-                                <input type="hidden" name="bookingMode" id="bookingMode" value="self" />
-                            </div>
-
-                            <form class="tm-form" method="post" action="/reservations" id="reserveForm">
-                                <input type="hidden" name="tableId" id="fTableId" />
-                                <input type="hidden" name="area" id="fArea" />
-                                <input type="hidden" name="date" id="fDate" />
-                                <input type="hidden" name="time" id="fTime" />
-                                <input type="hidden" name="partySize" id="fGuests" />
-
-                                <div class="tm-panel" data-panel="self">
-                                    <div class="tm-field">
-                                        <label for="fullName">Họ và tên *</label>
-                                        <input id="fullName" name="fullName" type="text" placeholder=""
-                                            required />
-                                    </div>
-
-                                    <div class="tm-field">
-                                        <label for="phone">SĐT *</label>
-                                        <!-- th:value="${user.phone}" -->
-                                        <input id="phone" name="phone" type="tel" placeholder="" required />
-                                    </div>
-
-                                    <div class="tm-field">
-                                        <label for="email">Email</label>
-                                        <input id="email" name="email" type="email" placeholder="" />
-                                    </div>
-
-                                    <div class="tm-field">
-                                        <label for="note">Ghi chú</label>
-                                        <textarea id="note" name="note" rows="3"
-                                            placeholder=""></textarea>
-                                    </div>
-                                </div>
-
-                                <div class="tm-panel is-hidden" data-panel="other">
-                                    <div class="tm-slab">
-                                        <div class="tm-slab-title">
-                                            <i class="fa-solid fa-user"></i>
-                                            <span>Thông tin người đặt</span>
-                                        </div>
-
-                                        <div class="tm-field">
-                                            <label for="fullName2">Họ và tên *</label>
-                                            <input id="fullName2" name="fullName" type="text" placeholder=""
-                                                required />
-                                        </div>
-
-                                        <div class="tm-field">
-                                            <label for="phone2">SĐT *</label>
-                                            <input id="phone2" name="phone" type="tel" placeholder="" required />
-                                        </div>
-
-                                        <div class="tm-field">
-                                            <label for="email2">Email</label>
-                                            <input id="email2" name="email" type="email" placeholder="" />
-                                        </div>
-                                    </div>
-
-                                    <!-- Khách đến -->
-                                    <div class="tm-slab">
-                                        <div class="tm-slab-title">
-                                            <i class="fa-solid fa-user-group"></i>
-                                            <span>Thông tin khách đến</span>
-                                        </div>
-
-                                        <div class="tm-field">
-                                            <label for="guestName">Họ và tên *</label>
-                                            <input id="guestName" name="guestName" type="text"
-                                                placeholder="" />
-                                        </div>
-
-                                        <div class="tm-field">
-                                            <label for="guestPhone">SĐT</label>
-                                            <input id="guestPhone" name="guestPhone" type="tel" placeholder="" />
-                                        </div>
-
-                                        <div class="tm-field">
-                                            <label for="note2">Ghi chú</label>
-                                            <textarea id="note2" name="note" rows="3"
-                                                placeholder=""></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <button class="btn-save" type="submit" id="btnSubmitReserve" disabled>
-                                    Đặt bàn
-                                </button>
-
-                                <p class="tm-hint">
-                                    Bằng việc đặt bàn, bạn đồng ý để Dinio liên hệ xác nhận khi cần.
-                                </p>
-                            </form>
-
-
-                            <div class="tm-mini">
-                                <i class="fa-solid fa-circle-info"></i>
-                                <span>Vui lòng chọn bàn trước, sau đó điền thông tin.</span>
-                            </div>
-                        </div>
-                    </aside>
-
+                    <div class="tm-field">
+                      <label for="note2">Ghi chú</label>
+                      <textarea id="note2" name="note" rows="3" placeholder=""></textarea>
+                    </div>
+                  </div>
                 </div>
+
+                <button class="btn-save" type="submit" id="btnSubmitReserve" disabled>
+                  Đặt bàn
+                </button>
+
+                <p class="tm-hint">
+                  Bằng việc đặt bàn, bạn đồng ý để Dinio liên hệ xác nhận khi cần.
+                </p>
+              </form>
+
+              <div class="tm-mini">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>Vui lòng chọn bàn trước, sau đó điền thông tin.</span>
+              </div>
+
             </div>
-        </section>
+          </aside>
 
-    </main>
+        </div>
+      </div>
+    </section>
 
-    <div th:replace="~{fragments/footer :: footer}"></div>
-    <script th:src="@{/assets/js/customer/table-map.js}" defer></script>
+  </main>
 
+  <div th:replace="~{fragments/footer :: footer}"></div>
+  <script th:src="@{/assets/js/customer/table-map.js}" defer></script>
 </body>
 
 </html>

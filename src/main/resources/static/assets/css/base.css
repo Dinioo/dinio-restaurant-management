@@ -57,6 +57,11 @@
   --ring-danger: rgba(140,38,51,0.22);
 
   --shadow-soft: 0 10px 24px rgba(0,0,0,0.35);
+
+   --tm-bg-available: rgba(32, 147, 45, 0.08);   /* còn trống: xanh nhẹ */
+  --tm-bg-vip:       rgba(239, 191, 88, 0.12);   /* VIP: vàng nhẹ hơn */
+  --tm-bg-reserved:  rgba(255, 255, 255, 0.03);  /* đã đặt: xám tối */
+  --tm-bg-selected:  rgba(255, 255, 255, 0.10);
 }
 
 html {

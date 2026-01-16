@@ -1,270 +1,275 @@
-(() => {
-  const $ = (s, root = document) => root.querySelector(s);
-  const $$ = (s, root = document) => Array.from(root.querySelectorAll(s));
 
-  const els = {
-    resDate: $("#resDate"),
-    resTime: $("#resTime"),
-    resGuests: $("#resGuests"),
-    resArea: $("#resArea"),
+document.addEventListener("DOMContentLoaded", () => {
+  const resDate = document.getElementById("resDate");
+  const resTime = document.getElementById("resTime");
+  const resGuests = document.getElementById("resGuests");
+  const resArea = document.getElementById("resArea");
 
-    pickTable: $("#pickTable"),
-    pickArea: $("#pickArea"),
-    pickSeats: $("#pickSeats"),
-    pickTime: $("#pickTime"),
+  const btnClearPick = document.getElementById("btnClearPick");
+  const btnSubmitReserve = document.getElementById("btnSubmitReserve");
 
-    fTableId: $("#fTableId"),
-    fArea: $("#fArea"),
-    fDate: $("#fDate"),
-    fTime: $("#fTime"),
-    fGuests: $("#fGuests"),
+  const pickTable = document.getElementById("pickTable");
+  const pickArea = document.getElementById("pickArea");
+  const pickSeats = document.getElementById("pickSeats");
+  const pickTime = document.getElementById("pickTime");
 
-    btnSubmit: $("#btnSubmitReserve"),
-    btnClear: $("#btnClearPick"),
+  const fTableId = document.getElementById("fTableId");
+  const fArea = document.getElementById("fArea");
+  const fDate = document.getElementById("fDate");
+  const fTime = document.getElementById("fTime");
+  const fGuests = document.getElementById("fGuests");
 
-    modeWrap: $(".tm-mode"),
-    bookingMode: $("#bookingMode"),
-    modeBtns: $$(".tm-mode-btn", $(".tm-mode") || document),
-    panels: $$(".tm-panel[data-panel]"),
+  const modeBtns = Array.from(document.querySelectorAll(".tm-mode-btn"));
+  const bookingMode = document.getElementById("bookingMode");
+  const panels = Array.from(document.querySelectorAll(".tm-panel"));
 
-    tables: $$(".tm-table"),
-    areasWrap: $("#tmAreas"),
+  const tableButtons = Array.from(document.querySelectorAll(".tm-table"));
+
+  if (!tableButtons.length) return;
+
+  const clampGuests = (val) => {
+    const n = parseInt(val, 10);
+    return Number.isFinite(n) ? n : 2;
   };
 
-  if (!els.tables.length) return;
-
-  const AREA_LABEL = {
-    all: "Tất cả",
-    floor1: "Tầng 1",
-    floor2: "Tầng 2",
-    floor3: "Tầng 3",
-    vip: "VIP",
-    outdoor: "Outdoor",
+  const areaLabel = (area) => {
+    const map = {
+      floor1: "Tầng 1",
+      floor2: "Tầng 2",
+      floor3: "Tầng 3",
+      vip: "VIP",
+      outdoor: "Outdoor",
+    };
+    return map[area] || area || "—";
   };
 
-  const isReserved = (status) =>
-    String(status || "").toUpperCase().includes("RESERVED");
-
-  const getNowDate = () => {
-    const d = new Date();
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    return `${yyyy}-${mm}-${dd}`;
+  const formatPickedTime = () => {
+    const d = resDate?.value || "";
+    const t = resTime?.value || "";
+    if (!d || !t) return "—";
+    return `${d} • ${t}`;
   };
 
-  const getNowTimeRounded = () => {
-    const d = new Date();
-    const hh = String(d.getHours()).padStart(2, "0");
-    const mi = String(d.getMinutes()).padStart(2, "0");
-    return `${hh}:${mi}`;
+  const clearStatusClasses = (btn) => {
+    btn.classList.remove("is-available", "is-reserved", "is-vip", "is-selected");
   };
 
-  const normalizeGuests = (v) => {
-    const n = parseInt(String(v || "2"), 10);
-    if (Number.isNaN(n)) return 2;
-    return n;
+  const applyStatusClass = (btn) => {
+    clearStatusClasses(btn);
+
+    const status = (btn.dataset.status || "").toUpperCase();
+
+    if (status === "AVAILABLE") btn.classList.add("is-available");
+    else if (status === "RESERVED") btn.classList.add("is-reserved");
+    else if (status === "VIP_AVAILABLE" || status === "VIP") btn.classList.add("is-vip");
+    else {
+      btn.classList.add("is-available");
+    }
   };
 
-  const getFilters = () => ({
-    date: els.resDate?.value || "",
-    time: els.resTime?.value || "",
-    guests: normalizeGuests(els.resGuests?.value || "2"),
-    area: els.resArea?.value || "all",
-  });
+  const isReserved = (btn) => btn.classList.contains("is-reserved");
+  const seatsOf = (btn) => parseInt(btn.dataset.seats || "0", 10) || 0;
+
+  (() => {
+    if (resDate && !resDate.value) {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, "0");
+      const dd = String(now.getDate()).padStart(2, "0");
+      resDate.value = `${yyyy}-${mm}-${dd}`;
+    }
+
+    if (resTime && !resTime.value) {
+      resTime.value = "19:00";
+    }
+  })();
+
+  tableButtons.forEach(applyStatusClass);
+
+  const updateAreaFilter = () => {
+    const val = resArea?.value || "all";
+
+    document.querySelectorAll(".tm-area").forEach((section) => {
+      const a = section.dataset.area;
+      const show = val === "all" || val === a;
+      section.style.display = show ? "" : "none";
+    });
+  };
+
+  const updateGuestsSuggestion = () => {
+    const guests = clampGuests(resGuests?.value || "2");
+
+    tableButtons.forEach((btn) => {
+      if (isReserved(btn)) {
+        btn.disabled = true;
+        btn.setAttribute("aria-disabled", "true");
+        return;
+      }
+
+      const seats = seatsOf(btn);
+      const ok = seats >= guests;
+
+      btn.disabled = !ok;
+      btn.setAttribute("aria-disabled", String(!ok));
+
+      if (!ok && btn.classList.contains("is-selected")) {
+        clearSelection();
+      }
+    });
+  };
 
   let selectedBtn = null;
 
-  const setPickedText = (btn) => {
-    const f = getFilters();
-    const area = btn?.dataset?.area || "—";
-    const seats = btn?.dataset?.seats || "—";
-    const code = btn?.dataset?.code || btn?.dataset?.id || "—";
+  const syncFormHidden = () => {
+    const guests = clampGuests(resGuests?.value || "2");
 
-    if (els.pickTable) els.pickTable.textContent = code;
-    if (els.pickArea) els.pickArea.textContent = AREA_LABEL[area] || area;
-    if (els.pickSeats) els.pickSeats.textContent = `${seats}`;
-    if (els.pickTime) {
-      const timeText =
-        (f.date ? f.date : "—") + (f.time ? ` • ${f.time}` : "");
-      els.pickTime.textContent = timeText.trim() || "—";
+    fDate && (fDate.value = resDate?.value || "");
+    fTime && (fTime.value = resTime?.value || "");
+    fGuests && (fGuests.value = String(guests));
+
+    if (selectedBtn) {
+      fTableId && (fTableId.value = selectedBtn.dataset.id || "");
+      fArea && (fArea.value = selectedBtn.dataset.area || "");
+    } else {
+      fTableId && (fTableId.value = "");
+      fArea && (fArea.value = "");
     }
   };
 
-  const setHidden = (btn) => {
-    const f = getFilters();
-    const area = btn?.dataset?.area || "";
-    const id = btn?.dataset?.id || "";
-    const time = f.time || "";
-    const date = f.date || "";
-    const guests = String(f.guests || "");
+  const syncReview = () => {
+    if (!pickTable) return;
 
-    if (els.fTableId) els.fTableId.value = id;
-    if (els.fArea) els.fArea.value = area;
-    if (els.fDate) els.fDate.value = date;
-    if (els.fTime) els.fTime.value = time;
-    if (els.fGuests) els.fGuests.value = guests;
+    if (!selectedBtn) {
+      pickTable.textContent = "—";
+      pickArea.textContent = "—";
+      pickSeats.textContent = "—";
+      pickTime.textContent = formatPickedTime();
+      return;
+    }
+
+    pickTable.textContent = selectedBtn.dataset.code || selectedBtn.dataset.id || "—";
+    pickArea.textContent = areaLabel(selectedBtn.dataset.area || "");
+    pickSeats.textContent = `${seatsOf(selectedBtn)} chỗ`;
+    pickTime.textContent = formatPickedTime();
   };
 
-  const canSubmit = () => {
-    const f = getFilters();
-    if (!selectedBtn) return false;
-    if (!f.date || !f.time) return false;
-    if (!els.fTableId?.value) return false;
-    return true;
+  const updateSubmitEnabled = () => {
+    const ok =
+      !!selectedBtn &&
+      !!(resDate?.value) &&
+      !!(resTime?.value) &&
+      !!(resGuests?.value);
+
+    if (btnSubmitReserve) btnSubmitReserve.disabled = !ok;
   };
 
-  const updateSubmitState = () => {
-    if (!els.btnSubmit) return;
-    els.btnSubmit.disabled = !canSubmit();
-  };
-
-  const clearSelected = () => {
-    if (selectedBtn) selectedBtn.classList.remove("is-selected");
+  const clearSelection = () => {
+    if (selectedBtn) {
+      selectedBtn.classList.remove("is-selected");
+      applyStatusClass(selectedBtn);
+    }
     selectedBtn = null;
-
-    if (els.pickTable) els.pickTable.textContent = "—";
-    if (els.pickArea) els.pickArea.textContent = "—";
-    if (els.pickSeats) els.pickSeats.textContent = "—";
-    if (els.pickTime) els.pickTime.textContent = "—";
-
-    if (els.fTableId) els.fTableId.value = "";
-    if (els.fArea) els.fArea.value = "";
-    if (els.fDate) els.fDate.value = els.resDate?.value || "";
-    if (els.fTime) els.fTime.value = els.resTime?.value || "";
-    if (els.fGuests) els.fGuests.value = els.resGuests?.value || "2";
-
-    updateSubmitState();
+    syncReview();
+    syncFormHidden();
+    updateSubmitEnabled();
   };
 
   const selectTable = (btn) => {
-    if (!btn) return;
-    if (btn.disabled) return;
-
-    const status = btn.dataset.status || "";
-    if (isReserved(status)) return;
+    if (!btn || btn.disabled) return;
+    if (isReserved(btn)) return;
 
     if (selectedBtn && selectedBtn !== btn) {
       selectedBtn.classList.remove("is-selected");
+      applyStatusClass(selectedBtn);
     }
+
     selectedBtn = btn;
-    selectedBtn.classList.add("is-selected");
 
-    setPickedText(btn);
-    setHidden(btn);
-    updateSubmitState();
+    applyStatusClass(btn);
+    btn.classList.add("is-selected");
+
+    syncReview();
+    syncFormHidden();
+    updateSubmitEnabled();
   };
 
-  const applyFilters = () => {
-    const f = getFilters();
-
-    $$(".tm-area", els.areasWrap || document).forEach((areaSec) => {
-      const a = areaSec.dataset.area || "";
-      const show = f.area === "all" || f.area === a;
-      areaSec.style.display = show ? "" : "none";
-    });
-
-    const need = normalizeGuests(f.guests);
-    els.tables.forEach((btn) => {
-      const seats = parseInt(btn.dataset.seats || "0", 10);
-      const okSeats = seats >= need;
-
-      const status = String(btn.dataset.status || "").toUpperCase();
-      const vip = status.includes("VIP");
-      btn.classList.toggle("is-vip", vip);
-
-      btn.style.opacity = okSeats ? "" : "0.55";
-    });
-
-    if (selectedBtn) {
-      setPickedText(selectedBtn);
-      setHidden(selectedBtn);
-    } else {
-      if (els.fDate) els.fDate.value = els.resDate?.value || "";
-      if (els.fTime) els.fTime.value = els.resTime?.value || "";
-      if (els.fGuests) els.fGuests.value = els.resGuests?.value || "2";
-    }
-
-    updateSubmitState();
-  };
-
-  els.areasWrap?.addEventListener("click", (e) => {
-    const btn = e.target.closest(".tm-table");
-    if (!btn) return;
-    selectTable(btn);
+  tableButtons.forEach((btn) => {
+    btn.addEventListener("click", () => selectTable(btn));
   });
 
-  els.btnClear?.addEventListener("click", clearSelected);
+  btnClearPick?.addEventListener("click", clearSelection);
 
-  els.resDate?.addEventListener("change", applyFilters);
-  els.resTime?.addEventListener("change", applyFilters);
-  els.resGuests?.addEventListener("change", applyFilters);
-  els.resArea?.addEventListener("change", applyFilters);
-
-  const setActiveTab = (mode) => {
-    els.modeBtns.forEach((btn) => {
-      const active = btn.dataset.mode === mode;
-      btn.classList.toggle("is-active", active);
-      btn.setAttribute("aria-selected", active ? "true" : "false");
-    });
+  const onParamsChanged = () => {
+    syncReview();
+    syncFormHidden();
+    updateGuestsSuggestion();
+    updateAreaFilter();
+    updateSubmitEnabled();
   };
 
-  const setPanel = (mode) => {
-    els.panels.forEach((p) => {
-      p.classList.toggle("is-hidden", p.dataset.panel !== mode);
-    });
-  };
-
-  const syncBasic = (from, to) => {
-    if (!from || !to) return;
-    if (from.name && to.name) to.name.value = from.name.value || "";
-    if (from.phone && to.phone) to.phone.value = from.phone.value || "";
-    if (from.email && to.email) to.email.value = from.email.value || "";
-  };
-
-  const self = {
-    name: $("#fullName"),
-    phone: $("#phone"),
-    email: $("#email"),
-  };
-
-  const other = {
-    name: $("#fullName2"),
-    phone: $("#phone2"),
-    email: $("#email2"),
-    guestName: $("#guestName"),
-    guestPhone: $("#guestPhone"),
-  };
+  resDate?.addEventListener("change", onParamsChanged);
+  resTime?.addEventListener("change", onParamsChanged);
+  resGuests?.addEventListener("change", onParamsChanged);
+  resArea?.addEventListener("change", () => {
+    updateAreaFilter();
+    const val = resArea.value;
+    if (selectedBtn) {
+      const a = selectedBtn.dataset.area;
+      if (val !== "all" && a !== val) clearSelection();
+    }
+    updateSubmitEnabled();
+  });
 
   const setMode = (mode) => {
-    if (mode !== "self" && mode !== "other") mode = "self";
+    if (!bookingMode) return;
+    bookingMode.value = mode;
 
-    setActiveTab(mode);
-    setPanel(mode);
+    modeBtns.forEach((b) => {
+      const active = b.dataset.mode === mode;
+      b.classList.toggle("is-active", active);
+      b.setAttribute("aria-selected", active ? "true" : "false");
+    });
 
-    if (els.bookingMode) els.bookingMode.value = mode;
-
-    if (other.guestName) other.guestName.required = mode === "other";
-    if (other.guestPhone) other.guestPhone.required = false;
-
-    if (mode === "other") syncBasic(self, other);
-    else syncBasic(other, self);
+    panels.forEach((p) => {
+      const show = p.dataset.panel === mode;
+      p.classList.toggle("is-hidden", !show);
+    });
   };
 
-  els.modeWrap?.addEventListener("click", (e) => {
-    const btn = e.target.closest(".tm-mode-btn");
-    if (!btn) return;
-    setMode(btn.dataset.mode);
+  modeBtns.forEach((b) => {
+    b.addEventListener("click", () => setMode(b.dataset.mode || "self"));
   });
 
-  if (els.resDate && !els.resDate.value) els.resDate.value = getNowDate();
-  if (els.resTime && !els.resTime.value) els.resTime.value = getNowTimeRounded();
+  const init = () => {
+    tableButtons.forEach((btn) => {
+      applyStatusClass(btn);
+      if ((btn.dataset.status || "").toUpperCase() === "RESERVED") {
+        btn.disabled = true;
+        btn.setAttribute("aria-disabled", "true");
+      }
+    });
 
-  if (els.fDate) els.fDate.value = els.resDate?.value || "";
-  if (els.fTime) els.fTime.value = els.resTime?.value || "";
-  if (els.fGuests) els.fGuests.value = els.resGuests?.value || "2";
+    setMode(bookingMode?.value || "self");
 
-  setMode(els.bookingMode?.value || "self");
-  applyFilters();
-  clearSelected();
-})();
+    syncReview();
+    syncFormHidden();
+    updateAreaFilter();
+    updateGuestsSuggestion();
+    updateSubmitEnabled();
+  };
+
+  init();
+  const form = document.getElementById("reserveForm");
+  form?.addEventListener("submit", (e) => {
+    syncFormHidden();
+    const ok =
+      !!selectedBtn &&
+      !!(resDate?.value) &&
+      !!(resTime?.value) &&
+      !!(resGuests?.value);
+
+    if (!ok) {
+      e.preventDefault();
+    }
+  });
+});

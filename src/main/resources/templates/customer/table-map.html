@@ -5,13 +5,21 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>DINIO - Book a Table</title>
+  <!-- Toastify -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
+  <!-- App CSS -->
   <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
   <link rel="stylesheet" th:href="@{/assets/css/customer/table-map.css}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <script th:src="@{/assets/js/header-dropdown.js}"></script>
+
+  <!-- App JS -->
+  <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
+  <script th:src="@{/assets/js/toast.js}" defer></script>
   <script th:src="@{/assets/js/customer/preorder-after-reservation-modal.js}" defer></script>
   <script th:src="@{/assets/js/customer/reservation-submit-popup.js}" defer></script>
+
 </head>
 
 <body>
@@ -181,53 +189,53 @@
                 </div>
 
                 <div class="tm-grid">
-                  <button class="tm-table" type="button" data-area="floor2" data-id="F201" data-code="F201" data-seats="2"
-                    data-status="AVAILABLE">
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F201" data-code="F201"
+                    data-seats="2" data-status="AVAILABLE">
                     <span class="t-code">F201</span><span class="t-meta">2 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="floor2" data-id="F202" data-code="F202" data-seats="4"
-                    data-status="AVAILABLE">
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F202" data-code="F202"
+                    data-seats="4" data-status="AVAILABLE">
                     <span class="t-code">F202</span><span class="t-meta">4 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="floor2" data-id="F203" data-code="F203" data-seats="4"
-                    data-status="RESERVED">
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F203" data-code="F203"
+                    data-seats="4" data-status="RESERVED">
                     <span class="t-code">F203</span><span class="t-meta">4 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="floor2" data-id="F204" data-code="F204" data-seats="6"
-                    data-status="AVAILABLE">
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F204" data-code="F204"
+                    data-seats="6" data-status="AVAILABLE">
                     <span class="t-code">F204</span><span class="t-meta">6 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="floor2" data-id="F205" data-code="F205" data-seats="2"
-                    data-status="AVAILABLE">
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F205" data-code="F205"
+                    data-seats="2" data-status="AVAILABLE">
                     <span class="t-code">F205</span><span class="t-meta">2 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="floor2" data-id="F206" data-code="F206" data-seats="8"
-                    data-status="AVAILABLE">
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F206" data-code="F206"
+                    data-seats="8" data-status="AVAILABLE">
                     <span class="t-code">F206</span><span class="t-meta">8 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="floor2" data-id="F207" data-code="F207" data-seats="6"
-                    data-status="RESERVED">
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F207" data-code="F207"
+                    data-seats="6" data-status="RESERVED">
                     <span class="t-code">F207</span><span class="t-meta">6 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="floor2" data-id="F208" data-code="F208" data-seats="4"
-                    data-status="AVAILABLE">
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F208" data-code="F208"
+                    data-seats="4" data-status="AVAILABLE">
                     <span class="t-code">F208</span><span class="t-meta">4 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="floor2" data-id="F209" data-code="F209" data-seats="2"
-                    data-status="AVAILABLE">
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F209" data-code="F209"
+                    data-seats="2" data-status="AVAILABLE">
                     <span class="t-code">F209</span><span class="t-meta">2 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="floor2" data-id="F210" data-code="F210" data-seats="4"
-                    data-status="AVAILABLE">
+                  <button class="tm-table" type="button" data-area="floor2" data-id="F210" data-code="F210"
+                    data-seats="4" data-status="AVAILABLE">
                     <span class="t-code">F210</span><span class="t-meta">4 chỗ</span>
                   </button>
                 </div>
@@ -241,38 +249,38 @@
                 </div>
 
                 <div class="tm-grid">
-                  <button class="tm-table" type="button" data-area="floor3" data-id="F301" data-code="F301" data-seats="2"
-                    data-status="AVAILABLE">
+                  <button class="tm-table" type="button" data-area="floor3" data-id="F301" data-code="F301"
+                    data-seats="2" data-status="AVAILABLE">
                     <span class="t-code">F301</span><span class="t-meta">2 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="floor3" data-id="F302" data-code="F302" data-seats="2"
-                    data-status="AVAILABLE">
+                  <button class="tm-table" type="button" data-area="floor3" data-id="F302" data-code="F302"
+                    data-seats="2" data-status="AVAILABLE">
                     <span class="t-code">F302</span><span class="t-meta">2 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="floor3" data-id="F303" data-code="F303" data-seats="4"
-                    data-status="RESERVED">
+                  <button class="tm-table" type="button" data-area="floor3" data-id="F303" data-code="F303"
+                    data-seats="4" data-status="RESERVED">
                     <span class="t-code">F303</span><span class="t-meta">4 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="floor3" data-id="F304" data-code="F304" data-seats="4"
-                    data-status="AVAILABLE">
+                  <button class="tm-table" type="button" data-area="floor3" data-id="F304" data-code="F304"
+                    data-seats="4" data-status="AVAILABLE">
                     <span class="t-code">F304</span><span class="t-meta">4 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="floor3" data-id="F305" data-code="F305" data-seats="6"
-                    data-status="AVAILABLE">
+                  <button class="tm-table" type="button" data-area="floor3" data-id="F305" data-code="F305"
+                    data-seats="6" data-status="AVAILABLE">
                     <span class="t-code">F305</span><span class="t-meta">6 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="floor3" data-id="F306" data-code="F306" data-seats="6"
-                    data-status="RESERVED">
+                  <button class="tm-table" type="button" data-area="floor3" data-id="F306" data-code="F306"
+                    data-seats="6" data-status="RESERVED">
                     <span class="t-code">F306</span><span class="t-meta">6 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="floor3" data-id="F307" data-code="F307" data-seats="8"
-                    data-status="AVAILABLE">
+                  <button class="tm-table" type="button" data-area="floor3" data-id="F307" data-code="F307"
+                    data-seats="8" data-status="AVAILABLE">
                     <span class="t-code">F307</span><span class="t-meta">8 chỗ</span>
                   </button>
                 </div>
@@ -331,28 +339,28 @@
                 </div>
 
                 <div class="tm-grid">
-                  <button class="tm-table" type="button" data-area="outdoor" data-id="O01" data-code="O01" data-seats="2"
-                    data-status="AVAILABLE">
+                  <button class="tm-table" type="button" data-area="outdoor" data-id="O01" data-code="O01"
+                    data-seats="2" data-status="AVAILABLE">
                     <span class="t-code">O01</span><span class="t-meta">2 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="outdoor" data-id="O02" data-code="O02" data-seats="4"
-                    data-status="AVAILABLE">
+                  <button class="tm-table" type="button" data-area="outdoor" data-id="O02" data-code="O02"
+                    data-seats="4" data-status="AVAILABLE">
                     <span class="t-code">O02</span><span class="t-meta">4 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="outdoor" data-id="O03" data-code="O03" data-seats="4"
-                    data-status="RESERVED">
+                  <button class="tm-table" type="button" data-area="outdoor" data-id="O03" data-code="O03"
+                    data-seats="4" data-status="RESERVED">
                     <span class="t-code">O03</span><span class="t-meta">4 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="outdoor" data-id="O04" data-code="O04" data-seats="6"
-                    data-status="AVAILABLE">
+                  <button class="tm-table" type="button" data-area="outdoor" data-id="O04" data-code="O04"
+                    data-seats="6" data-status="AVAILABLE">
                     <span class="t-code">O04</span><span class="t-meta">6 chỗ</span>
                   </button>
 
-                  <button class="tm-table" type="button" data-area="outdoor" data-id="O05" data-code="O05" data-seats="2"
-                    data-status="AVAILABLE">
+                  <button class="tm-table" type="button" data-area="outdoor" data-id="O05" data-code="O05"
+                    data-seats="2" data-status="AVAILABLE">
                     <span class="t-code">O05</span><span class="t-meta">2 chỗ</span>
                   </button>
                 </div>

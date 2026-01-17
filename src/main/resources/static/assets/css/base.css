@@ -123,3 +123,18 @@ ol {
   background: rgba(239,191,88,0.22);
   color: var(--text-strong);
 }
+.toastify {
+  border-radius: 14px;
+  background: rgba(18, 18, 18, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 14px;
+  padding: 14px 18px;
+}
+
+.toastify.success { border-left: 4px solid #2ecc71; }
+.toastify.error   { border-left: 4px solid #ff5c5c; }
+.toastify.warning { border-left: 4px solid #f1c40f; }
+.toastify.info    { border-left: 4px solid #4da3ff; }

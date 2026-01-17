@@ -197,7 +197,15 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener("click", () => selectTable(btn));
   });
 
-  btnClearPick?.addEventListener("click", clearSelection);
+  btnClearPick?.addEventListener("click", () => {
+  if (!selectedBtn) {
+    infoToast("Chưa có bàn nào được chọn");
+    return;
+  }
+  clearSelection();
+  successToast("Đã xoá lựa chọn bàn");
+});
+
 
   const onParamsChanged = () => {
     syncReview();
@@ -261,15 +269,22 @@ document.addEventListener("DOMContentLoaded", () => {
   init();
   const form = document.getElementById("reserveForm");
   form?.addEventListener("submit", (e) => {
-    syncFormHidden();
-    const ok =
-      !!selectedBtn &&
-      !!(resDate?.value) &&
-      !!(resTime?.value) &&
-      !!(resGuests?.value);
+  syncFormHidden();
 
-    if (!ok) {
-      e.preventDefault();
-    }
-  });
+  const ok =
+    !!selectedBtn &&
+    !!(resDate?.value) &&
+    !!(resTime?.value) &&
+    !!(resGuests?.value);
+
+  if (!ok) {
+    e.preventDefault();
+    errorToast("Vui lòng chọn ngày/giờ/số khách và chọn bàn trước khi đặt bàn.");
+    return;
+  }
+
+  infoToast("Đang gửi yêu cầu đặt bàn...");
 });
+
+});
+

@@ -301,14 +301,17 @@ document.addEventListener("DOMContentLoaded", () => {
       date: resDate?.value,
       time: resTime?.value,
       guests: parseInt(resGuests?.value),
-      note: document.getElementById("fNote")?.value || "",
+      note:
+        mode === "self"
+          ? document.getElementById("note")?.value || ""
+          : document.getElementById("note2")?.value || "",
       mode: mode,
     };
 
     // Handle "other" mode
     if (mode === "other") {
-      data.guestName = document.getElementById("fGuestName")?.value || "";
-      data.guestPhone = document.getElementById("fGuestPhone")?.value || "";
+      data.guestName = document.getElementById("guestName")?.value || "";
+      data.guestPhone = document.getElementById("guestPhone")?.value || "";
     }
 
     try {

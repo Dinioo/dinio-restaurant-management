@@ -16,6 +16,7 @@ import ut.edu.dinio.pojo.Customer;
 import ut.edu.dinio.pojo.DiningTable;
 import ut.edu.dinio.pojo.Reservation;
 import ut.edu.dinio.pojo.enums.ReservationStatus;
+import ut.edu.dinio.pojo.enums.TableStatus;
 import ut.edu.dinio.repositories.AreaRepository;
 import ut.edu.dinio.repositories.DiningTableRepository;
 import ut.edu.dinio.repositories.ReservationRepository;
@@ -162,15 +163,29 @@ public class TableMapService {
                 if (guestPhone == null || guestPhone.trim().isEmpty()) {
                     return "Vui lòng nhập số điện thoại khách!";
                 }
+                
+                // Validate phone number: must be exactly 10 digits
+                String phoneDigits = guestPhone.trim().replaceAll("\\D", "");
+                if (phoneDigits.length() != 10) {
+                    return "Số điện thoại phải có đúng 10 chữ số!";
+                }
+                
                 reservation.setIsForOther(true);
                 reservation.setGuestName(guestName.trim());
-                reservation.setGuestPhone(guestPhone.trim());
+                reservation.setGuestPhone(phoneDigits);
             } else {
+                // Mode "self": Lưu thông tin customer (an toàn hơn để NULL)
                 reservation.setIsForOther(false);
+                reservation.setGuestName(customer.getFullName());
+                reservation.setGuestPhone(customer.getPhone());
             }
 
-            // Save
+            // Save reservation
             reservationRepository.save(reservation);
+
+            // Update table status to IN_SERVICE (not RESERVED)
+            table.setStatus(TableStatus.IN_SERVICE);
+            tableRepository.save(table);
 
             return "success";
 

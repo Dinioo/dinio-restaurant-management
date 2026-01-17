@@ -20,7 +20,6 @@ public class SecurityConfig {
     @Autowired
     private CustomOAuth2UserService customOAuth2UserService;
 
-    // Nếu bạn không dùng AuthenticationManager thì có thể xoá bean này
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
@@ -34,7 +33,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/forgot-password/**", "/api/send-otp/**", "/api/reset-password/**"))
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/forgot-password/**", "/api/send-otp/**", "/api/reset-password/**","/api/reservations/cancel"))
             .securityContext(context -> context
                 .securityContextRepository(securityContextRepository())
             )
@@ -66,8 +65,11 @@ public class SecurityConfig {
             )
 
             .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
+                .logoutUrl("/logout") 
+                .logoutSuccessUrl("/login?logout") 
+                .invalidateHttpSession(true) 
+                .clearAuthentication(true) 
+                .deleteCookies("JSESSIONID") 
                 .permitAll()
             );
 

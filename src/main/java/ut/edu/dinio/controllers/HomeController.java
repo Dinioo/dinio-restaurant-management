@@ -17,7 +17,20 @@ public class HomeController {
   private MenuItemService menuItemService;
 
   @GetMapping("/")
-  public String home() {
+  public String home(Model model) {
+    try {
+      // Lấy món yêu thích (có tag BEST hoặc SIGNATURE)
+      List<MenuItem> favoriteItems = menuItemService.getFavoriteItems();
+      model.addAttribute("favoriteItems", favoriteItems);
+      model.addAttribute("favoriteCount", favoriteItems.size());
+      
+    } catch (Exception e) {
+      System.out.println("Error loading favorite items for home: " + e.getMessage());
+      e.printStackTrace();
+      model.addAttribute("favoriteItems", List.of());
+      model.addAttribute("favoriteCount", 0);
+    }
+    
     return "customer/home";
   }
 
@@ -32,32 +45,5 @@ public class HomeController {
     ));
 
     return "customer/reservations-my";
-  }
-
-  // ===== TEST MENU ITEMS =====
-  @GetMapping("/test-items")
-  public String testItems(Model model) {
-    try {
-      // Lấy tất cả món ăn từ database
-      List<MenuItem> allItems = menuItemService.getAllActiveItems();
-      model.addAttribute("menuItems", allItems);
-      
-      // Lấy món yêu thích (có tag BEST hoặc SIGNATURE)
-      List<MenuItem> favoriteItems = menuItemService.getFavoriteItems();
-      model.addAttribute("favoriteItems", favoriteItems);
-      
-      // Thêm thông tin thống kê
-      model.addAttribute("totalItems", allItems.size());
-      model.addAttribute("favoriteCount", favoriteItems.size());
-      
-    } catch (Exception e) {
-      System.out.println("Error loading menu items: " + e.getMessage());
-      e.printStackTrace();
-      model.addAttribute("menuItems", List.of());
-      model.addAttribute("favoriteItems", List.of());
-      model.addAttribute("error", "Không thể tải dữ liệu món ăn: " + e.getMessage());
-    }
-    
-    return "customer/test_item";
   }
 }

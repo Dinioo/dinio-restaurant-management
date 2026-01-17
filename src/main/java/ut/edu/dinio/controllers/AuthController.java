@@ -132,12 +132,6 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/login?logout";
-    }
-
     @GetMapping("/register")
     public String register() {
         return "auth/register";
@@ -176,7 +170,8 @@ public class AuthController {
             user = auth.getPrincipal(); 
         }
 
-        if (user == null) return "redirect:/login";
+        if (user == null) 
+            return "redirect:/login";
         
         model.addAttribute("user", user);
         return "customer/profile-customer";

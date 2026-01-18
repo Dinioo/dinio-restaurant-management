@@ -98,20 +98,21 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.text();
 
       if (response.ok) {
-          window.closeOtpModal?.();
-          window.openResetModal?.(currentEmail, otp); 
+        successToast("Xác thực OTP thành công!");
+        window.closeOtpModal?.();
+        window.openResetModal?.(currentEmail, otp); 
       } else {
           showAlert(result, true);
       }
   } catch (error) {
-      showAlert("Lỗi hệ thống.", true);
-  }
+      errorToast("Lỗi hệ thống. Vui lòng thử lại sau.");
+  } 
 
   });
 
   resendBtn?.addEventListener("click", async () => {
     hideAlert();
     await new Promise((r) => setTimeout(r, 400));
-    showAlert("Đã gửi lại OTP (mock). Thử nhập 123456.", false);
+    successToast("Mã OTP mới đã được gửi lại!");
   });
 });

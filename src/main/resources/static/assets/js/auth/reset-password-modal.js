@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
     } catch (error) {
-      showAlert("Lỗi hệ thống.", true);
+      errorToast("Lỗi hệ thống. Vui lòng thử lại sau.");
     }
 
     if (submitBtn) {

@@ -36,25 +36,21 @@ document.addEventListener("DOMContentLoaded", () => {
     fpModal.setAttribute("aria-hidden", "true");
   };
 
-  // Open
   openForgotBtn.addEventListener("click", (e) => {
     e.preventDefault();
     openModal();
   });
 
-  // Close: backdrop + nút X
   fpModal.addEventListener("click", (e) => {
     if (e.target?.dataset?.close) closeModal();
     if (e.target?.id === "fpClose") closeModal();
     if (e.target?.closest?.("#fpClose")) closeModal();
   });
 
-  // Close: ESC
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !fpModal.classList.contains("is-hidden")) closeModal();
   });
 
-  // Submit email: MOCK gửi OTP thành công -> mở OTP modal
   fpForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
     hideAlert();
@@ -65,7 +61,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // UI loading giả
     const originalText = fpSubmitBtn?.textContent || "Khôi phục mật khẩu";
     if (fpSubmitBtn) {
       fpSubmitBtn.disabled = true;
@@ -82,15 +77,16 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.text();
 
       if (response.ok) {
-          closeModal();
-          if (typeof window.openOtpModal === "function") {
-              window.openOtpModal(email);
+        successToast("Mã OTP đã được gửi thành công!");
+        closeModal();
+        if (typeof window.openOtpModal === "function") {
+            window.openOtpModal(email);
           }
       } else {
           showAlert(result, true); 
       }
   } catch (error) {
-      showAlert("Lỗi kết nối server.", true);
+      errorToast("Lỗi kết nối server. Vui lòng thử lại sau.");
   }
 
     if (fpSubmitBtn) {

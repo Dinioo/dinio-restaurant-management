@@ -301,12 +301,13 @@
 
       if (response.ok) {
         closeModal(cancelModal);
+        successToast(`Đã hủy thành công đơn đặt chỗ ${pendingCancel.code}`);
         fetchReservations(); 
       } else {
-        alert("Không thể hủy đơn này!");
+        errorToast(errorMsg || "Không thể hủy đơn này!");
       }
     } catch (e) {
-      alert("Lỗi kết nối!");
+      errorToast("Lỗi kết nối máy chủ. Vui lòng thử lại sau.");
     } finally {
       btnConfirmCancel.disabled = false;
     }

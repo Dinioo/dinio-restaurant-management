@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (error) {
       console.error("Login error:", error);
-      showAlert("Lỗi kết nối máy chủ. Vui lòng thử lại.");
+      errorToast("Lỗi kết nối máy chủ. Vui lòng thử lại sau.");
     }
     finally {
       submitBtn.disabled = false;

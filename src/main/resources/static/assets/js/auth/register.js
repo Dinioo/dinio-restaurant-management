@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
       const provider = btn.dataset.provider || "provider";
-      showAlert(`(${provider}) Chưa cấu hình đăng ký OAuth. Nút hiện tại chỉ để demo UI.`);
+      infoToast(`Đăng ký qua ${provider} hiện chưa được hỗ trợ.`);
       setTimeout(hideAlert, 2600);
     });
   });

@@ -63,21 +63,28 @@
               <p class="side-title">Categories</p>
 
               <nav class="side-tabs" aria-label="Menu categories">
-                <button class="side-tab is-active" type="button" data-cat="all">All</button>
-                <button class="side-tab" type="button" data-cat="starter">Starters</button>
-                <button class="side-tab" type="button" data-cat="main">Main</button>
-                <button class="side-tab" type="button" data-cat="dessert">Desserts</button>
-                <button class="side-tab" type="button" data-cat="drink">Drinks</button>
+                <button class="side-tab"
+                        th:classappend="${cat == null} ? ' is-active' : ''"
+                        type="button" data-cat="all">All</button>
+
+                <button class="side-tab"
+                        th:each="c : ${categories}"
+                        th:text="${c.name}"
+                        th:attr="data-cat=${c.id}"
+                        th:classappend="${cat != null && cat == c.id} ? ' is-active' : ''"
+                        type="button"></button>
               </nav>
 
               <div class="side-divider"></div>
 
               <p class="side-title">Tags</p>
               <div class="side-tags" aria-label="Menu tags">
-                <button class="chip" type="button" data-tag="best">Best</button>
-                <button class="chip" type="button" data-tag="new">New</button>
-                <button class="chip" type="button" data-tag="signature">Signature</button>
-                <button class="chip" type="button" data-tag="premium">Premium</button>
+                <button class="chip"
+                        th:each="t : ${tags}"
+                        th:text="${#strings.capitalize(#strings.toLowerCase(t.name()))}"
+                        th:attr="data-tag=${#strings.toLowerCase(t.name())}"
+                        th:classappend="${tag != null && tag == #strings.toLowerCase(t.name())} ? ' is-active' : ''"
+                        type="button"></button>
               </div>
             </div>
           </aside>
@@ -90,289 +97,41 @@
             </div>
 
             <div class="menu-sections">
-              <section class="menu-section" data-section="starter">
+              <section class="menu-section"
+                      th:each="c : ${categories}"
+                      th:attr="data-section=${c.id}">
                 <div class="menu-section-head">
-                  <h3>Starters</h3>
-                  <span class="section-hint">Light bites to begin</span>
+                  <h3 th:text="${c.name}">Category</h3>
+                  <span class="section-hint"></span>
                 </div>
 
                 <div class="menu-grid">
 
-                  <div class="dish-wrap" data-cat="starter" data-tags="new" data-name="bruschetta" data-price="79000" data-new="1">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Bruschetta',
-                      'Bánh mì nướng, cà chua, basil.',
-                      '79.000đ',
-                      '/assets/pic/food1.jpeg',
-                      'New'
-                    )}"></div>
-                  </div>
+                  <div class="dish-wrap"
+                      th:each="d : ${itemsByCategory[c.id]}"
+                      th:with="
+                          tagsCsv=${#strings.arrayJoin(d.itemTags.?[true].![#strings.toLowerCase(name())], ',')},
+                          searchText=${(d.name ?: '') + ' ' + (d.description ?: '') + ' ' + (d.ingredients ?: '')},
+                          isNew=${d.itemTags != null && d.itemTags.contains(T(ut.edu.dinio.pojo.enums.ItemTag).NEW)}
+                      "
+                      th:attr="data-cat=${c.id},
+                                data-tags=${tagsCsv},
+                                data-name=${searchText},
+                                data-price=${d.basePrice},
+                                data-new=${isNew ? 1 : 0}">
 
-                  <div class="dish-wrap" data-cat="starter" data-tags="premium" data-name="mushroom cream soup" data-price="89000">
                     <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Mushroom Cream Soup',
-                      'Súp kem nấm béo mịn, thơm rosemary.',
-                      '89.000đ',
-                      '/assets/pic/menu/starters1.jpeg',
-                      'Premium'
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="starter" data-tags="best" data-name="spring rolls" data-price="79000">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Spring Rolls',
-                      'Chả giò giòn rụm, dùng kèm nước chấm.',
-                      '79.000đ',
-                      '/assets/pic/menu/starters2.jpeg',
-                      'Best'
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="starter" data-tags="new" data-name="crispy fried shrimp" data-price="129000" data-new="1">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Crispy Fried Shrimp',
-                      'Tôm chiên giòn, sốt chua ngọt, kèm chanh.',
-                      '129.000đ',
-                      '/assets/pic/menu/starters3.jpeg',
-                      'New'
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="starter" data-tags="" data-name="french fries" data-price="59000">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'French Fries',
-                      'Khoai tây chiên vàng giòn, kèm mayo/ketchup.',
-                      '59.000đ',
-                      '/assets/pic/menu/starters4.jpeg',
-                      ''
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="starter" data-tags="best" data-name="caesar salad" data-price="109000">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Caesar Salad',
-                      'Rau romaine, gà nướng, sốt Caesar & phô mai.',
-                      '109.000đ',
-                      '/assets/pic/menu/starters5.jpeg',
-                      'Best'
+                        ${d.name},
+                        ${d.description},
+                        ${#numbers.formatDecimal(d.basePrice,0,'COMMA',0,'POINT')} + 'đ',
+                        ${d.imageUrl},
+                        ${isNew ? 'New' : ''}
                     )}"></div>
                   </div>
 
                 </div>
               </section>
 
-              <section class="menu-section" data-section="main">
-                <div class="menu-section-head">
-                  <h3>Main</h3>
-                  <span class="section-hint">Signature & hearty</span>
-                </div>
-
-                <div class="menu-grid">
-
-                  <div class="dish-wrap" data-cat="main" data-tags="signature,premium" data-name="grilled beef steak" data-price="259000">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Grilled Beef Steak',
-                      'Bò nướng mềm, sốt tiêu đen, dùng kèm khoai tây.',
-                      '259.000đ',
-                      '/assets/pic/menu/Main1.jpeg',
-                      'Signature'
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="main" data-tags="best,premium" data-name="pan seared salmon" data-price="239000">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Pan-Seared Salmon',
-                      'Cá hồi áp chảo, sốt bơ chanh, rau củ theo mùa.',
-                      '239.000đ',
-                      '/assets/pic/menu/Main2.jpeg',
-                      'Best'
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="main" data-tags="signature" data-name="truffle cream pasta" data-price="149000">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Truffle Cream Pasta',
-                      'Mì Ý sốt kem truffle, phô mai Parmesan.',
-                      '149.000đ',
-                      '/assets/pic/menu/Main3.jpeg',
-                      'Chef’s Pick'
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="main" data-tags="new" data-name="roasted chicken" data-price="169000" data-new="1">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Herb Roasted Chicken',
-                      'Gà nướng thảo mộc, da giòn, thịt mọng.',
-                      '169.000đ',
-                      '/assets/pic/menu/Main4.jpeg',
-                      'New'
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="main" data-tags="best" data-name="garlic shrimp rice" data-price="159000">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Garlic Shrimp Rice',
-                      'Tôm xào bơ tỏi, cơm nóng, hương vị đậm đà.',
-                      '159.000đ',
-                      '/assets/pic/menu/Main5.jpeg',
-                      'Best'
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="main" data-tags="premium" data-name="mushroom risotto" data-price="139000">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Mushroom Risotto',
-                      'Risotto nấm Ý, béo nhẹ, phù hợp ăn chay.',
-                      '139.000đ',
-                      '/assets/pic/menu/Main5.jpeg',
-                      'Premium'
-                    )}"></div>
-                  </div>
-
-                </div>
-              </section>
-
-              <section class="menu-section" data-section="dessert">
-                <div class="menu-section-head">
-                  <h3>Desserts</h3>
-                  <span class="section-hint">Finish on a sweet note</span>
-                </div>
-
-                <div class="menu-grid">
-
-                  <div class="dish-wrap" data-cat="dessert" data-tags="best" data-name="classic tiramisu" data-price="99000">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Classic Tiramisu',
-                      'Espresso, cacao, hậu vị nhẹ và cân bằng.',
-                      '99.000đ',
-                      '/assets/pic/menu/Dessert1.jpeg',
-                      'Best'
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="dessert" data-tags="signature,premium" data-name="chocolate lava cake" data-price="109000">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Chocolate Lava Cake',
-                      'Bánh chocolate nóng chảy, dùng kèm kem vani.',
-                      '109.000đ',
-                      '/assets/pic/menu/Dessert2.jpeg',
-                      'Signature'
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="dessert" data-tags="new" data-name="new york cheesecake" data-price="99000" data-new="1">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'New York Cheesecake',
-                      'Cheesecake mịn, béo nhẹ, sốt berry.',
-                      '99.000đ',
-                      '/assets/pic/menu/Dessert3.jpeg',
-                      'New'
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="dessert" data-tags="" data-name="vanilla ice cream" data-price="59000">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Vanilla Ice Cream',
-                      'Kem vani mát lạnh, vị ngọt dịu.',
-                      '59.000đ',
-                      '/assets/pic/menu/Dessert4.jpeg',
-                      ''
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="dessert" data-tags="premium" data-name="fruit panna cotta" data-price="89000">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Fruit Panna Cotta',
-                      'Panna cotta mịn, ăn kèm trái cây tươi theo mùa.',
-                      '89.000đ',
-                      '/assets/pic/menu/Dessert5.jpeg',
-                      'Premium'
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="dessert" data-tags="new,signature" data-name="matcha tiramisu" data-price="109000" data-new="1">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Matcha Tiramisu',
-                      'Tiramisu trà xanh, vị thanh nhẹ, hậu ngọt.',
-                      '109.000đ',
-                      '/assets/pic/menu/Dessert6.jpeg',
-                      'New'
-                    )}"></div>
-                  </div>
-
-                </div>
-              </section>
-
-              <section class="menu-section" data-section="drink">
-                <div class="menu-section-head">
-                  <h3>Drinks</h3>
-                  <span class="section-hint">Refresh & pair</span>
-                </div>
-
-                <div class="menu-grid">
-
-                  <div class="dish-wrap" data-cat="drink" data-tags="best" data-name="espresso" data-price="49000">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Espresso',
-                      'Cà phê espresso đậm vị, rang xay nguyên chất.',
-                      '49.000đ',
-                      '/assets/pic/menu/Drink1.jpeg',
-                      'Best'
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="drink" data-tags="" data-name="latte" data-price="59000">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Latte',
-                      'Cà phê sữa nóng, vị dịu, dễ uống.',
-                      '59.000đ',
-                      '/assets/pic/menu/Drink2.jpeg',
-                      ''
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="drink" data-tags="premium" data-name="fresh orange juice" data-price="69000">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Fresh Orange Juice',
-                      'Nước cam tươi nguyên chất, giàu vitamin C.',
-                      '69.000đ',
-                      '/assets/pic/menu/Drink3.jpeg',
-                      'Premium'
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="drink" data-tags="" data-name="iced lemon tea" data-price="49000">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Iced Lemon Tea',
-                      'Trà chanh mát lạnh, thanh nhẹ.',
-                      '49.000đ',
-                      '/assets/pic/menu/Drink4.jpeg',
-                      ''
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="drink" data-tags="signature" data-name="tropical mocktail" data-price="89000">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Tropical Mocktail',
-                      'Mocktail trái cây nhiệt đới, không cồn.',
-                      '89.000đ',
-                      '/assets/pic/menu/Drink5.jpeg',
-                      'Signature'
-                    )}"></div>
-                  </div>
-
-                  <div class="dish-wrap" data-cat="drink" data-tags="new" data-name="sparkling water" data-price="39000" data-new="1">
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                      'Sparkling Water',
-                      'Nước khoáng có gas, vị thanh mát.',
-                      '39.000đ',
-                      '/assets/pic/menu/Drink6.jpeg',
-                      'New'
-                    )}"></div>
-                  </div>
-
-                </div>
-              </section>
 
             </div>
 

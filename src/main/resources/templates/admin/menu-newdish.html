@@ -124,7 +124,7 @@
           <!-- FORM (RIGHT) -->
           <div class="adddish-form">
             <form id="dishForm"
-                  th:action="@{/menu/newdish}"
+                  th:action="@{/menu-items/newdish}"
                   method="post"
                   class="dish-form"
                   enctype="multipart/form-data">
@@ -207,21 +207,14 @@
                     </div>
 
                     <div class="chips chips-grid" aria-label="Allergens">
-                      <label class="chip-check"><input type="checkbox" name="allergens" value="peanuts" /><span>Peanuts</span></label>
-                      <label class="chip-check"><input type="checkbox" name="allergens" value="tree_nuts" /><span>Tree nuts</span></label>
-                      <label class="chip-check"><input type="checkbox" name="allergens" value="milk" /><span>Milk</span></label>
-                      <label class="chip-check"><input type="checkbox" name="allergens" value="eggs" /><span>Eggs</span></label>
-                      <label class="chip-check"><input type="checkbox" name="allergens" value="wheat_gluten" /><span>Wheat/Gluten</span></label>
-                      <label class="chip-check"><input type="checkbox" name="allergens" value="soy" /><span>Soy</span></label>
-                      <label class="chip-check"><input type="checkbox" name="allergens" value="fish" /><span>Fish</span></label>
-                      <label class="chip-check"><input type="checkbox" name="allergens" value="shellfish" /><span>Shellfish</span></label>
+                      <label class="chip-check" th:each="a : ${allergenEnums}">
+                        <input type="checkbox"
+                              name="allergens"
+                              th:value="${#strings.toLowerCase(a.name())}" />
+                        <span th:text="${#strings.capitalize(#strings.replace(#strings.toLowerCase(a.name()), '_', ' '))}">Allergen</span>
+                      </label>
                     </div>
 
-                    <div class="field">
-                      <label for="allergenNote">Ghi chú dị ứng (tuỳ chọn)</label>
-                      <input id="allergenNote" name="allergenNote" type="text"
-                        placeholder="VD: Có sữa và gluten. Có thể yêu cầu không sữa." />
-                    </div>
                   </section>
                 </div>
 
@@ -242,10 +235,11 @@
                     <div class="field">
                       <label>Tag</label>
                       <div class="chips chips-grid">
-                        <label class="chip-check"><input type="checkbox" name="tags" value="best" /><span>Best</span></label>
-                        <label class="chip-check"><input type="checkbox" name="tags" value="new" /><span>New</span></label>
-                        <label class="chip-check"><input type="checkbox" name="tags" value="signature" /><span>Signature</span></label>
-                        <label class="chip-check"><input type="checkbox" name="tags" value="premium" /><span>Premium</span></label>
+                        <label class="chip-check" th:each="t : ${tagEnums}">
+                          <input type="checkbox"
+                                name="tags"
+                                th:value="${#strings.toLowerCase(t.name())}" />
+                          <span th:text="${#strings.capitalize(#strings.replace(#strings.toLowerCase(t.name()), '_', ' '))}">Tag</span>                        </label>
                       </div>
                     </div>
 
@@ -257,10 +251,6 @@
                         )
                       }"></div>
 
-                      <div class="field">
-                        <label for="label">Nhãn hiển thị (tuỳ chọn)</label>
-                        <input id="label" name="label" type="text" placeholder="VD: Chef’s Pick / New / Best" />
-                      </div>
                     </div>
                   </section>
                 </div>

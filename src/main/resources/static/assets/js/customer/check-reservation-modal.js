@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const yesBtn = document.getElementById("crYesBtn");
   const noBtn  = document.getElementById("crNoBtn");
 
-  const RESERVED_OK_URL = "/dinio/orders/temp";
+  const RESERVED_OK_URL = "/dinio/preorder";
   const RESERVATION_URL = "/dinio/reservation/tables"; 
 
   const open = () => {

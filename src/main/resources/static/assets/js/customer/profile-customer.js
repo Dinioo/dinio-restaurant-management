@@ -1,19 +1,5 @@
 const $ = (s) => document.querySelector(s);
 
-const toastEl = $("#toast");
-const toastMsg = $("#toastMsg");
-const toastHint = $("#toastHint");
-
-function showToast(message, hint = "", type = "ok") {
-  if (!toastEl) return;
-  toastEl.classList.toggle("error", type === "error");
-  if (toastMsg) toastMsg.textContent = message || "";
-  if (toastHint) toastHint.textContent = hint || "";
-  toastEl.classList.add("show");
-  clearTimeout(showToast._t);
-  showToast._t = setTimeout(() => toastEl.classList.remove("show"), 2600);
-}
-
 function formatDateTime(d) {
   const pad = (n) => String(n).padStart(2, "0");
   return `${pad(d.getHours())}:${pad(d.getMinutes())} • ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
@@ -71,7 +57,7 @@ const user = {
   address: "123 Nguyễn Huệ, Q.1, TP.HCM",
   note: "Thích bàn gần cửa sổ.",
   avatarUrl: $("#avatarImg") ? $("#avatarImg").src : "",
-  updatedAt: null
+  updatedAt: null,
 };
 
 function loadToUI() {
@@ -118,12 +104,11 @@ function loadToUI() {
 }
 
 function logout() {
-  showToast("Đã đăng xuất", "Chuyển về trang đăng nhập...");
+  infoToast("Đăng xuất thành công");
   setTimeout(() => {
     window.location.href = "/login";
   }, 900);
 }
-
 
 function bindTabs() {
   document.querySelectorAll(".profile-pill").forEach((pill) => {
@@ -145,8 +130,14 @@ function bindAvatar() {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
 
+    if (!file.type.startsWith("image/")) {
+      errorToast("Vui lòng chọn đúng file ảnh");
+      input.value = "";
+      return;
+    }
+
     if (file.size > 2 * 1024 * 1024) {
-      showToast("Ảnh quá lớn", "Vui lòng chọn ảnh dưới 2MB.", "error");
+      errorToast("Ảnh quá lớn (tối đa 2MB)");
       input.value = "";
       return;
     }
@@ -156,7 +147,7 @@ function bindAvatar() {
       user.avatarUrl = reader.result;
       user.updatedAt = formatDateTime(new Date());
       loadToUI();
-      showToast("Đã cập nhật ảnh đại diện", "Nhớ lưu lên server nếu cần.");
+      successToast("Đã cập nhật ảnh đại diện");
     };
     reader.readAsDataURL(file);
   });
@@ -175,11 +166,11 @@ function bindForms() {
       const phone = $("#phone")?.value.trim() || "";
 
       if (fullName.length < 2) {
-        showToast("Tên chưa hợp lệ", "Vui lòng nhập họ tên đầy đủ.", "error");
+        errorToast("Tên chưa hợp lệ (nhập đầy đủ họ tên)");
         return;
       }
       if (!isValidPhone(phone)) {
-        showToast("SĐT chưa hợp lệ", "Chỉ dùng số, dấu cách, +, - ( )", "error");
+        errorToast("SĐT chưa hợp lệ (chỉ dùng số, +, -, ( ), dấu cách)");
         return;
       }
 
@@ -192,7 +183,7 @@ function bindForms() {
       user.updatedAt = formatDateTime(new Date());
 
       loadToUI();
-      showToast("Đã lưu hồ sơ", "Thông tin của bạn đã được cập nhật.");
+      successToast("Thông tin đã được cập nhật");
     });
   }
 
@@ -204,11 +195,11 @@ function bindForms() {
       const pwd = $("#emailPassword")?.value || "";
 
       if (!isValidEmail(newEmail)) {
-        showToast("Email mới chưa hợp lệ", "Vui lòng kiểm tra lại.", "error");
+        errorToast("Email mới chưa hợp lệ");
         return;
       }
       if (pwd.length < 6) {
-        showToast("Mật khẩu chưa đúng", "Vui lòng nhập mật khẩu hiện tại.", "error");
+        errorToast("Mật khẩu hiện tại chưa đúng");
         return;
       }
 
@@ -217,7 +208,7 @@ function bindForms() {
 
       emailForm.reset();
       loadToUI();
-      showToast("Đổi email thành công", "Bạn có thể cần đăng nhập lại.");
+      successToast("Đổi email thành công");
     });
   }
 
@@ -230,26 +221,26 @@ function bindForms() {
       const confirm = $("#confirmPassword")?.value || "";
 
       if (oldPwd.length < 6) {
-        showToast("Mật khẩu hiện tại chưa hợp lệ", "Vui lòng nhập đúng mật khẩu.", "error");
+        errorToast("Mật khẩu hiện tại chưa hợp lệ");
         return;
       }
       if (newPwd.length < 8) {
-        showToast("Mật khẩu mới quá ngắn", "Tối thiểu 8 ký tự.", "error");
+        errorToast("Mật khẩu mới quá ngắn (tối thiểu 8 ký tự)");
         return;
       }
       if (newPwd !== confirm) {
-        showToast("Xác nhận mật khẩu không khớp", "Vui lòng nhập lại.", "error");
+        errorToast("Xác nhận mật khẩu không khớp");
         return;
       }
       if (newPwd === oldPwd) {
-        showToast("Mật khẩu mới trùng mật khẩu cũ", "Chọn mật khẩu khác.", "error");
+        warningToast("Mật khẩu mới trùng mật khẩu cũ");
         return;
       }
 
       passwordForm.reset();
       user.updatedAt = formatDateTime(new Date());
       loadToUI();
-      showToast("Đổi mật khẩu thành công", "Để an toàn, hãy đăng xuất và đăng nhập lại.");
+      successToast("Đổi mật khẩu thành công");
     });
   }
 

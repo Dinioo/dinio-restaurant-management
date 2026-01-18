@@ -101,28 +101,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const response = await fetch('/dinio/api/forgot-password/reset', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-              email: currentEmail, 
-              otp: currentOtp, 
-              newPassword: p1 
-          })
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: currentEmail,
+          otp: currentOtp,
+          newPassword: p1
+        })
       });
       const result = await response.text();
 
       if (response.ok) {
-          showAlert("Đổi mật khẩu thành công!", false);
-          setTimeout(() => {
-              closeResetModal();
-              window.location.href = "/login";
-          }, 1500);
+        successToast("Đổi mật khẩu thành công");
+
+        setTimeout(() => {
+          closeResetModal();
+          window.location.href = "/login";
+        }, 1500);
       } else {
-          showAlert(result, true);
+        errorToast(result || "Đổi mật khẩu thất bại");
       }
-  } catch (error) {
+
+    } catch (error) {
       showAlert("Lỗi hệ thống.", true);
-  }
+    }
 
     if (submitBtn) {
       submitBtn.disabled = false;

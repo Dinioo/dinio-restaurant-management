@@ -5,7 +5,7 @@ public enum AllergyTag {
     TREE_NUTS,
     MILK,
     EGGS,
-    WHEAT,
+    WHEAT_GLUTEN,
     SOY,
     FISH,
     SHELLFISH

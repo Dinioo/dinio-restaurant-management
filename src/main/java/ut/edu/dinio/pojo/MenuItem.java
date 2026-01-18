@@ -20,6 +20,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import ut.edu.dinio.pojo.enums.AllergyTag;
 import ut.edu.dinio.pojo.enums.ItemTag;
 import ut.edu.dinio.pojo.enums.SpiceLevel;
 
@@ -47,6 +48,13 @@ public class MenuItem {
     @Column(name = "item_tag", length = 50, nullable = false)
     @Enumerated(EnumType.STRING)
     private Set<ItemTag> itemTags = new HashSet<>();
+
+    @ElementCollection(targetClass = AllergyTag.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "menu_item_allergens", joinColumns = @JoinColumn(name = "MenuItemID"))
+    @Column(name = "allergy_tag", length = 50, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Set<AllergyTag> allergyTags = new HashSet<>();
+
     @Lob
     @Column(name = "Ingredients", columnDefinition = "NVARCHAR(MAX)")
     private String ingredients; 
@@ -93,6 +101,7 @@ public class MenuItem {
     public String getName() { return name; }
     public String getDescription() { return description; }
     public Set<ItemTag> getItemTags() { return itemTags; }
+    public Set<AllergyTag> getAllergyTags() { return allergyTags; }
     public String getIngredients() { return ingredients; }
     public Integer getCalories() { return calories; }
     public SpiceLevel getSpiceLevel() { return spiceLevel; }
@@ -110,6 +119,7 @@ public class MenuItem {
     public void setName(String name) { this.name = name; }
     public void setDescription(String description) { this.description = description; }
     public void setItemTags(Set<ItemTag> itemTags) { this.itemTags = itemTags; }
+    public void setAllergyTags(Set<AllergyTag> allergyTags) { this.allergyTags = allergyTags; }
     public void setIngredients(String ingredients) { this.ingredients = ingredients; }
     public void setCalories(Integer calories) { this.calories = calories; }
     public void setSpiceLevel(SpiceLevel spiceLevel) { this.spiceLevel = spiceLevel; }

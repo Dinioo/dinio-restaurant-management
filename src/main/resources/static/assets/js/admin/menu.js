@@ -42,7 +42,7 @@
     let visible = 0;
 
     items.forEach(el => {
-      const cat  = norm(el.dataset.cat || "all");
+      const cat = (el.dataset.cat || "all").toString().trim();
       const tags = parseTags(el.dataset.tags || "");
       const name = norm(el.dataset.name || el.textContent);
 
@@ -104,7 +104,7 @@
   // ===== events =====
   catBtns.forEach(btn => {
     btn.addEventListener("click", () => {
-      state.cat = norm(btn.dataset.cat || "all");
+      state.cat = (btn.dataset.cat || "all").toString().trim();
       setActive(catBtns, btn);
 
       // when changing category, optionally scroll to that section
@@ -160,7 +160,7 @@
   // ===== init =====
   // optional: read ?cat=main&tag=best&q=pasta
   const params = new URLSearchParams(location.search);
-  if (params.get("cat")) state.cat = norm(params.get("cat"));
+  if (params.get("cat")) state.cat = params.get("cat").toString().trim();
   if (params.get("tag")) state.tag = norm(params.get("tag"));
   if (params.get("q"))   state.q   = norm(params.get("q"));
 
@@ -168,7 +168,7 @@
   if (state.q && input) input.value = state.q;
 
   // activate cat button
-  const activeCatBtn = Array.from(catBtns).find(b => norm(b.dataset.cat) === state.cat);
+  const activeCatBtn = Array.from(catBtns).find(b => (b.dataset.cat || "all").toString().trim() === state.cat);
   if (activeCatBtn) setActive(catBtns, activeCatBtn);
 
   // activate tag chip

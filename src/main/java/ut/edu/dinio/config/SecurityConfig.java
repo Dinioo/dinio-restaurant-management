@@ -33,7 +33,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/forgot-password/**", "/api/send-otp/**", "/api/reset-password/**","/api/reservations/cancel"))
             .securityContext(context -> context
                 .securityContextRepository(securityContextRepository())
             )

@@ -78,6 +78,48 @@ public class CustomerService implements UserDetailsService {
         return "success";
     }
 
+    public Customer updateProfile(Integer id, String fullName, String phone) {
+        Customer c = getById(id);
+        if (c != null) {
+            c.setFullName(fullName);
+            c.setPhone(phone);
+            return customerRepository.save(c);
+        }
+        return null;
+    }
+
+    public String updatePassword(Integer id, String oldPwd, String newPwd) {
+        Customer c = getById(id);
+        if (c == null) return "Người dùng không tồn tại";
+        if (!passwordEncoder.matches(oldPwd, c.getPasswordHash())) {
+            return "Mật khẩu hiện tại không đúng";
+        }
+        c.setPasswordHash(passwordEncoder.encode(newPwd));
+        customerRepository.save(c);
+        return "success";
+    }
+
+    public String updateEmail(Integer id, String newEmail, String password) {
+        Customer c = getById(id);
+        if (c == null) return "Người dùng không tồn tại";
+        
+        if (!passwordEncoder.matches(password, c.getPasswordHash())) {
+            return "Xác nhận mật khẩu không chính xác";
+        }
+    
+        Optional<Customer> existing = customerRepository.findByEmail(newEmail);
+        if (existing.isPresent() && !existing.get().getId().equals(id)) {
+            return "Email này đã được đăng ký bởi tài khoản khác";
+        }
+
+        c.setEmail(newEmail);
+        customerRepository.save(c);
+        return "success";
+    }
+    
+    public Customer getById(Integer id) {
+        return customerRepository.findById(id).orElse(null);
+    }
     public Customer findByEmail(String email) {
         return customerRepository.findByEmail(email).orElse(null);
     }

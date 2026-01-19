@@ -17,9 +17,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -138,22 +138,28 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String handleRegister( @RequestParam String fullName, @RequestParam String identifier, @RequestParam String password, @RequestParam String confirmPassword,
-            Model model, RedirectAttributes redirectAttributes) {
+    @ResponseBody 
+    public ResponseEntity<?> handleRegister(@RequestBody Map<String, String> body) {
+        
+        String fullName = body.get("fullName");
+        String identifier = body.get("identifier");
+        String password = body.get("password");
+        String confirmPassword = body.get("confirmPassword");
+
+        if (fullName == null || identifier == null || password == null) {
+            return ResponseEntity.badRequest().body("Vui lòng nhập đầy đủ thông tin.");
+        }
 
         if (!password.equals(confirmPassword)) {
-            model.addAttribute("error", "Mật khẩu xác nhận không khớp!");
-            return "auth/register";
+            return ResponseEntity.badRequest().body("Mật khẩu xác nhận không khớp!");
         }
 
         String result = customerService.registerCustomer(fullName, identifier, password);
 
         if ("success".equals(result)) {
-            redirectAttributes.addFlashAttribute("successMessage", "Đăng ký thành công!");
-            return "redirect:/login";
+            return ResponseEntity.ok("Đăng ký thành công!");
         } else {
-            model.addAttribute("error", result);
-            return "auth/register";
+            return ResponseEntity.badRequest().body(result);
         }
     }
 

@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("registerForm");
-  const alertBox = document.getElementById("authAlert");
   const submitBtn = document.getElementById("submitBtn");
 
   const fullName = document.getElementById("fullName");
@@ -11,16 +10,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const pwToggle1 = document.getElementById("pwToggle1");
   const pwToggle2 = document.getElementById("pwToggle2");
 
-  const showAlert = (msg) => {
-    alertBox.textContent = msg;
-    alertBox.classList.remove("is-hidden");
-    alertBox.classList.add("error");
-  };
-
-  const hideAlert = () => {
-    alertBox.classList.add("is-hidden");
-    alertBox.classList.remove("error");
-    alertBox.textContent = "";
+  const getHeaders = () => {
+    const token = document.querySelector('meta[name="_csrf"]')?.content;
+    const header = document.querySelector('meta[name="_csrf_header"]')?.content;
+    const headers = { 'Content-Type': 'application/json' };
+    
+    if (token && header) {
+      headers[header] = token; 
+    }
+    return headers;
   };
 
   const isEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
@@ -36,55 +34,67 @@ document.addEventListener("DOMContentLoaded", () => {
   pwToggle1?.addEventListener("click", () => togglePw(password, pwToggle1));
   pwToggle2?.addEventListener("click", () => togglePw(confirmPassword, pwToggle2));
 
-  document.querySelectorAll(".social-btn").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      const provider = btn.dataset.provider || "provider";
-      infoToast(`Đăng ký qua ${provider} hiện chưa được hỗ trợ.`);
-      setTimeout(hideAlert, 2600);
-    });
-  });
-
   identifier?.addEventListener("input", () => {
     const v = (identifier.value || "").trim();
     if (/^(\+84|0)?\d+$/.test(v)) identifier.setAttribute("inputmode", "tel");
     else identifier.setAttribute("inputmode", "email");
   });
 
-  form?.addEventListener("submit", (e) => {
-    hideAlert();
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
     const nameVal = (fullName.value || "").trim();
     const idVal = (identifier.value || "").trim();
     const pwVal = password.value || "";
     const cpwVal = confirmPassword.value || "";
 
-    if (nameVal.length < 2) {
-      e.preventDefault();
-      showAlert("Vui lòng nhập họ tên hợp lệ (tối thiểu 2 ký tự).");
-      return;
-    }
+    if (nameVal.length < 2) return errorToast("Vui lòng nhập họ tên hợp lệ (tối thiểu 2 ký tự).");
+    if (!isEmail(idVal) && !isPhone(idVal)) return errorToast("Vui lòng nhập Email hoặc số điện thoại hợp lệ.");
+    if (pwVal.length < 6) return errorToast("Mật khẩu tối thiểu 6 ký tự.");
+    if (pwVal !== cpwVal) return errorToast("Mật khẩu nhập lại không khớp.");
 
-    if (!isEmail(idVal) && !isPhone(idVal)) {
-      e.preventDefault();
-      showAlert("Vui lòng nhập Email hoặc số điện thoại hợp lệ.");
-      return;
-    }
-
-    if (pwVal.length < 6) {
-      e.preventDefault();
-      showAlert("Mật khẩu tối thiểu 6 ký tự.");
-      return;
-    }
-
-    if (pwVal !== cpwVal) {
-      e.preventDefault();
-      showAlert("Mật khẩu nhập lại không khớp.");
-      return;
-    }
-
+    const originalBtnText = submitBtn.innerHTML;
     submitBtn.disabled = true;
-    submitBtn.style.opacity = "0.85";
-    submitBtn.querySelector("span").textContent = "Đang tạo tài khoản...";
+    submitBtn.innerHTML = `<span>Đang xử lý...</span>`;
+
+    try {
+      const response = await fetch('/dinio/register', { 
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({
+          fullName: nameVal,
+          identifier: idVal,
+          password: pwVal,
+          confirmPassword: cpwVal
+        })
+      });
+
+      const message = await response.text();
+
+      if (response.ok) {
+        successToast("Đăng ký thành công! Đang chuyển hướng...");
+        setTimeout(() => {
+          window.location.href = "/dinio/login"; 
+        }, 1500);
+      } else {
+        errorToast(message || "Đăng ký thất bại.");
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+      }
+
+    } catch (err) {
+      console.error(err);
+      errorToast("Lỗi kết nối đến máy chủ.");
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnText;
+    }
+  });
+
+  document.querySelectorAll(".social-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const provider = btn.dataset.provider || "provider";
+      infoToast(`Đăng ký qua ${provider} hiện chưa được hỗ trợ.`);
+    });
   });
 });

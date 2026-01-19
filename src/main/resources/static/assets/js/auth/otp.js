@@ -8,6 +8,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const emailPreview = document.getElementById("fpOtpEmailPreview");
   const resendBtn = document.getElementById("fpResendOtpBtn");
 
+  const getHeaders = () => {
+    const token = document.querySelector('meta[name="_csrf"]')?.content;
+    const header = document.querySelector('meta[name="_csrf_header"]')?.content;
+    const headers = { 'Content-Type': 'application/json' };
+    
+    if (token && header) {
+      headers[header] = token; 
+    }
+    return headers;
+  };
+
   let currentEmail = "";
 
   const showAlert = (msg, isError = true) => {
@@ -92,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const response = await fetch('/dinio/api/forgot-password/verify-otp', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: getHeaders(),
           body: JSON.stringify({ email: currentEmail, otp: otp })
       });
       const result = await response.text();

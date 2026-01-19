@@ -2,6 +2,17 @@
   const $ = (s, root = document) => root.querySelector(s);
   const $$ = (s, root = document) => Array.from(root.querySelectorAll(s));
 
+  const getHeaders = () => {
+    const token = document.querySelector('meta[name="_csrf"]')?.content;
+    const header = document.querySelector('meta[name="_csrf_header"]')?.content;
+    const headers = { 'Content-Type': 'application/json' };
+    
+    if (token && header) {
+      headers[header] = token; 
+    }
+    return headers;
+  };
+
   const grid = $("#myresGrid");
   if (!grid) 
     return;
@@ -295,7 +306,7 @@
     try {
       const response = await fetch('/dinio/api/reservations/cancel', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getHeaders(),
         body: JSON.stringify({ id: pendingCancel.id })
       });
 

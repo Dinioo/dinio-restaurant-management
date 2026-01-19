@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
     finally {
       submitBtn.disabled = false;
       submitBtn.style.opacity = "1";
-      submitBtn.querySelector("span").textContent = originalBtnText; // ✅ restore đúng
+      submitBtn.querySelector("span").textContent = originalBtnText;
     }
 
   });

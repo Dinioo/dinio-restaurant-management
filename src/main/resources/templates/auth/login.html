@@ -8,6 +8,9 @@
   <meta name="_csrf_header" th:content="${_csrf.headerName}" />
   <title>DINIO — Sign in</title>
 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
   <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
   <link rel="stylesheet" th:href="@{/assets/css/auth/login.css}" />
   <link rel="stylesheet" th:href="@{/assets/css/components/forgot-password.css}" />
@@ -16,6 +19,11 @@
 
 
   <script th:src="@{/assets/js/header-dropdown.js}"></script>
+  <script th:src="@{/assets/js/toast.js}" defer></script>
+  <script th:src="@{/assets/js/auth/login.js}" defer></script>
+  <script th:src="@{/assets/js/auth/forgot-password.js}" defer></script>
+  <script th:src="@{/assets/js/auth/otp.js}" defer></script>
+  <script th:src="@{/assets/js/auth/reset-password-modal.js}" defer></script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
@@ -151,10 +159,6 @@
 
     </section>
   </main>
-<script th:src="@{/assets/js/auth/reset-password-modal.js}"></script>
-<script th:src="@{/assets/js/auth/otp.js}"></script>
-<script th:src="@{/assets/js/auth/forgot-password.js}"></script>
-<script th:src="@{/assets/js/auth/login.js}"></script>
 
 </body>
 

@@ -34,6 +34,18 @@ public class Customer {
     @Column(name = "Email", length = 120, unique=true, columnDefinition = "NVARCHAR(120)")
     private String email;
 
+    @Column(name = "Gender")
+    private Boolean gender;
+
+    @Column(name = "DateOfBirth")
+    private LocalDateTime dateOfBirth;
+
+    @Column(name = "Address", nullable = false, length = 120, columnDefinition = "NVARCHAR(120)")
+    private String address;
+
+    @Column(name = "Note", length = 500, columnDefinition = "NVARCHAR(500)")
+    private String note;
+
     @Column(name = "PasswordHash", nullable = false, length = 255)
     private String passwordHash;
 
@@ -42,6 +54,9 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Reservation> reservations = new ArrayList<>();
+
+    @Column(name = "ImageUrl", length = 500, columnDefinition = "NVARCHAR(500)")
+    private String imageUrl;
 
     public Customer() {}
 
@@ -55,8 +70,13 @@ public class Customer {
     public String getFullName() { return fullName; }
     public String getPhone() { return phone; }
     public String getEmail() { return email; }
+    public Boolean getGender() { return gender; }
+    public LocalDateTime getDateOfBirth() { return dateOfBirth; }
+    public String getAddress() { return address; }
+    public String getNote() { return note; }
     public String getPasswordHash() { return passwordHash; }
     public LocalDateTime getCreatedAt() { return createdAt; }
+    public String getImageUrl() { return imageUrl; }
 
     @JsonIgnore
     public List<Reservation> getReservations() { return reservations; }
@@ -67,6 +87,11 @@ public class Customer {
     public void setEmail(String email) { this.email = email; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public void setReservations(List<Reservation> reservations) { this.reservations = reservations; }
+    public void setGender(Boolean gender) { this.gender = gender; }
+    public void setDateOfBirth(LocalDateTime dateOfBirth) { this.dateOfBirth = dateOfBirth; }
+    public void setAddress(String address) { this.address = address; }
+    public void setNote(String note) { this.note = note; }
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }
     

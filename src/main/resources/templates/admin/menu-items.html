@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,8 +8,6 @@
   <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
   <link rel="stylesheet" th:href="@{/assets/css/admin/menu-items.css}" />
   <script th:src="@{/assets/js/header-dropdown.js}"></script>
-
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
 
@@ -18,7 +15,6 @@
   <div th:replace="~{fragments/header :: header}"></div>
 
   <main>
-
     <section id="menu-head" class="section">
       <div class="menu-container">
         <div class="menu-head-card">
@@ -55,98 +51,37 @@
 
     <section id="menu-layout" class="section">
       <div class="menu-container">
-
         <div class="menu-shell">
 
           <aside class="menu-side" aria-label="Menu filters">
             <div class="side-card">
               <p class="side-title">Categories</p>
-
-              <nav class="side-tabs" aria-label="Menu categories">
-                <button class="side-tab"
-                        th:classappend="${cat == null} ? ' is-active' : ''"
-                        type="button" data-cat="all">All</button>
-
-                <button class="side-tab"
-                        th:each="c : ${categories}"
-                        th:text="${c.name}"
-                        th:attr="data-cat=${c.id}"
-                        th:classappend="${cat != null && cat == c.id} ? ' is-active' : ''"
-                        type="button"></button>
-              </nav>
+              <nav class="side-tabs" id="menuCatTabs" aria-label="Menu categories"></nav>
 
               <div class="side-divider"></div>
 
               <p class="side-title">Tags</p>
-              <div class="side-tags" aria-label="Menu tags">
-                <button class="chip"
-                        th:each="t : ${tags}"
-                        th:text="${#strings.capitalize(#strings.toLowerCase(t.name()))}"
-                        th:attr="data-tag=${#strings.toLowerCase(t.name())}"
-                        th:classappend="${tag != null && tag == #strings.toLowerCase(t.name())} ? ' is-active' : ''"
-                        type="button"></button>
-              </div>
+              <div class="side-tags" id="menuTagChips" aria-label="Menu tags"></div>
             </div>
           </aside>
 
           <div class="menu-main">
-
             <div class="menu-main-head">
               <p class="menu-count">Showing <b>0</b> items</p>
-              <a class="ghost-link" th:href="@{/menu}">Reset</a>
+              <a class="ghost-link" th:href="@{/menu-items}">Reset</a>
             </div>
 
-            <div class="menu-sections">
-              <section class="menu-section"
-                      th:each="c : ${categories}"
-                      th:attr="data-section=${c.id}">
-                <div class="menu-section-head">
-                  <h3 th:text="${c.name}">Category</h3>
-                  <span class="section-hint"></span>
-                </div>
-
-                <div class="menu-grid">
-
-                  <div class="dish-wrap"
-                      th:each="d : ${itemsByCategory[c.id]}"
-                      th:with="
-                          tagsCsv=${#strings.arrayJoin(d.itemTags.?[true].![#strings.toLowerCase(name())], ',')},
-                          searchText=${(d.name ?: '') + ' ' + (d.description ?: '') + ' ' + (d.ingredients ?: '')},
-                          isNew=${d.itemTags != null && d.itemTags.contains(T(ut.edu.dinio.pojo.enums.ItemTag).NEW)}
-                      "
-                      th:attr="data-cat=${c.id},
-                                data-tags=${tagsCsv},
-                                data-name=${searchText},
-                                data-price=${d.basePrice},
-                                data-new=${isNew ? 1 : 0}">
-
-                    <div th:replace="~{fragments/dish-card :: dishCard(
-                        ${d.name},
-                        ${d.description},
-                        ${#numbers.formatDecimal(d.basePrice,0,'COMMA',0,'POINT')} + 'đ',
-                        ${d.imageUrl},
-                        ${isNew ? 'New' : ''}
-                    )}"></div>
-                  </div>
-
-                </div>
-              </section>
-
-
-            </div>
-
+            <div class="menu-sections" id="menuSections"></div>
           </div>
 
         </div>
-
       </div>
     </section>
-
   </main>
 
   <div th:replace="~{fragments/footer :: footer}"></div>
 
-  <script th:src="@{/assets/js/admin/menu.js}"></script>
+  <script th:src="@{/assets/js/menu-common.js}" defer></script>
+  <script th:src="@{/assets/js/admin/menu-items.js}" defer></script>
 </body>
-
 </html>

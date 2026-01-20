@@ -27,6 +27,12 @@ public class MenuCategory {
     @Column(name = "Name", nullable = false, length = 120, columnDefinition = "NVARCHAR(120)")
     private String name;
 
+    @Column(name = "ImageUrl", length = 500, columnDefinition = "NVARCHAR(500)")
+    private String imageUrl;
+
+    @Column(name = "Description", length = 500, columnDefinition = "NVARCHAR(500)")
+    private String description;
+
     @Column(name = "SortOrder")
     private Integer sortOrder;
 
@@ -43,6 +49,8 @@ public class MenuCategory {
     public Integer getId() { return id; }
     public String getName() { return name; }
     public Integer getSortOrder() { return sortOrder; }
+    public String getImageUrl() { return imageUrl; }
+    public String getDescription() { return description; }
 
     @JsonIgnore
     public List<MenuItem> getItems() { return items; }
@@ -51,4 +59,6 @@ public class MenuCategory {
     public void setName(String name) { this.name = name; }
     public void setSortOrder(Integer sortOrder) { this.sortOrder = sortOrder; }
     public void setItems(List<MenuItem> items) { this.items = items; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public void setDescription(String description) { this.description = description; }
 }

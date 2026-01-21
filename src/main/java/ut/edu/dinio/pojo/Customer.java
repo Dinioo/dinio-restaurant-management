@@ -1,5 +1,6 @@
 package ut.edu.dinio.pojo;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class Customer {
     private Boolean gender;
 
     @Column(name = "DateOfBirth")
-    private LocalDateTime dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @Column(name = "Address", nullable = false, length = 120, columnDefinition = "NVARCHAR(120)")
     private String address;
@@ -66,12 +67,23 @@ public class Customer {
         this.email = email;
     }
 
+    public Customer(String address, LocalDate dateOfBirth, String email, String fullName, Boolean gender,  String imageUrl, String note, String phone) {
+        this.address = address;
+        this.dateOfBirth = dateOfBirth;
+        this.email = email;
+        this.fullName = fullName;
+        this.gender = gender;
+        this.imageUrl = imageUrl;
+        this.note = note;
+        this.phone = phone;
+    }
+
     public Integer getId() { return id; }
     public String getFullName() { return fullName; }
     public String getPhone() { return phone; }
     public String getEmail() { return email; }
     public Boolean getGender() { return gender; }
-    public LocalDateTime getDateOfBirth() { return dateOfBirth; }
+    public LocalDate getDateOfBirth() { return dateOfBirth; }
     public String getAddress() { return address; }
     public String getNote() { return note; }
     public String getPasswordHash() { return passwordHash; }
@@ -88,7 +100,7 @@ public class Customer {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public void setReservations(List<Reservation> reservations) { this.reservations = reservations; }
     public void setGender(Boolean gender) { this.gender = gender; }
-    public void setDateOfBirth(LocalDateTime dateOfBirth) { this.dateOfBirth = dateOfBirth; }
+    public void setDateOfBirth(LocalDate dateOfBirth) { this.dateOfBirth = dateOfBirth; }
     public void setAddress(String address) { this.address = address; }
     public void setNote(String note) { this.note = note; }
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }

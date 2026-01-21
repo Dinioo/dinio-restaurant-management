@@ -9,7 +9,6 @@
     return num.toLocaleString("vi-VN") + "đ";
   };
 
-  // Build dish card markup (keep wrapper .dish-wrap for your CSS)
   const buildDishWrap = (item) => {
     const wrap = document.createElement("div");
     wrap.className = "dish-wrap";
@@ -76,7 +75,7 @@
     return btn;
   };
 
-  // Core init (customer/admin call this)
+  // Core init
   window.initMenuPage = async function initMenuPage({ view = "customer" } = {}) {
     const catTabs = $("#menuCatTabs");
     const tagChips = $("#menuTagChips");
@@ -89,7 +88,6 @@
 
     if (!catTabs || !tagChips || !sectionsWrap) return;
 
-    // state from URL
     const params = new URLSearchParams(location.search);
     const state = {
       cat: params.get("cat") ? String(params.get("cat")).trim() : "all",
@@ -112,6 +110,9 @@
     const res = await fetch(`/dinio/api/menu/page-data?${qs.toString()}`);
     const data = await res.json();
 
+    if (data && data.cat != null) {
+    state.cat = String(data.cat);
+    }
     // render cats
     catTabs.innerHTML = "";
     const btnAll = buildCatButton("all", "All");

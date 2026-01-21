@@ -66,16 +66,19 @@ public class MenuController {
   @ResponseBody
   public ResponseEntity<?> menuPageData(
       @RequestParam(value = "q", required = false) String q,
-      @RequestParam(value = "cat", required = false) Integer cat,
+      @RequestParam(value = "cat", required = false) String catParam,
       @RequestParam(value = "tag", required = false) String tag,
       @RequestParam(value = "sort", required = false) String sort,
       @RequestParam(value = "view", required = false, defaultValue = "customer") String view
   ) {
+    Integer cat = resolveCategoryId(catParam);
     var data = menuViewService.getMenuPageData(q, cat, tag, sort);
 
     boolean isCustomer = "customer".equalsIgnoreCase(view);
 
     Map<String, Object> res = new HashMap<>();
+
+    res.put("cat", cat);        
 
     res.put("categories", data.categories.stream()
         .map(c -> Map.<String, Object>of(
@@ -110,7 +113,7 @@ public class MenuController {
 
                 m.put("name", it.getName());
                 m.put("description", it.getDescription());
-                m.put("price", it.getBasePrice()); // BigDecimal -> JSON number/string tuỳ Jackson config
+                m.put("price", it.getBasePrice());
                 m.put("imageUrl", it.getImageUrl());
 
                 m.put("ingredients", it.getIngredients());
@@ -193,5 +196,31 @@ public class MenuController {
     return "redirect:/menu-items";
   }
 
+  private Integer resolveCategoryId(String catParam) {
+  if (catParam == null || catParam.trim().isEmpty()) return null;
+
+  String raw = catParam.trim();
+
+  try {
+    return Integer.valueOf(raw);
+  } catch (NumberFormatException ignored) {}
+
+  String slug = raw.toLowerCase();
+
+  return menuCategoryRepository.findAllByOrderBySortOrderAscNameAsc()
+      .stream()
+      .filter(c -> {
+        String nameSlug = c.getName() == null ? "" : c.getName().toLowerCase().replaceAll("[^a-z0-9]+", "");
+        if (slug.equals("starter")) return nameSlug.contains("starter");
+        if (slug.equals("main"))    return nameSlug.contains("main");
+        if (slug.equals("dessert")) return nameSlug.contains("dessert");
+        if (slug.equals("drink"))   return nameSlug.contains("drink");
+        // fallback: slug match gần đúng
+        return nameSlug.contains(slug);
+      })
+      .map(MenuCategory::getId)
+      .findFirst()
+      .orElse(null);
+}
 
 }

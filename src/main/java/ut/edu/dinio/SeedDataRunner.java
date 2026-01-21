@@ -1,6 +1,7 @@
 package ut.edu.dinio;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.EnumSet;
 import java.util.Set;
@@ -186,9 +187,27 @@ public class SeedDataRunner implements CommandLineRunner {
         // =========================================================
         // 3) Customers + Reservations 
         // =========================================================
-        Customer c1 = new Customer("Lê Minh Anh", "0901000111", "minhanh@gmail.com");
+        Customer c1 = new Customer(
+        "Hà Nội",
+        LocalDate.of(2002, 5, 1),
+        "minhanh@gmail.com",
+        "Lê Minh Anh",
+        true,                             // gender (true = nam, false = nữ)
+        null,
+        null,
+        "0901000111"
+);
         c1.setPasswordHash(passwordEncoder.encode("hash_customer_1"));
-        Customer c2 = new Customer("Trần Quốc Huy", "0902000222", "quochuy@gmail.com");
+        Customer c2 = new Customer(
+        "TP.HCM",
+        LocalDate.of(2001, 8, 20),
+        "quochuy@gmail.com",
+        "Trần Quốc Huy",
+        true,
+        null,
+        null,
+        "0902000222"
+);
         c2.setPasswordHash(passwordEncoder.encode("hash_customer_2"));
         em.persist(c1);
         em.persist(c2);

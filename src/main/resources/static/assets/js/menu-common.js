@@ -99,19 +99,22 @@
     if (input && state.q) input.value = state.q;
     if (sortSel && state.sort) sortSel.value = state.sort;
 
-    // fetch data
     const qs = new URLSearchParams();
-    if (state.q) qs.set("q", state.q);
-    if (state.cat !== "all") qs.set("cat", state.cat);
-    if (state.tag) qs.set("tag", state.tag);
-    if (state.sort) qs.set("sort", state.sort);
+
     qs.set("view", view);
+
+    const urlCat = new URLSearchParams(location.search).get("cat");
+    if (urlCat) {
+      qs.set("cat", urlCat);
+    }
+
+    if (state.sort) qs.set("sort", state.sort);
 
     const res = await fetch(`/dinio/api/menu/page-data?${qs.toString()}`);
     const data = await res.json();
 
     if (data && data.cat != null) {
-    state.cat = String(data.cat);
+      state.cat = String(data.cat);
     }
     // render cats
     catTabs.innerHTML = "";
@@ -169,7 +172,7 @@
 
         const okCat = (state.cat === "all") || (cat === state.cat);
         const okTag = (!state.tag) || tags.includes(state.tag);
-        const okQ   = (!state.q) || name.includes(state.q);
+        const okQ = (!state.q) || name.includes(state.q);
 
         const show = okCat && okTag && okQ;
         el.classList.toggle("is-hidden", !show);
@@ -193,7 +196,7 @@
       grids.forEach(grid => {
         const children = Array.from(grid.querySelectorAll(":scope > .dish-wrap"));
         const sorted = children.sort((a, b) => {
-          if (mode === "low")  return getPrice(a) - getPrice(b);
+          if (mode === "low") return getPrice(a) - getPrice(b);
           if (mode === "high") return getPrice(b) - getPrice(a);
           if (mode === "newest") return (Number(b.dataset.new || 0) - Number(a.dataset.new || 0));
           return 0;

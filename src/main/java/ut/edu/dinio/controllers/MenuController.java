@@ -72,13 +72,17 @@ public class MenuController {
       @RequestParam(value = "view", required = false, defaultValue = "customer") String view
   ) {
     Integer cat = resolveCategoryId(catParam);
-    var data = menuViewService.getMenuPageData(q, cat, tag, sort);
+  Integer initialCatId = resolveCategoryId(catParam);
+
+  Integer filterCatId = null;
+
+    var data = menuViewService.getMenuPageData(q, filterCatId, tag, sort);
 
     boolean isCustomer = "customer".equalsIgnoreCase(view);
 
     Map<String, Object> res = new HashMap<>();
 
-    res.put("cat", cat);        
+    res.put("cat", initialCatId);   
 
     res.put("categories", data.categories.stream()
         .map(c -> Map.<String, Object>of(

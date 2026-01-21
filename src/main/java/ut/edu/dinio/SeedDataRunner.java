@@ -104,80 +104,80 @@ public class SeedDataRunner implements CommandLineRunner {
 
         // Starters
         catStarters.getItems().add(mi(catStarters,"Bruschetta","Bánh mì nướng, cà chua, basil.", bd(79000),
-                "img/menu/starters/bruschetta.jpg", tags(ItemTag.NEW), "Bread, tomato, basil", 320, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005761/food1_dtc686.jpg", tags(ItemTag.NEW), "Bread, tomato, basil", 320, SpiceLevel.NOT_SPICY));
 
         catStarters.getItems().add(mi(catStarters,"Mushroom Cream Soup","Súp kem nấm béo mịn, thơm rosemary.", bd(89000),
-                "img/menu/starters/mushroom-cream-soup.jpg", tags(ItemTag.PREMIUM), "Mushroom, cream, rosemary", 380, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005817/starters1_xjiz2s.jpg", tags(ItemTag.PREMIUM), "Mushroom, cream, rosemary", 380, SpiceLevel.NOT_SPICY));
 
         catStarters.getItems().add(mi(catStarters,"Spring Rolls","Chả giò giòn rụm, dùng kèm nước chấm.", bd(79000),
-                "img/menu/starters/spring-rolls.jpg", tags(ItemTag.BEST), "Pork, shrimp, wrapper, herbs", 420, SpiceLevel.MILD));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005818/starters2_fcivxk.jpg", tags(ItemTag.BEST), "Pork, shrimp, wrapper, herbs", 420, SpiceLevel.MILD));
 
         catStarters.getItems().add(mi(catStarters,"Crispy Fried Shrimp","Tôm chiên giòn, sốt chua ngọt, kèm chanh.", bd(129000),
-                "img/menu/starters/crispy-fried-shrimp.jpg", tags(ItemTag.NEW), "Shrimp, batter, sweet&sour sauce", 560, SpiceLevel.MILD));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005819/starters3_phrsc6.jpg", tags(ItemTag.NEW), "Shrimp, batter, sweet&sour sauce", 560, SpiceLevel.MILD));
 
         catStarters.getItems().add(mi(catStarters,"French Fries","Khoai tây chiên vàng giòn, kèm mayo/ketchup.", bd(59000),
-                "img/menu/starters/french-fries.jpg", tags(), "Potato, salt", 480, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005820/starters4_rv423g.jpg", tags(), "Potato, salt", 480, SpiceLevel.NOT_SPICY));
 
         catStarters.getItems().add(mi(catStarters,"Caesar Salad","Rau romaine, gà nướng, sốt Caesar & phô mai.", bd(109000),
-                "img/menu/starters/caesar-salad.jpg", tags(ItemTag.BEST), "Romaine, chicken, parmesan", 520, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005821/starters5_jr61i3.jpg", tags(ItemTag.BEST), "Romaine, chicken, parmesan", 520, SpiceLevel.NOT_SPICY));
 
         // Main
         catMain.getItems().add(mi(catMain,"Grilled Beef Steak","Bò nướng mềm, sốt tiêu đen, dùng kèm khoai tây.", bd(259000),
-                "img/menu/main/grilled-beef-steak.jpg", tags(ItemTag.SIGNATURE), "Beef, black pepper sauce, potato", 820, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005763/food3_cilk4f.jpg", tags(ItemTag.SIGNATURE), "Beef, black pepper sauce, potato", 820, SpiceLevel.NOT_SPICY));
 
         catMain.getItems().add(mi(catMain,"Pan-Seared Salmon","Cá hồi áp chảo, sốt bơ chanh, rau củ theo mùa.", bd(239000),
-                "img/menu/main/pan-seared-salmon.jpg", tags(ItemTag.BEST), "Salmon, butter lemon sauce, veggies", 760, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005816/Main5_atqozl.jpg", tags(ItemTag.BEST), "Salmon, butter lemon sauce, veggies", 760, SpiceLevel.NOT_SPICY));
 
         // Chef’s Pick (UI) -> map về SIGNATURE
         catMain.getItems().add(mi(catMain,"Truffle Cream Pasta","Mỳ sốt kem truffle, phô mai Parmesan.", bd(149000),
-                "img/menu/main/truffle-cream-pasta.jpg", tags(ItemTag.SIGNATURE), "Pasta, truffle cream, parmesan", 690, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005815/Main4_zrkwle.jpg", tags(ItemTag.SIGNATURE), "Pasta, truffle cream, parmesan", 690, SpiceLevel.NOT_SPICY));
 
         catMain.getItems().add(mi(catMain,"Herb Roasted Chicken","Gà nướng thảo mộc, da giòn, thịt mọng.", bd(169000),
-                "img/menu/main/herb-roasted-chicken.jpg", tags(ItemTag.NEW), "Chicken, herbs, gravy", 740, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005814/Main3_w6wpht.jpg", tags(ItemTag.NEW), "Chicken, herbs, gravy", 740, SpiceLevel.NOT_SPICY));
 
         catMain.getItems().add(mi(catMain,"Garlic Shrimp Rice","Tôm xào bơ tỏi, cơm nóng, hương vị đậm đà.", bd(159000),
-                "img/menu/main/garlic-shrimp-rice.jpg", tags(ItemTag.BEST), "Shrimp, garlic butter, rice", 780, SpiceLevel.MEDIUM));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005814/Main2_wyzvc9.jpg", tags(ItemTag.BEST), "Shrimp, garlic butter, rice", 780, SpiceLevel.MEDIUM));
 
         catMain.getItems().add(mi(catMain,"Mushroom Risotto","Risotto nấm Ý, béo nhẹ, phù hợp ăn chay.", bd(139000),
-                "img/menu/main/mushroom-risotto.jpg", tags(ItemTag.PREMIUM), "Rice, mushroom", 650, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005813/Main1_ueblhn.jpg", tags(ItemTag.PREMIUM), "Rice, mushroom", 650, SpiceLevel.NOT_SPICY));
 
         // Desserts
         catDesserts.getItems().add(mi(catDesserts,"Classic Tiramisu","Espresso, cacao, hậu vị nhẹ và cân bằng.", bd(99000),
-                "img/menu/desserts/classic-tiramisu.jpg", tags(ItemTag.BEST), "Mascarpone, espresso, cocoa", 520, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005822/Dessert1_xhpuj3.jpg", tags(ItemTag.BEST), "Mascarpone, espresso, cocoa", 520, SpiceLevel.NOT_SPICY));
 
         catDesserts.getItems().add(mi(catDesserts,"Chocolate Lava Cake","Bánh chocolate nóng chảy, dùng kèm kem vani.", bd(109000),
-                "img/menu/desserts/chocolate-lava-cake.jpg", tags(ItemTag.SIGNATURE), "Chocolate, vanilla ice cream", 610, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005823/Dessert2_xbakak.jpg", tags(ItemTag.SIGNATURE), "Chocolate, vanilla ice cream", 610, SpiceLevel.NOT_SPICY));
 
         catDesserts.getItems().add(mi(catDesserts,"New York Cheesecake","Cheesecake mịn, béo nhẹ, sốt berry.", bd(99000),
-                "img/menu/desserts/newyork-cheesecake.jpg", tags(ItemTag.NEW), "Cream cheese, berry sauce", 560, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005824/Dessert3_gr4crv.jpg", tags(ItemTag.NEW), "Cream cheese, berry sauce", 560, SpiceLevel.NOT_SPICY));
 
         catDesserts.getItems().add(mi(catDesserts,"Vanilla Ice Cream","Kem vani mát lạnh, vị ngọt dịu.", bd(59000),
-                "img/menu/desserts/vanilla-ice-cream.jpg", tags(), "Milk, vanilla", 280, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005825/Dessert4_pb1eft.jpg", tags(), "Milk, vanilla", 280, SpiceLevel.NOT_SPICY));
 
         catDesserts.getItems().add(mi(catDesserts,"Fruit Panna Cotta","Panna cotta mịn, ăn kèm trái cây tươi theo mùa.", bd(89000),
-                "img/menu/desserts/fruit-panna-cotta.jpg", tags(ItemTag.PREMIUM), "Cream, fruits", 410, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005826/Dessert5_srovtb.jpg", tags(ItemTag.PREMIUM), "Cream, fruits", 410, SpiceLevel.NOT_SPICY));
 
         catDesserts.getItems().add(mi(catDesserts,"Matcha Tiramisu","Tiramisu trà xanh, vị thanh nhẹ, hậu ngọt.", bd(109000),
-                "img/menu/desserts/matcha-tiramisu.jpg", tags(ItemTag.NEW), "Mascarpone, matcha", 540, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005828/Dessert6_fpff4d.jpg", tags(ItemTag.NEW), "Mascarpone, matcha", 540, SpiceLevel.NOT_SPICY));
 
         // Drinks
         catDrinks.getItems().add(mi(catDrinks,"Espresso","Cà phê espresso đậm vị, rang xay nguyên chất.", bd(49000),
-                "img/menu/drinks/espresso.jpg", tags(ItemTag.BEST), "Coffee beans", 15, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005828/Drink1_f8dbe3.jpg", tags(ItemTag.BEST), "Coffee beans", 15, SpiceLevel.NOT_SPICY));
 
         catDrinks.getItems().add(mi(catDrinks,"Latte","Cà phê sữa nóng, vị dịu, dễ uống.", bd(59000),
-                "img/menu/drinks/latte.jpg", tags(), "Coffee, milk", 180, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005831/Drink2_jdgic8.jpg", tags(), "Coffee, milk", 180, SpiceLevel.NOT_SPICY));
 
         catDrinks.getItems().add(mi(catDrinks,"Fresh Orange Juice","Nước cam tươi nguyên chất, giàu vitamin C.", bd(69000),
-                "img/menu/drinks/fresh-orange-juice.jpg", tags(ItemTag.PREMIUM), "Orange", 120, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005829/Drink3_dhqmhg.jpg", tags(ItemTag.PREMIUM), "Orange", 120, SpiceLevel.NOT_SPICY));
 
         catDrinks.getItems().add(mi(catDrinks,"Iced Lemon Tea","Trà chanh mát lạnh, thanh nhẹ.", bd(49000),
-                "img/menu/drinks/iced-lemon-tea.jpg", tags(), "Tea, lemon", 90, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005811/Drink4_us3fgj.jpg", tags(), "Tea, lemon", 90, SpiceLevel.NOT_SPICY));
 
         catDrinks.getItems().add(mi(catDrinks,"Tropical Mocktail","Mocktail trái cây nhiệt đới, không cồn.", bd(89000),
-                "img/menu/drinks/tropical-mocktail.jpg", tags(ItemTag.SIGNATURE), "Pineapple, mango, citrus", 160, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005812/Drink5_fmlhro.jpg", tags(ItemTag.SIGNATURE), "Pineapple, mango, citrus", 160, SpiceLevel.NOT_SPICY));
 
         catDrinks.getItems().add(mi(catDrinks,"Sparkling Water","Nước khoáng có gas, vị thanh mát.", bd(39000),
-                "img/menu/drinks/sparkling-water.jpg", tags(ItemTag.NEW), "Mineral water", 0, SpiceLevel.NOT_SPICY));
+                "https://res.cloudinary.com/dd8jemplj/image/upload/v1769005813/Drink6_vbfaei.jpg", tags(ItemTag.NEW), "Mineral water", 0, SpiceLevel.NOT_SPICY));
 
         em.persist(catStarters);
         em.persist(catMain);

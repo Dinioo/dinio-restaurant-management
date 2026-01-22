@@ -19,17 +19,20 @@ document.addEventListener("DOMContentLoaded", () => {
     return headers;
   };
 
-  if (!openForgotBtn || !fpModal) return;
+  if (!openForgotBtn || !fpModal) 
+    return;
 
   const showAlert = (msg, isError = true) => {
-    if (!fpAlert) return;
+    if (!fpAlert) 
+      return;
     fpAlert.textContent = msg;
     fpAlert.classList.remove("is-hidden");
     fpAlert.classList.toggle("error", isError);
   };
 
   const hideAlert = () => {
-    if (!fpAlert) return;
+    if (!fpAlert) 
+      return;
     fpAlert.textContent = "";
     fpAlert.classList.add("is-hidden");
     fpAlert.classList.remove("error");

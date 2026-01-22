@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("crModal");
-  if (!modal) return;
+  if (!modal) 
+    return;
 
   const yesBtn = document.getElementById("crYesBtn");
   const noBtn  = document.getElementById("crNoBtn");
@@ -19,11 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
     modal.setAttribute("aria-hidden", "true");
   };
 
-  // expose để gọi từ bất kỳ nút nào
   window.openCheckReservationModal = open;
   window.closeCheckReservationModal = close;
 
-  // close handlers
   modal.addEventListener("click", (e) => {
     if (e.target?.dataset?.close) close();
   });

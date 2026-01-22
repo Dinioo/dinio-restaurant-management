@@ -8,16 +8,13 @@
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <title>DINIO - Hồ sơ cá nhân</title>
 
-  <!-- Toastify -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
   <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-  <!-- Icons + CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" th:href="@{/assets/css/main.css}">
   <link rel="stylesheet" th:href="@{/assets/css/customer/profile-customer.css}">
 
-  <!-- JS: defer + đúng thứ tự -->
   <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
   <script th:src="@{/assets/js/toast.js}" defer></script>
   <script th:src="@{/assets/js/customer/profile-customer.js}" defer></script>
@@ -205,11 +202,8 @@
   </main>
 
   <div th:replace="fragments/footer :: footer"></div>
-
-  <!-- File input cho avatar (JS dùng #avatarFile) -->
   <input id="avatarFile" type="file" accept="image/*" hidden>
-
-  <!-- ✅ Đã bỏ toast tự tạo (#toast) vì dùng Toastify -->
+  
 </body>
 
 </html>

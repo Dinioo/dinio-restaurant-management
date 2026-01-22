@@ -16,7 +16,8 @@ let userData = {};
 async function fetchProfileData() {
   try {
     const res = await fetch('/dinio/profile/api/data');
-    if (res.status === 401) return window.location.href = "/dinio/login";
+    if (res.status === 401) 
+      return window.location.href = "/dinio/login";
     
     userData = await res.json();
     loadToUI();
@@ -84,7 +85,8 @@ function bindForms() {
     const newPwd = $("#newPassword").value;
     const confirm = $("#confirmPassword").value;
 
-    if (newPwd !== confirm) return errorToast("Mật khẩu xác nhận không khớp");
+    if (newPwd !== confirm) 
+      return errorToast("Mật khẩu xác nhận không khớp");
 
     const res = await fetch('/dinio/profile/api/change-password', {
       method: 'POST',

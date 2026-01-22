@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById("dishModal");
-    if (!modal) return;
+    if (!modal) 
+        return;
 
     const mediaEl = document.getElementById("dishModalMedia");
     const infoEl = document.getElementById("dishModalInfo");
@@ -41,11 +42,14 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const syncMediaHeight = () => {
-        if (!isOpen) return;
-        if (!mediaEl || !infoEl) return;
+        if (!isOpen) 
+            return;
+        if (!mediaEl || !infoEl) 
+            return;
 
         const isMobile = window.matchMedia("(max-width: 820px)").matches;
-        if (isMobile) return;
+        if (isMobile) 
+            return;
 
         const h = infoEl.offsetHeight;
 
@@ -66,12 +70,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener("click", (e) => {
         const btn = e.target.closest(".js-dish-detail");
-        if (!btn) return;
+        if (!btn) 
+            return;
 
         e.preventDefault();
 
         const card = btn.closest(".dish-card");
-        if (!card) return;
+        if (!card) 
+            return;
 
         const data = {
             title: card.dataset.title,

@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("reserveForm");
   const btn  = document.getElementById("btnSubmitReserve");
-  if (!form || !btn) return;
+  if (!form || !btn) 
+    return;
 
   btn.addEventListener("click", (e) => {
     e.preventDefault();

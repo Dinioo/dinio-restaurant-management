@@ -4,17 +4,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <title>DINIO - Book a Table</title>
-  <!-- Toastify -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
   <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-  <!-- App CSS -->
   <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
   <link rel="stylesheet" th:href="@{/assets/css/customer/table-map.css}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <!-- App JS -->
   <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
   <script th:src="@{/assets/js/toast.js}" defer></script>
   <script th:src="@{/assets/js/customer/preorder-after-reservation-modal.js}" defer></script>
@@ -111,7 +110,6 @@
 
             <div class="tm-areas" id="tmAreas">
 
-              <!-- FLOOR 1 -->
               <section class="tm-area" data-area="floor1">
                 <div class="tm-area-head">
                   <h4>Tầng 1</h4>
@@ -181,7 +179,6 @@
                 </div>
               </section>
 
-              <!-- FLOOR 2 -->
               <section class="tm-area" data-area="floor2">
                 <div class="tm-area-head">
                   <h4>Tầng 2</h4>
@@ -241,7 +238,6 @@
                 </div>
               </section>
 
-              <!-- FLOOR 3 -->
               <section class="tm-area" data-area="floor3">
                 <div class="tm-area-head">
                   <h4>Tầng 3</h4>
@@ -286,7 +282,6 @@
                 </div>
               </section>
 
-              <!-- VIP -->
               <section class="tm-area" data-area="vip">
                 <div class="tm-area-head">
                   <h4>VIP</h4>
@@ -331,7 +326,6 @@
                 </div>
               </section>
 
-              <!-- OUTDOOR -->
               <section class="tm-area" data-area="outdoor">
                 <div class="tm-area-head">
                   <h4>Outdoor</h4>

@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("fpResetModal");
-  if (!modal) return;
+  if (!modal) 
+    return;
 
   const emailPreview = document.getElementById("fpResetEmailPreview");
   const alertBox = document.getElementById("fpResetAlert");
@@ -28,14 +29,16 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const showAlert = (msg, isError = true) => {
-    if (!alertBox) return;
+    if (!alertBox) 
+      return;
     alertBox.textContent = msg;
     alertBox.classList.remove("is-hidden");
     alertBox.classList.toggle("error", isError);
   };
 
   const hideAlert = () => {
-    if (!alertBox) return;
+    if (!alertBox) 
+      return;
     alertBox.textContent = "";
     alertBox.classList.add("is-hidden");
     alertBox.classList.remove("error");
@@ -76,7 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const bindToggle = (btn, input) => {
-    if (!btn || !input) return;
+    if (!btn || !input) 
+      return;
     btn.addEventListener("click", () => {
       const isPw = input.type === "password";
       input.type = isPw ? "text" : "password";

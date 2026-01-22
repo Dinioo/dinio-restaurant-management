@@ -102,7 +102,6 @@ public class MenuController {
           if (list == null) return java.util.stream.Stream.empty();
 
           return list.stream()
-              // customer: chỉ thấy item active + available
               .filter(it -> !isCustomer || (Boolean.TRUE.equals(it.getIsActive()) && Boolean.TRUE.equals(it.getIsAvailable())))
               .map(it -> {
                 List<String> tagsList = (it.getItemTags() == null) ? List.of()
@@ -139,7 +138,7 @@ public class MenuController {
     res.put("items", items);
 
     res.put("q", q == null ? "" : q.trim());
-    res.put("cat", cat); // nullable
+    res.put("cat", cat);
     res.put("tag", tag == null ? null : tag.trim().toLowerCase());
     res.put("sort", sort == null ? "recommended" : sort);
     res.put("view", view);
@@ -201,7 +200,8 @@ public class MenuController {
   }
 
   private Integer resolveCategoryId(String catParam) {
-  if (catParam == null || catParam.trim().isEmpty()) return null;
+  if (catParam == null || catParam.trim().isEmpty()) 
+    return null;
 
   String raw = catParam.trim();
 
@@ -215,11 +215,14 @@ public class MenuController {
       .stream()
       .filter(c -> {
         String nameSlug = c.getName() == null ? "" : c.getName().toLowerCase().replaceAll("[^a-z0-9]+", "");
-        if (slug.equals("starter")) return nameSlug.contains("starter");
-        if (slug.equals("main"))    return nameSlug.contains("main");
-        if (slug.equals("dessert")) return nameSlug.contains("dessert");
-        if (slug.equals("drink"))   return nameSlug.contains("drink");
-        // fallback: slug match gần đúng
+        if (slug.equals("starter")) 
+          return nameSlug.contains("starter");
+        if (slug.equals("main"))    
+          return nameSlug.contains("main");
+        if (slug.equals("dessert")) 
+          return nameSlug.contains("dessert");
+        if (slug.equals("drink"))   
+          return nameSlug.contains("drink");
         return nameSlug.contains(slug);
       })
       .map(MenuCategory::getId)

@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("fpOtpModal");
-  if (!modal) return;
+  if (!modal) 
+    return;
 
   const form = document.getElementById("fpOtpForm");
   const inputs = Array.from(modal.querySelectorAll(".otp"));
@@ -22,14 +23,16 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentEmail = "";
 
   const showAlert = (msg, isError = true) => {
-    if (!alertBox) return;
+    if (!alertBox) 
+      return;
     alertBox.textContent = msg;
     alertBox.classList.remove("is-hidden");
     alertBox.classList.toggle("error", isError);
   };
 
   const hideAlert = () => {
-    if (!alertBox) return;
+    if (!alertBox) 
+      return;
     alertBox.textContent = "";
     alertBox.classList.add("is-hidden");
     alertBox.classList.remove("error");
@@ -78,7 +81,8 @@ document.addEventListener("DOMContentLoaded", () => {
     input.addEventListener("paste", (e) => {
       const text = (e.clipboardData || window.clipboardData).getData("text");
       const digits = (text || "").replace(/\D/g, "").slice(0, inputs.length);
-      if (!digits) return;
+      if (!digits) 
+        return;
 
       e.preventDefault();
       digits.split("").forEach((d, i) => {

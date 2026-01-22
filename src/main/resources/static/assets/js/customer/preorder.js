@@ -62,16 +62,19 @@
   function matchCard(card) {
     const d = cardData(card);
 
-    if (activeCat !== "all" && d.cat !== activeCat) return false;
+    if (activeCat !== "all" && d.cat !== activeCat) 
+      return false;
 
     if (activeTags.size > 0) {
       const ok = d.tags.some(t => activeTags.has(t));
-      if (!ok) return false;
+      if (!ok) 
+        return false;
     }
 
     if (query) {
       const hay = (d.name + " " + (card.textContent || "")).toLowerCase();
-      if (!hay.includes(query)) return false;
+      if (!hay.includes(query)) 
+        return false;
     }
 
     return true;
@@ -82,13 +85,17 @@
       const A = cardData(a);
       const B = cardData(b);
 
-      if (sortBy === "low") return A.price - B.price;
-      if (sortBy === "high") return B.price - A.price;
-      if (sortBy === "newest") return (B.isNew ? 1 : 0) - (A.isNew ? 1 : 0);
+      if (sortBy === "low") 
+        return A.price - B.price;
+      if (sortBy === "high") 
+        return B.price - A.price;
+      if (sortBy === "newest") 
+        return (B.isNew ? 1 : 0) - (A.isNew ? 1 : 0);
 
       const ra = A.recommended ? 1 : 0;
       const rb = B.recommended ? 1 : 0;
-      if (rb !== ra) return rb - ra;
+      if (rb !== ra) 
+        return rb - ra;
       return A.price - B.price;
     });
   }
@@ -102,7 +109,8 @@
 
     allSections().forEach(section => {
       const grid = qs(".po-grid", section);
-      if (!grid) return;
+      if (!grid) 
+        return;
 
       const visible = qsa(".po-card", grid).filter(c => c.style.display !== "none");
       const hidden = qsa(".po-card", grid).filter(c => c.style.display === "none");
@@ -127,7 +135,8 @@
 
   function addToCartById(id) {
     const card = qs(`.po-card[data-id="${CSS.escape(id)}"]`);
-    if (!card) return;
+    if (!card) 
+      return;
 
     const d = cardData(card);
     if (!cart[id]) cart[id] = { id: d.id, name: d.name, price: d.price, img: d.img, qty: 0 };
@@ -137,7 +146,8 @@
   }
 
   function changeQty(id, delta) {
-    if (!cart[id]) return;
+    if (!cart[id]) 
+      return;
     cart[id].qty += delta;
     if (cart[id].qty <= 0) delete cart[id];
     renderCart();
@@ -218,16 +228,20 @@
 
   document.addEventListener("click", (e) => {
     const add = e.target.closest("[data-add]");
-    if (add) return addToCartById(add.dataset.add);
+    if (add) 
+      return addToCartById(add.dataset.add);
 
     const quick = e.target.closest("[data-quick]");
-    if (quick) return addToCartById(quick.dataset.quick);
+    if (quick) 
+      return addToCartById(quick.dataset.quick);
 
     const inc = e.target.closest("[data-inc]");
-    if (inc) return changeQty(inc.dataset.inc, +1);
+    if (inc) 
+      return changeQty(inc.dataset.inc, +1);
 
     const dec = e.target.closest("[data-dec]");
-    if (dec) return changeQty(dec.dataset.dec, -1);
+    if (dec) 
+      return changeQty(dec.dataset.dec, -1);
 
     const chip = e.target.closest("#catChips .chip");
     if (chip) {
@@ -241,7 +255,8 @@
     const tag = e.target.closest("#tagToggles .tag");
     if (tag) {
       const t = (tag.dataset.tag || "").toLowerCase();
-      if (!t) return;
+      if (!t) 
+        return;
 
       if (activeTags.has(t)) {
         activeTags.delete(t);
@@ -289,7 +304,7 @@
       return;
     }
     console.log("PREORDER PAYLOAD:", Object.values(cart));
-    alert("Đã chuẩn bị payload ✅ (xem console). Bạn nối endpoint backend là xong.");
+    alert("Đã chuẩn bị payload (xem console). Nối endpoint backend là xong.");
   });
 
   updateClearBtn();

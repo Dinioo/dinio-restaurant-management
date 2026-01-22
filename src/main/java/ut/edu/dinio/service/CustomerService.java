@@ -90,7 +90,8 @@ public class CustomerService implements UserDetailsService {
 
     public String updatePassword(Integer id, String oldPwd, String newPwd) {
         Customer c = getById(id);
-        if (c == null) return "Người dùng không tồn tại";
+        if (c == null) 
+            return "Người dùng không tồn tại";
         if (!passwordEncoder.matches(oldPwd, c.getPasswordHash())) {
             return "Mật khẩu hiện tại không đúng";
         }

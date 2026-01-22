@@ -25,7 +25,8 @@ public class ProfileController {
 
     @GetMapping("/me")
     public String profilePage(HttpSession session) {
-        if (session.getAttribute("currentUser") == null) return "redirect:/login";
+        if (session.getAttribute("currentUser") == null) 
+            return "redirect:/login";
         return "customer/profile-customer";
     }
 
@@ -33,7 +34,8 @@ public class ProfileController {
     @ResponseBody
     public ResponseEntity<?> getProfileData(HttpSession session) {
         Customer current = (Customer) session.getAttribute("currentUser");
-        if (current == null) return ResponseEntity.status(401).build();
+        if (current == null) 
+            return ResponseEntity.status(401).build();
 
         Customer user = customerService.getById(current.getId());
         Map<String, Object> map = new HashMap<>();
@@ -46,12 +48,11 @@ public class ProfileController {
 
         map.put("points", 0);
         map.put("tier", "Premium Member");
-        map.put("dob", "N/A");
-        map.put("gender", "N/A");
-        map.put("address", "N/A");
-        map.put("note", "N/A");
-        map.put("avatarUrl", "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=900&q=80");
-
+        map.put("dob", user.getDateOfBirth() != null ? user.getDateOfBirth().toString() : "N/A");
+        map.put("gender", user.getGender() != null ? (user.getGender() ? "Nam" : "Nữ") : "N/A");
+        map.put("address", user.getAddress() != null ? user.getAddress() : "N/A");
+        map.put("note", user.getNote() != null ? user.getNote() : "N/A");
+        map.put("avatarUrl", user.getImageUrl() != null ? user.getImageUrl() : "https://images.unsplash.com/...");
         return ResponseEntity.ok(map);
     }
 

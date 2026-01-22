@@ -6,6 +6,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <title>DINIO - Home</title>
 
   <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
@@ -13,8 +15,7 @@
   <script th:src="@{/assets/js/header-dropdown.js}"></script>
   <script th:src="@{/assets/js/customer/dish-detail-modal.js}"></script>
   <script th:src="@{/assets/js/customer/check-reservation-modal.js}"></script>
-
-
+  <script th:src="@{/assets/js/customer/items-pagination.js}"></script>
 
 </head>
 
@@ -187,9 +188,7 @@
         </div>
         
 
-        <!-- Right: Visual -->
         <div class="about-visual" aria-label="Dinio atmosphere">
-          <!-- Bạn có thể thay ảnh cho đẹp hơn -->
           <img src="assets/pic/about_story.jpg" alt="Dinio restaurant atmosphere">
 
           <div class="about-quote">
@@ -403,7 +402,6 @@
 
   <div class="review-grid">
 
-    <!-- Review 1 -->
     <div th:replace="fragments/review-card :: reviewCard(
       5,
       'Best Service',
@@ -415,7 +413,6 @@
       false
     )"></div>
 
-    <!-- Review 2 (featured + accent) -->
     <div th:replace="fragments/review-card :: reviewCard(
       5,
       'Signature',
@@ -427,7 +424,6 @@
       true
     )"></div>
 
-    <!-- Review 3 -->
     <div th:replace="fragments/review-card :: reviewCard(
       4,
       'Cozy Mood',
@@ -494,7 +490,6 @@
           </div>
         </div>
 
-        <!-- Right: map -->
         <div class="loc-map" aria-label="Dinio map">
           <iframe title="Dinio location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
             src="https://www.google.com/maps?q=Ho%20Chi%20Minh%20City&output=embed">

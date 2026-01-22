@@ -2,7 +2,6 @@
   const $ = (s) => document.querySelector(s);
   const $$ = (s) => Array.from(document.querySelectorAll(s));
 
-  // ===== Preview nodes =====
   const pvName = $("#pvName");
   const pvDesc = $("#pvDesc");
   const pvPrice = $("#pvPrice");
@@ -14,43 +13,37 @@
   const pvIngredients = $("#pvIngredients");
   const pvAllergens = $("#pvAllergens");
 
-  // ===== Summary nodes =====
   const pvSumName = $("#pvSumName");
   const pvSumCategory = $("#pvSumCategory");
   const pvSumPrice = $("#pvSumPrice");
   const pvSumStatus = $("#pvSumStatus");
 
-  // ===== Form nodes =====
   const form = $("#dishForm");
   const ipName = $("#name");
   const ipDesc = $("#description");
   const ipPrice = $("#price");
   const ipIngredients = $("#ingredients");
   const ipImageFile = $("#imageFile");
-  const ipCategory = $("#category"); // must exist from selectField
-  const ipStatus = $("#status");     // must exist from selectField
+  const ipCategory = $("#category"); 
+  const ipStatus = $("#status");     
 
-  // ===== Chips nodes =====
   const tagChecks = $$('input[name="tags"]');
   const allergenChecks = $$('input[name="allergens"]');
 
-  // ===== Actions =====
   const btnPreviewPopup = $("#btnPreviewPopup");
   const btnResetForm = $("#btnResetForm");
   const btnCopySummary = $("#btnCopySummary");
 
-  // ===== Modal =====
   const previewModal = $("#previewModal");
   const modalPreviewSlot = $("#modalPreviewSlot");
   const closePreviewModal = $("#closePreviewModal");
 
-  // ===== Checklist =====
   const checklist = $("#pvChecklist");
 
-  // ---------- Helpers ----------
   const formatVND = (n) => {
     const num = Number(n || 0);
-    if (!Number.isFinite(num)) return "0đ";
+    if (!Number.isFinite(num)) 
+      return "0đ";
     return num.toLocaleString("vi-VN") + "đ";
   };
 
@@ -62,7 +55,8 @@
   };
 
   const setList = (ul, items, emptyText) => {
-    if (!ul) return;
+    if (!ul) 
+      return;
     ul.innerHTML = "";
     if (!items.length) {
       const li = document.createElement("li");
@@ -79,7 +73,8 @@
   };
 
   const setTags = () => {
-    if (!pvTags) return;
+    if (!pvTags) 
+      return;
     pvTags.innerHTML = "";
     const selected = tagChecks.filter((i) => i.checked).map((i) => i.value);
 
@@ -90,12 +85,12 @@
       pvTags.appendChild(span);
     });
 
-    // Show badge if "new" tag selected
     if (pvBadge) pvBadge.classList.toggle("is-hidden", !selected.includes("new"));
   };
 
   const updateImagePreview = () => {
-    if (!pvImage) return;
+    if (!pvImage) 
+      return;
 
     const file = ipImageFile?.files?.[0];
     if (!file) {
@@ -111,7 +106,8 @@
   };
 
   const updateCategoryPreview = () => {
-    if (!pvCategory) return;
+    if (!pvCategory) 
+      return;
     const opt = ipCategory?.selectedOptions?.[0];
     const text = opt?.textContent?.trim() || "danh mục";
     pvCategory.textContent = text;
@@ -125,9 +121,11 @@
   };
 
   const setDone = (key, done) => {
-    if (!checklist) return;
+    if (!checklist) 
+      return;
     const li = checklist.querySelector(`li[data-key="${key}"]`);
-    if (!li) return;
+    if (!li) 
+      return;
 
     li.classList.toggle("is-done", !!done);
     const icon = li.querySelector("i");
@@ -150,11 +148,9 @@
     updateCategoryPreview();
     updateImagePreview();
 
-    // Ingredients
     const ing = splitCommaList(ipIngredients?.value || "");
     setList(pvIngredients, ing, "Chưa có nguyên liệu");
 
-    // Allergens
     const alls = allergenChecks
       .filter((i) => i.checked)
       .map((i) => i.nextElementSibling?.textContent?.trim() || i.value);
@@ -165,9 +161,9 @@
     updateChecklist();
   };
 
-  // ---------- Modal ----------
   const openModal = () => {
-    if (!previewModal) return;
+    if (!previewModal) 
+      return;
     previewModal.classList.remove("is-hidden");
     previewModal.setAttribute("aria-hidden", "false");
 
@@ -177,15 +173,16 @@
   };
 
   const closeModal = () => {
-    if (!previewModal) return;
+    if (!previewModal) 
+      return;
     previewModal.classList.add("is-hidden");
     previewModal.setAttribute("aria-hidden", "true");
     modalPreviewSlot.innerHTML = "";
   };
 
-  // ---------- Actions ----------
   const resetForm = () => {
-    if (!form) return;
+    if (!form) 
+      return;
     form.reset();
     updateAll();
   };
@@ -207,10 +204,10 @@
     }
   };
 
-  // ---------- Bind ----------
   ["input", "change"].forEach((ev) => {
     document.addEventListener(ev, (e) => {
-      if (!form) return;
+      if (!form) 
+        return;
       if (e.target && form.contains(e.target)) updateAll();
     });
   });
@@ -227,6 +224,5 @@
   btnResetForm?.addEventListener("click", resetForm);
   btnCopySummary?.addEventListener("click", copySummary);
 
-  // init
   updateAll();
 })();

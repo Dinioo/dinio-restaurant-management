@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,10 +49,8 @@ public class MenuItemService {
     MenuCategory category = menuCategoryRepository.findById(categoryId)
         .orElseThrow(() -> new IllegalArgumentException("Category not found: " + categoryId));
 
-    // Upload Cloudinary -> URL
     String imageUrl = cloudinaryStorageService.uploadImage(imageFile, "dinio/menu");
 
-    // Map tags
     Set<ItemTag> itemTags = new HashSet<>();
     if (tags != null) {
       for (String t : tags) {
@@ -60,7 +59,6 @@ public class MenuItemService {
       }
     }
 
-    // Map allergens
     Set<AllergyTag> allergyTags = new HashSet<>();
     if (allergens != null) {
       for (String a : allergens) {
@@ -69,10 +67,8 @@ public class MenuItemService {
       }
     }
 
-    // Map spice level (form: none/mild/medium/hot)
     SpiceLevel sp = parseSpice(spiceLevel);
 
-    // Map status (available/soldout/hidden)
     boolean isActive = true;
     boolean isAvailable = true;
     if (status != null) {
@@ -104,17 +100,61 @@ public class MenuItemService {
   }
 
   private static SpiceLevel parseSpice(String spiceLevel) {
-    if (spiceLevel == null || spiceLevel.isBlank()) return SpiceLevel.NOT_SPICY;
+    if (spiceLevel == null || spiceLevel.isBlank()) 
+      return SpiceLevel.NOT_SPICY;
     String s = spiceLevel.trim().toUpperCase();
-    if ("NONE".equals(s)) return SpiceLevel.NOT_SPICY;
-    try { return SpiceLevel.valueOf(s); }
-    catch (Exception e) { return SpiceLevel.NOT_SPICY; }
+    if ("NONE".equals(s)) 
+      return SpiceLevel.NOT_SPICY;
+    try { 
+      return SpiceLevel.valueOf(s); }
+    catch (Exception e) { 
+      return SpiceLevel.NOT_SPICY; }
   }
 
   private static <E extends Enum<E>> E parseEnum(Class<E> enumClass, String raw) {
-    if (raw == null || raw.isBlank()) return null;
+    if (raw == null || raw.isBlank()) 
+      return null;
     String key = raw.trim().toUpperCase().replace("-", "_").replace(" ", "_");
-    try { return Enum.valueOf(enumClass, key); }
-    catch (Exception e) { return null; }
+    try { 
+      return Enum.valueOf(enumClass, key); }
+    catch (Exception e) { 
+      return null; }
   }
+
+  public List<MenuItem> getFavoriteItems() {
+        try {
+            List<MenuItem> items = menuItemRepository.findFavoriteItems();
+            if (items != null && !items.isEmpty()) {
+                return items;
+            }
+        } catch (Exception e) {
+            System.out.println("Error in findFavoriteItems: " + e.getMessage());
+        }
+        
+        try {
+            return menuItemRepository.findByIsActiveTrueAndIsAvailableTrue()
+                .stream()
+                .filter(item -> item.getItemTags() != null && 
+                               !item.getItemTags().isEmpty() &&
+                               (item.getItemTags().contains(ItemTag.BEST) || 
+                                item.getItemTags().contains(ItemTag.SIGNATURE)))
+                .collect(Collectors.toList());
+        } catch (Exception e) {
+            System.out.println("Error in backup method: " + e.getMessage());
+            return List.of();
+        }
+    }
+
+    public List<MenuItem> getAllActiveItems() {
+        try {
+            return menuItemRepository.findAllActiveItems();
+        } catch (Exception e) {
+            System.out.println("Error in getAllActiveItems: " + e.getMessage());
+            return menuItemRepository.findAll();
+        }
+    }
+
+    public MenuItem getItemById(Integer id) { 
+      return menuItemRepository.findById(id).orElse(null); 
+    }
 }

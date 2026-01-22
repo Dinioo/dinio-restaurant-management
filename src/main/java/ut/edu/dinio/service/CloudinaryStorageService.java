@@ -18,9 +18,6 @@ public class CloudinaryStorageService {
     this.cloudinary = cloudinary;
   }
 
-  /**
-   * Upload ảnh lên Cloudinary và trả về secure_url.
-   */
   public String uploadImage(MultipartFile file, String folder) {
     if (file == null || file.isEmpty()) {
       throw new IllegalArgumentException("Image file is empty");

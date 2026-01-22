@@ -73,7 +73,6 @@ public class MenuViewService {
         }
         items.sort(cmp);
 
-        // group by categoryId
         Map<Integer, List<MenuItem>> itemsByCategory = new LinkedHashMap<>();
         for (MenuCategory c : categories) itemsByCategory.put(c.getId(), new ArrayList<>());
 
@@ -86,16 +85,21 @@ public class MenuViewService {
     }
 
     private static ItemTag parseTag(String tag) {
-        if (tag == null || tag.isBlank()) return null;
-        try { return ItemTag.valueOf(tag.trim().toUpperCase()); }
-        catch (Exception e) { return null; }
+        if (tag == null || tag.isBlank()) 
+            return null;
+        try { 
+            return ItemTag.valueOf(tag.trim().toUpperCase()); }
+        catch (Exception e) { 
+            return null; }
     }
 
-    private static String norm(String s) { return s == null ? "" : s.trim().toLowerCase(); }
-    private static String safe(String s) { return s == null ? "" : s; }
-    private static int safeInt(Integer i) { return i == null ? 9999 : i; }
+    private static String norm(String s) { 
+        return s == null ? "" : s.trim().toLowerCase(); }
+    private static String safe(String s) { 
+        return s == null ? "" : s; }
+    private static int safeInt(Integer i) { 
+        return i == null ? 9999 : i; }
 
-    // wrapper class 
     public static class MenuPageData {
         public final List<MenuCategory> categories;
         public final Map<Integer, List<MenuItem>> itemsByCategory;

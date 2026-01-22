@@ -48,10 +48,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const pwVal = password.value || "";
     const cpwVal = confirmPassword.value || "";
 
-    if (nameVal.length < 2) return errorToast("Vui lòng nhập họ tên hợp lệ (tối thiểu 2 ký tự).");
-    if (!isEmail(idVal) && !isPhone(idVal)) return errorToast("Vui lòng nhập Email hoặc số điện thoại hợp lệ.");
-    if (pwVal.length < 6) return errorToast("Mật khẩu tối thiểu 6 ký tự.");
-    if (pwVal !== cpwVal) return errorToast("Mật khẩu nhập lại không khớp.");
+    if (nameVal.length < 2) 
+      return errorToast("Vui lòng nhập họ tên hợp lệ (tối thiểu 2 ký tự).");
+    if (!isEmail(idVal) && !isPhone(idVal)) 
+      return errorToast("Vui lòng nhập Email hoặc số điện thoại hợp lệ.");
+    if (pwVal.length < 6) 
+      return errorToast("Mật khẩu tối thiểu 6 ký tự.");
+    if (pwVal !== cpwVal) 
+      return errorToast("Mật khẩu nhập lại không khớp.");
 
     const originalBtnText = submitBtn.innerHTML;
     submitBtn.disabled = true;

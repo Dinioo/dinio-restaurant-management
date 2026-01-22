@@ -1,13 +1,15 @@
 (() => {
   const modal = document.getElementById("preOrderModal");
-  if (!modal) return;
+  if (!modal) 
+    return;
 
   const alertBox = document.getElementById("preoAlert");
   const yesBtn = document.getElementById("preoYesBtn");
   const noBtn  = document.getElementById("preoNoBtn");
 
   const hideAlert = () => {
-    if (!alertBox) return;
+    if (!alertBox) 
+      return;
     alertBox.classList.add("is-hidden");
     alertBox.textContent = "";
     alertBox.classList.remove("error");

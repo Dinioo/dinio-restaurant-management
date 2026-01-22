@@ -6,18 +6,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
 import ut.edu.dinio.pojo.Customer;
+import ut.edu.dinio.pojo.MenuItem;
 import ut.edu.dinio.pojo.Reservation;
+import ut.edu.dinio.service.MenuItemService;
 import ut.edu.dinio.service.ReservationService;
 
 @Controller
@@ -26,9 +30,56 @@ public class HomeController {
   @Autowired
   private ReservationService reservationService;
 
+  @Autowired
+  private MenuItemService menuItemService;
+
   @GetMapping("/")
   public String home() {
     return "customer/home";
+  }
+
+  @GetMapping("/api/menu/favorites")
+  @ResponseBody
+  public ResponseEntity<List<Map<String, Object>>> getFavoriteItemsApi() {
+      List<MenuItem> favorites = menuItemService.getFavoriteItems();
+      List<Map<String, Object>> response = favorites.stream().map(item -> {
+          Map<String, Object> map = new HashMap<>();
+          map.put("id", item.getId());
+          map.put("name", item.getName());
+          map.put("description", item.getDescription());
+          map.put("price", String.format("%,.0fđ", item.getBasePrice()));
+          map.put("imageUrl", item.getImageUrl());
+          
+          String tag = "Signature";
+          if (item.getItemTags() != null && !item.getItemTags().isEmpty()) {
+              tag = item.getItemTags().iterator().next().name();
+          }
+          map.put("tag", tag);
+          return map;
+      }).collect(Collectors.toList());
+      
+      return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("/api/menu/items/{id}")
+  @ResponseBody
+  public ResponseEntity<?> getMenuItemDetail(@PathVariable Integer id) {
+      MenuItem item = menuItemService.getItemById(id); 
+      if (item == null) return ResponseEntity.notFound().build();
+      
+      Map<String, Object> map = new HashMap<>();
+      map.put("id", item.getId());
+      map.put("name", item.getName());
+      map.put("description", item.getDescription());
+      map.put("ingredients", item.getIngredients());
+      map.put("calories", item.getCalories());
+      map.put("price", item.getBasePrice());
+      map.put("imageUrl", item.getImageUrl());
+      map.put("spiceLevel", item.getSpiceLevel());
+      map.put("tags", item.getItemTags());
+      map.put("allergens", item.getAllergyTags());
+      
+      return ResponseEntity.ok(map);
   }
 
   @GetMapping("/reservations/my")

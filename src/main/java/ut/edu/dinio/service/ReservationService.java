@@ -1,7 +1,12 @@
 package ut.edu.dinio.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,5 +51,22 @@ public class ReservationService {
         reservationRepository.save(res);
         
         return "success";
+    }
+
+    public List<Map<String, Object>> getOccupiedReservationsByDate(String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        LocalDateTime startOfDay = localDate.atStartOfDay();
+        LocalDateTime endOfDay = localDate.atTime(23, 59, 59);
+
+        List<Reservation> reservations = reservationRepository.findByReservedAtBetweenAndStatusNot(
+            startOfDay, endOfDay, ReservationStatus.CANCELLED);
+
+        return reservations.stream().map(res -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("tableId", res.getTable().getId());
+            map.put("reservedAt", res.getReservedAt().toString());
+            map.put("seats", res.getTable().getSeats());
+            return map;
+        }).collect(Collectors.toList());
     }
 }

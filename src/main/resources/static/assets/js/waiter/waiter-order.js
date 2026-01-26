@@ -250,7 +250,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ===== Filter: search + category (+ bestseller chip) =====
   let activeCat = "all";
 
   const applyFilter = () => {

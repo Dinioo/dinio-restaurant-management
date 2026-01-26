@@ -259,10 +259,10 @@ public class SeedDataRunner implements CommandLineRunner {
         em.persist(adminRole);
 
         // ===== STAFF USERS =====
-        StaffUser waiter = new StaffUser("Anna Waiter", "waiter1", "hash_waiter", waiterRole);
-        StaffUser kitchen = new StaffUser("Ben Kitchen", "kitchen1", "hash_kitchen", kitchenRole);
-        StaffUser cashier = new StaffUser("Cara Cashier", "cashier1", "hash_cashier", cashierRole);
-        StaffUser admin = new StaffUser("Dinio Admin", "admin", "hash_admin", adminRole);
+        StaffUser waiter = new StaffUser("Anna Waiter", "waiter1", passwordEncoder.encode("hash_waiter"), waiterRole);
+        StaffUser kitchen = new StaffUser("Ben Kitchen", "kitchen1", passwordEncoder.encode("hash_kitchen"), kitchenRole);
+        StaffUser cashier = new StaffUser("Cara Cashier", "cashier1", passwordEncoder.encode("hash_cashier"), cashierRole);
+        StaffUser admin = new StaffUser("Dinio Admin", "admin", passwordEncoder.encode("hash_admin"), adminRole);
 
         em.persist(waiter);
         em.persist(kitchen);

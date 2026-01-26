@@ -27,7 +27,7 @@ public class ForgotPasswordController {
     private final Map<String, String> otpStorage = new ConcurrentHashMap<>();
 
     @PostMapping("/api/forgot-password/send-otp")
-    @ResponseBody 
+    @ResponseBody
     public ResponseEntity<String> sendOtp(@RequestBody Map<String, String> request) {
         String email = request.get("email");
 
@@ -35,7 +35,7 @@ public class ForgotPasswordController {
             return ResponseEntity.badRequest().body("Vui lòng nhập email!");
         }
 
-        Customer customer = customerService.findByEmail(email); 
+        Customer customer = customerService.findByEmail(email);
         if (customer == null) {
             return ResponseEntity.badRequest().body("Email không tồn tại trong hệ thống!");
         }
@@ -49,7 +49,7 @@ public class ForgotPasswordController {
             message.setTo(email);
             message.setSubject("Mã xác thực quên mật khẩu - DINIO");
             message.setText("Mã OTP của bạn là: " + otp + "\n Mã này có hiệu lực trong 5 phút.");
-            
+
             mailSender.send(message);
             return ResponseEntity.ok("OTP đã được gửi thành công!");
         } catch (Exception e) {
@@ -91,10 +91,10 @@ public class ForgotPasswordController {
         if (customer != null) {
 
             customerService.updatePassword(customer, newPassword);
-            otpStorage.remove(email);  
+            otpStorage.remove(email);
             return ResponseEntity.ok("Đổi mật khẩu thành công!");
         }
-        
+
         return ResponseEntity.badRequest().body("Lỗi không tìm thấy người dùng!");
     }
 }

@@ -19,18 +19,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const tmAreas = document.getElementById("tmAreas");
 
   let allTables = [];
-  let occupiedReservations = []; 
+  let occupiedReservations = [];
   let selectedBtn = null;
-  let currentUserData = null; 
+  let currentUserData = null;
   const CONTEXT_PATH = '/dinio';
 
   const getHeaders = () => {
     const token = document.querySelector('meta[name="_csrf"]')?.content;
     const header = document.querySelector('meta[name="_csrf_header"]')?.content;
     const headers = { 'Content-Type': 'application/json' };
-    
+
     if (token && header) {
-      headers[header] = token; 
+      headers[header] = token;
     }
     return headers;
   };
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const fetchAndPrefillUserData = async () => {
     try {
       const response = await fetch(`${CONTEXT_PATH}/profile/api/data`);
-      if (!response.ok) 
+      if (!response.ok)
         return;
 
       currentUserData = await response.json();
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
         email: currentUserData.email,
         note: currentUserData.note !== "N/A" ? currentUserData.note : ""
       };
-      
+
       Object.keys(selfFields).forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = selfFields[id] || "";
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const syncProfileIfChanged = async (name, phone) => {
-    if (!currentUserData) 
+    if (!currentUserData)
       return;
 
     if (name !== currentUserData.fullName || phone !== currentUserData.phone) {
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
           headers: getHeaders(),
           body: JSON.stringify({ fullName: name, phone: phone })
         });
-        
+
         if (response.ok) {
           infoToast("Thông tin cá nhân đã được cập nhật đồng bộ.");
           currentUserData.fullName = name;
@@ -96,24 +96,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const getDiningDuration = (seats) => {
     const s = parseInt(seats);
-    if (s <= 2) 
-      return 105; 
-    if (s <= 4) 
-      return 120; 
-    if (s <= 6) 
-      return 150; 
-    return 180;             
+    if (s <= 2)
+      return 105;
+    if (s <= 4)
+      return 120;
+    if (s <= 6)
+      return 150;
+    return 180;
   };
 
   const isTableOccupied = (tableId, seats, requestedTimeStr) => {
-    if (!requestedTimeStr || !resDate.value) 
+    if (!requestedTimeStr || !resDate.value)
       return false;
     const reqStart = new Date(`${resDate.value}T${requestedTimeStr}`);
     const reqDuration = getDiningDuration(seats);
     const reqEnd = new Date(reqStart.getTime() + reqDuration * 60000);
 
     return occupiedReservations.some(res => {
-      if (parseInt(res.tableId) !== parseInt(tableId)) 
+      if (parseInt(res.tableId) !== parseInt(tableId))
         return false;
       const resStart = new Date(res.reservedAt);
       const resDuration = getDiningDuration(res.seats);
@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const tableId = btn.dataset.id;
       const seats = parseInt(btn.dataset.seats);
       const busyByTime = isTableOccupied(tableId, seats, timeVal);
-      const isOriginalReserved = btn.dataset.status === "RESERVED" || btn.dataset.status === "IN_SERVICE";
+      const isOriginalReserved = btn.dataset.status === "PENDING" || btn.dataset.status === "COMPLETED";
 
       btn.classList.remove("is-available", "is-reserved", "is-selected");
 
@@ -151,11 +151,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const fetchOccupiedData = async () => {
     const date = resDate.value;
-    if (!date) 
+    if (!date)
       return;
     try {
       const response = await fetch(`${CONTEXT_PATH}/api/reservations/occupied?date=${date}`);
-      if (!response.ok) 
+      if (!response.ok)
         return;
       occupiedReservations = await response.json();
       updateTableStatusesUI();
@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const renderTables = (tables) => {
-    if (!tmAreas) 
+    if (!tmAreas)
       return;
     tmAreas.innerHTML = "";
     const grouped = {};
@@ -213,7 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const selectTable = (btn) => {
-    if (!btn || btn.disabled) 
+    if (!btn || btn.disabled)
       return;
     if (selectedBtn) selectedBtn.classList.remove("is-selected");
     selectedBtn = btn;
@@ -230,7 +230,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const syncReview = () => {
-    if (!pickTable) 
+    if (!pickTable)
       return;
     pickTable.textContent = selectedBtn ? selectedBtn.dataset.code : "—";
     pickArea.textContent = selectedBtn ? areaLabel(selectedBtn.closest('.tm-area').dataset.area) : "—";
@@ -268,7 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
   btnClearPick?.addEventListener("click", clearSelection);
 
   const setMode = (mode) => {
-    if (!bookingMode) 
+    if (!bookingMode)
       return;
     bookingMode.value = mode;
     modeBtns.forEach(b => b.classList.toggle("is-active", b.dataset.mode === mode));
@@ -310,8 +310,8 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         errorToast(result.message || "Không thể đặt bàn.");
       }
-    } catch (e) { 
-      console.error(e); 
+    } catch (e) {
+      console.error(e);
       errorToast("Lỗi hệ thống, vui lòng thử lại sau.");
     }
     finally { btnSubmitReserve.disabled = false; }

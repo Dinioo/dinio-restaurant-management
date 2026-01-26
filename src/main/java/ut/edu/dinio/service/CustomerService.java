@@ -26,13 +26,13 @@ public class CustomerService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
         Optional<Customer> customerOpt = customerRepository.findByEmail(identifier);
-        
-        if (customerOpt.isEmpty()) 
+
+        if (customerOpt.isEmpty())
             customerOpt = customerRepository.findByPhone(identifier);
-        
-        if (customerOpt.isEmpty()) 
+
+        if (customerOpt.isEmpty())
             throw new UsernameNotFoundException("User not found with identifier: " + identifier);
-        
+
         Customer customer = customerOpt.get();
 
         return User.builder().username(customer.getEmail()).password(customer.getPasswordHash()).roles("USER").build();
@@ -63,14 +63,15 @@ public class CustomerService implements UserDetailsService {
 
         Customer customer = new Customer();
         customer.setFullName(fullName);
-        
+        customer.setAddress("N/A");
+
         if (identifier.contains("@")) {
             customer.setEmail(identifier);
-            customer.setPhone("N/A"); 
+            customer.setPhone("N/A");
         } else {
             customer.setPhone(identifier);
         }
-        
+
         customer.setPasswordHash(passwordEncoder.encode(password));
         customer.setCreatedAt(LocalDateTime.now());
 
@@ -90,7 +91,7 @@ public class CustomerService implements UserDetailsService {
 
     public String updatePassword(Integer id, String oldPwd, String newPwd) {
         Customer c = getById(id);
-        if (c == null) 
+        if (c == null)
             return "Người dùng không tồn tại";
         if (!passwordEncoder.matches(oldPwd, c.getPasswordHash())) {
             return "Mật khẩu hiện tại không đúng";
@@ -102,12 +103,13 @@ public class CustomerService implements UserDetailsService {
 
     public String updateEmail(Integer id, String newEmail, String password) {
         Customer c = getById(id);
-        if (c == null) return "Người dùng không tồn tại";
-        
+        if (c == null)
+            return "Người dùng không tồn tại";
+
         if (!passwordEncoder.matches(password, c.getPasswordHash())) {
             return "Xác nhận mật khẩu không chính xác";
         }
-    
+
         Optional<Customer> existing = customerRepository.findByEmail(newEmail);
         if (existing.isPresent() && !existing.get().getId().equals(id)) {
             return "Email này đã được đăng ký bởi tài khoản khác";
@@ -117,10 +119,11 @@ public class CustomerService implements UserDetailsService {
         customerRepository.save(c);
         return "success";
     }
-    
+
     public Customer getById(Integer id) {
         return customerRepository.findById(id).orElse(null);
     }
+
     public Customer findByEmail(String email) {
         return customerRepository.findByEmail(email).orElse(null);
     }

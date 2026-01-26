@@ -25,7 +25,7 @@ public class ReservationService {
     public List<Reservation> getReservationsByCustomer(Integer customerId) {
         return reservationRepository.findByCustomerIdOrderByReservedAtDesc(customerId);
     }
-    
+
     public String cancelReservation(Integer reservationId, Customer currentUser) {
         Optional<Reservation> resOpt = reservationRepository.findById(reservationId);
 
@@ -42,14 +42,14 @@ public class ReservationService {
         if (res.getStatus() == ReservationStatus.CANCELLED) {
             return "Đơn này đã bị hủy trước đó!";
         }
-        
+
         if (res.getStatus() == ReservationStatus.COMPLETED) {
             return "Đơn hàng đã hoàn thành, không thể hủy!";
         }
 
         res.setStatus(ReservationStatus.CANCELLED);
         reservationRepository.save(res);
-        
+
         return "success";
     }
 
@@ -59,10 +59,11 @@ public class ReservationService {
         LocalDateTime endOfDay = localDate.atTime(23, 59, 59);
 
         List<Reservation> reservations = reservationRepository.findByReservedAtBetweenAndStatusNot(
-            startOfDay, endOfDay, ReservationStatus.CANCELLED);
+                startOfDay, endOfDay, ReservationStatus.CANCELLED);
 
         return reservations.stream().map(res -> {
             Map<String, Object> map = new HashMap<>();
+            map.put("id", res.getId());
             map.put("tableId", res.getTable().getId());
             map.put("reservedAt", res.getReservedAt().toString());
             map.put("seats", res.getTable().getSeats());

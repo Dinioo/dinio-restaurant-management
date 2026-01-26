@@ -11,15 +11,20 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import ut.edu.dinio.pojo.Area;
 import ut.edu.dinio.pojo.Customer;
 import ut.edu.dinio.pojo.DiningTable;
 import ut.edu.dinio.pojo.Reservation;
+import ut.edu.dinio.pojo.StaffUser;
+import ut.edu.dinio.pojo.TableSession;
 import ut.edu.dinio.pojo.enums.ReservationStatus;
+import ut.edu.dinio.pojo.enums.SessionStatus;
 import ut.edu.dinio.pojo.enums.TableStatus;
 import ut.edu.dinio.repositories.AreaRepository;
 import ut.edu.dinio.repositories.DiningTableRepository;
 import ut.edu.dinio.repositories.ReservationRepository;
+import ut.edu.dinio.repositories.TableSessionRepository;
 
 @Service
 public class TableMapService {
@@ -32,6 +37,9 @@ public class TableMapService {
 
     @Autowired
     private ReservationRepository reservationRepository;
+
+    @Autowired
+    private TableSessionRepository sessionRepository;
 
     public List<Map<String, Object>> getAllAreas() {
         List<Area> areas = areaRepository.findAllByOrderByIdAsc();
@@ -69,15 +77,15 @@ public class TableMapService {
     }
 
     private String mapAreaToKey(String areaName) {
-        if (areaName.contains("1") || areaName.toLowerCase().contains("floor 1")) 
+        if (areaName.contains("1") || areaName.toLowerCase().contains("floor 1"))
             return "floor1";
-        if (areaName.contains("2") || areaName.toLowerCase().contains("floor 2")) 
+        if (areaName.contains("2") || areaName.toLowerCase().contains("floor 2"))
             return "floor2";
-        if (areaName.contains("3") || areaName.toLowerCase().contains("floor 3")) 
+        if (areaName.contains("3") || areaName.toLowerCase().contains("floor 3"))
             return "floor3";
-        if (areaName.equalsIgnoreCase("VIP")) 
+        if (areaName.equalsIgnoreCase("VIP"))
             return "vip";
-        if (areaName.equalsIgnoreCase("Outdoor")) 
+        if (areaName.equalsIgnoreCase("Outdoor"))
             return "outdoor";
         return "floor1";
     }
@@ -140,12 +148,12 @@ public class TableMapService {
                 if (guestPhone == null || guestPhone.trim().isEmpty()) {
                     return "Vui lòng nhập số điện thoại khách!";
                 }
-                
+
                 String phoneDigits = guestPhone.trim().replaceAll("\\D", "");
                 if (phoneDigits.length() != 10) {
                     return "Số điện thoại phải có đúng 10 chữ số!";
                 }
-                
+
                 reservation.setIsForOther(true);
                 reservation.setGuestName(guestName.trim());
                 reservation.setGuestPhone(phoneDigits);
@@ -156,8 +164,6 @@ public class TableMapService {
             }
 
             reservationRepository.save(reservation);
-
-            table.setStatus(TableStatus.IN_SERVICE);
             tableRepository.save(table);
 
             return "success";
@@ -168,4 +174,52 @@ public class TableMapService {
             return "Có lỗi xảy ra khi đặt bàn!";
         }
     }
+
+    @Transactional
+    public void updateTableStatus(Integer tableId, TableStatus newStatus, StaffUser staff) {
+        DiningTable table = tableRepository.findById(tableId).orElse(null);
+        if (table == null)
+            return;
+        table.setStatus(newStatus);
+        if (newStatus == TableStatus.IN_SERVICE) {
+            if (sessionRepository.findByTableIdAndStatus(tableId, SessionStatus.OPEN).isEmpty()) {
+                TableSession session = new TableSession(table, table.getSeats(), staff);
+                sessionRepository.save(session);
+            }
+        }
+        if (newStatus == TableStatus.CLEANING) {
+            sessionRepository.findByTableIdAndStatus(tableId, SessionStatus.OPEN).ifPresent(s -> {
+                s.setStatus(SessionStatus.CLOSED);
+                s.setClosedAt(LocalDateTime.now());
+                sessionRepository.save(s);
+            });
+        }
+        tableRepository.save(table);
+    }
+
+    @Transactional
+    public void closeSession(Integer tableId) {
+        sessionRepository.findByTableIdAndStatus(tableId, SessionStatus.OPEN).ifPresent(s -> {
+            s.setStatus(SessionStatus.CLOSED);
+            s.setClosedAt(LocalDateTime.now());
+        });
+        tableRepository.findById(tableId).ifPresent(t -> t.setStatus(TableStatus.CLEANING));
+    }
+
+    public DiningTable getTableById(Integer id) {
+        return tableRepository.findById(id).orElse(null);
+    }
+
+    public String getGuestNameByReservationId(Integer reservationId) {
+        Reservation res = reservationRepository.findById(reservationId).orElse(null);
+        if (res == null)
+            return null;
+
+        if (res.getIsForOther() != null && res.getIsForOther()) {
+            return res.getGuestName();
+        }
+
+        return res.getCustomer() != null ? res.getCustomer().getFullName() : "Khách đặt";
+    }
+
 }

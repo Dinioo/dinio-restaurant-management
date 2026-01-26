@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DINIO - Waiter Dashboard</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/waiter/waiter-dashboard.css}" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
+  <script th:src="@{/assets/js/waiter/waiter-dashboard.js}" defer></script>
+</head>
+
+<body>
+  <div th:replace="~{fragments/header :: header}"></div>
+
+  <main class="wd">
+
+    <section class="shift card">
+      <div class="shift-left">
+        <div class="mini">SHIFT</div>
+        <div class="shift-name" id="shiftName">Ca sáng</div>
+        <div class="shift-time" id="shiftTime">08:00 — 14:00</div>
+      </div>
+
+      <div class="shift-mid">
+        <div class="shift-kpi">
+          <div class="kpi-label">Đã làm</div>
+          <div class="kpi-value" id="shiftWorked">1h29’</div>
+        </div>
+        <div class="shift-kpi">
+          <div class="kpi-label">Bill trong ca</div>
+          <div class="kpi-value" id="shiftBills">0</div>
+        </div>
+        <div class="shift-kpi">
+          <div class="kpi-label">Tổng tiền</div>
+          <div class="kpi-value" id="shiftRevenue">0đ</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="quick">
+      <button class="qcard" type="button" data-nav="/dinio/waiter/tables">
+        <div class="qicon"><i class="fa-solid fa-table-cells-large"></i></div>
+        <div class="qbody">
+          <div class="qtitle">Sơ đồ bàn</div>
+        </div>
+        <div class="qgo"><i class="fa-solid fa-chevron-right"></i></div>
+      </button>
+
+      <button class="qcard" type="button" data-nav="/dinio/waiter/order">
+        <div class="qicon"><i class="fa-solid fa-utensils"></i></div>
+        <div class="qbody">
+          <div class="qtitle">Tạo order nhanh</div>
+        </div>
+        <div class="qgo"><i class="fa-solid fa-chevron-right"></i></div>
+      </button>
+
+      <button class="qcard" type="button" data-nav="/dinio/waiter/bill/review">
+        <div class="qicon"><i class="fa-solid fa-receipt"></i></div>
+        <div class="qbody">
+          <div class="qtitle">Bill tạm tính / Thanh toán</div>
+        </div>
+        <div class="qgo"><i class="fa-solid fa-chevron-right"></i></div>
+      </button>
+
+      <button class="qcard" type="button" data-nav="/dinio/waiter/order-detail">
+        <div class="qicon"><i class="fa-solid fa-clipboard-check"></i></div>
+        <div class="qbody">
+          <div class="qtitle">Order đang phục vụ</div>
+        </div>
+        <div class="qgo"><i class="fa-solid fa-chevron-right"></i></div>
+      </button>
+
+      <button class="qcard" type="button" id="btnPatchers">
+        <div class="qicon"><i class="fa-solid fa-box-archive"></i></div>
+        <div class="qbody">
+          <div class="qtitle">Patcher đang lưu</div>
+        </div>
+        <div class="qgo"><i class="fa-solid fa-chevron-right"></i></div>
+      </button>
+
+      <button class="qcard" type="button" id="btnPayingBills">
+        <div class="qicon"><i class="fa-solid fa-credit-card"></i></div>
+        <div class="qbody">
+          <div class="qtitle">Bill đang tính tiền</div>
+        </div>
+        <div class="qgo"><i class="fa-solid fa-chevron-right"></i></div>
+      </button>
+    </section>
+
+    <section class="mini-grid">
+      <button class="mcard" type="button" data-nav="/dinio/waiter/tables?focus=seated">
+        <div class="mtop">
+          <div class="mmini">NOW</div>
+          <div class="mbadge"><i class="fa-solid fa-user-group"></i></div>
+        </div>
+        <div class="mvalue" id="statSeated">0</div>
+        <div class="mlabel">Bàn đang phục vụ</div>
+      </button>
+
+      <button class="mcard" type="button" data-nav="/dinio/waiter/tables?focus=need_order">
+        <div class="mtop">
+          <div class="mmini">TODO</div>
+          <div class="mbadge"><i class="fa-solid fa-clipboard-list"></i></div>
+        </div>
+        <div class="mvalue" id="statNeedOrder">0</div>
+        <div class="mlabel">Bàn chờ order</div>
+      </button>
+
+      <button class="mcard" type="button" data-nav="/dinio/waiter/tables?focus=paying">
+        <div class="mtop">
+          <div class="mmini">PAY</div>
+          <div class="mbadge"><i class="fa-solid fa-credit-card"></i></div>
+        </div>
+        <div class="mvalue" id="statPaying">0</div>
+        <div class="mlabel">Chờ thanh toán</div>
+      </button>
+
+      <button class="mcard" type="button" data-nav="/dinio/waiter/tables?focus=cancelled">
+        <div class="mtop">
+          <div class="mmini">RISK</div>
+          <div class="mbadge"><i class="fa-solid fa-ban"></i></div>
+        </div>
+        <div class="mvalue" id="statCancelled">0</div>
+        <div class="mlabel">Bàn bị huỷ</div>
+      </button>
+    </section>
+  </main>
+
+  <div class="modal" id="endShiftModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="1"></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Kết ca">
+      <div class="modal-head">
+        <div class="modal-title">
+          <div class="mini">SHIFT CLOSE</div>
+          <h3>Xác nhận kết ca</h3>
+        </div>
+        <button class="icon-btn" type="button" data-close="1" aria-label="Đóng">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="summary">
+          <div class="sum-row">
+            <div class="sum-label">Số bill trong ca</div>
+            <div class="sum-value" id="sumBills">0</div>
+          </div>
+          <div class="sum-row">
+            <div class="sum-label">Tổng tiền</div>
+            <div class="sum-value" id="sumRevenue">0đ</div>
+          </div>
+          <div class="sum-row">
+            <div class="sum-label">Tiền mặt</div>
+            <div class="sum-value" id="sumCash">0đ</div>
+          </div>
+          <div class="sum-row">
+            <div class="sum-label">Chuyển khoản</div>
+            <div class="sum-value" id="sumTransfer">0đ</div>
+          </div>
+        </div>
+
+        <div class="warn" id="endShiftBlocker">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <div>
+            <div class="warn-title">Chưa thể kết ca</div>
+            <div class="warn-sub" id="endShiftBlockerText"></div>
+          </div>
+        </div>
+
+        <label class="check">
+          <input type="checkbox" id="chkConfirm" />
+          <span>Tôi đã kiểm tra và xác nhận dữ liệu ca làm là đúng.</span>
+        </label>
+      </div>
+
+      <div class="modal-foot">
+        <button class="btn btn-ghost" type="button" data-close="1">Huỷ</button>
+        <button class="btn btn-primary" id="btnConfirmEndShift" type="button" disabled>
+          <i class="fa-solid fa-check"></i>
+          <span>Kết ca</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

@@ -453,3 +453,40 @@ body.is-auth{
   opacity: .95;
   color: var(--text-normal);
 }
+.sl-row{margin-top:10px}
+.sl-seg{
+  width:100%;
+  display:flex;
+  gap:6px;
+  padding:6px;
+  border-radius:999px;
+  border:1px solid var(--border-soft);
+  background:var(--surface-1);
+}
+.sl-seg-btn{
+  flex:1;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid transparent;
+  background:transparent;
+  color:var(--text-normal);
+  font-weight:850;
+  font-size:13px;
+  cursor:pointer;
+  opacity:.92;
+  user-select:none;
+}
+.sl-seg-btn:hover{background:var(--surface-2);opacity:1}
+.sl-seg-btn.is-active{
+  background:var(--accent-solid);
+  border-color:var(--accent-solid-border);
+  color:var(--text-on-accent);
+  box-shadow:0 10px 24px rgba(0,0,0,.35);
+}
+.sl-note{
+  font-size:13px;
+  color:var(--text-muted);
+}

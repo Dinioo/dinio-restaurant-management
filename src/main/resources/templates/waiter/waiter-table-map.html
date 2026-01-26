@@ -8,12 +8,10 @@
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
   <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
   <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
   <link rel="stylesheet" th:href="@{/assets/css/customer/table-map.css}" />
   <link rel="stylesheet" th:href="@{/assets/css/waiter/waiter-table-map.css}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
   <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
   <script th:src="@{/assets/js/toast.js}" defer></script>
   <script th:src="@{/assets/js/waiter/waiter-table-map.js}" defer></script>
@@ -27,15 +25,9 @@
     <section id="tablemap-head" class="section">
       <div class="menu-container">
         <div class="menu-head-card">
-          <p class="section-eyebrow">WAITER</p>
-          <h2 class="section-title">Sơ đồ bàn</h2>
-          <p class="section-subtitle">
-            Chọn bàn để mở phục vụ, nhận order, theo dõi món và chốt thanh toán.
-          </p>
         </div>
       </div>
     </section>
-
 
     <section id="tablemap-tools" class="section">
       <div class="menu-container">
@@ -101,11 +93,11 @@
                 <p class="tm-kicker">Floor plan</p>
                 <h3 class="tm-title">Tình trạng bàn</h3>
               </div>
-              <p class="tm-note">Chọn bàn để mở order, thanh toán hoặc dọn bàn.</p>
             </div>
 
             <div class="tm-areas" id="tmAreas">
 
+              <!-- FLOOR 1 -->
               <section class="tm-area" data-area="floor1">
                 <div class="tm-area-head">
                   <h4>Tầng 1</h4>
@@ -324,21 +316,6 @@
                     <span class="t-code">V04</span><span class="t-meta">10 chỗ • VIP</span>
                     <span class="t-badge" data-badge>—</span>
                   </button>
-
-                  <button class="tm-table" type="button" data-area="vip" data-id="V05" data-code="V05" data-seats="10" data-status="VIP_AVAILABLE">
-                    <span class="t-code">V05</span><span class="t-meta">10 chỗ • VIP</span>
-                    <span class="t-badge" data-badge>—</span>
-                  </button>
-
-                  <button class="tm-table" type="button" data-area="vip" data-id="V06" data-code="V06" data-seats="10" data-status="VIP_AVAILABLE">
-                    <span class="t-code">V06</span><span class="t-meta">10 chỗ • VIP</span>
-                    <span class="t-badge" data-badge>—</span>
-                  </button>
-
-                  <button class="tm-table" type="button" data-area="vip" data-id="V07" data-code="V07" data-seats="10" data-status="VIP_AVAILABLE">
-                    <span class="t-code">V07</span><span class="t-meta">10 chỗ • VIP</span>
-                    <span class="t-badge" data-badge>—</span>
-                  </button>
                 </div>
               </section>
 
@@ -364,16 +341,6 @@
                     <span class="t-code">O03</span><span class="t-meta">4 chỗ</span>
                     <span class="t-badge" data-badge>18:15</span>
                   </button>
-
-                  <button class="tm-table" type="button" data-area="outdoor" data-id="O04" data-code="O04" data-seats="6" data-status="AVAILABLE">
-                    <span class="t-code">O04</span><span class="t-meta">6 chỗ</span>
-                    <span class="t-badge" data-badge>—</span>
-                  </button>
-
-                  <button class="tm-table" type="button" data-area="outdoor" data-id="O05" data-code="O05" data-seats="2" data-status="AVAILABLE">
-                    <span class="t-code">O05</span><span class="t-meta">2 chỗ</span>
-                    <span class="t-badge" data-badge>—</span>
-                  </button>
                 </div>
               </section>
 
@@ -386,7 +353,6 @@
               <div class="wtm-right-head">
                 <div>
                   <p class="wtm-right-kicker">Now</p>
-                  <h3 class="wtm-right-title">Đang ngồi / Đặt trước</h3>
                 </div>
 
                 <button class="icon-btn" type="button" id="btnClearPick" title="Clear selection" aria-label="Clear">
@@ -409,8 +375,8 @@
 
               <div class="wtm-actions">
                 <button class="btn-light" type="button" id="btnStartService" disabled>Bắt đầu phục vụ</button>
-                <button class="btn-order" type="button" id="btnOpenOrder" disabled>Mở order</button>
-                <button class="btn-save" type="button" id="btnCheckout" disabled>Thanh toán</button>
+                <button class="btn-order" type="button" id="btnOpenOrder" disabled>Xem Order</button>
+                <button class="btn-save" type="button" id="btnCheckout" disabled>Kết Phiên</button>
                 <button class="btn-cancel" type="button" id="btnMarkCleaned" disabled>Đã dọn xong</button>
               </div>
 
@@ -424,6 +390,9 @@
     </section>
 
   </main>
+
+  <!-- IMPORTANT: modal fragment -->
+  <div th:replace="~{fragments/waiter-close-session-modal :: waiterCloseSessionModal}"></div>
 
   <div th:replace="~{fragments/footer :: footer}"></div>
 </body>

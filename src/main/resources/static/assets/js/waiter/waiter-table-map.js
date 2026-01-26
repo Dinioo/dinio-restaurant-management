@@ -1,3 +1,4 @@
+// /assets/js/waiter/waiter-table-map.js
 document.addEventListener("DOMContentLoaded", () => {
   const tables = Array.from(document.querySelectorAll(".tm-table"));
   const list = document.getElementById("wtmList");
@@ -9,6 +10,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnClearPick = document.getElementById("btnClearPick");
   const btnRefresh   = document.getElementById("btnRefresh");
 
+  // Nếu thiếu các element cốt lõi thì thôi (tránh văng lỗi toàn trang)
+  if (!tables.length || !list || !floorSel || !showSel || !queryInp) {
+    console.warn("[waiter-table-map] Missing required DOM nodes. Abort init.");
+    return;
+  }
+
+  // ctx = "/dinio" nếu path có /dinio/..., không thì ""
+  const parts = location.pathname.split("/").filter(Boolean);
+  const ctx = (parts[0] === "dinio") ? "/dinio" : "";
+
   const pick = {
     table:  document.getElementById("pickTable"),
     area:   document.getElementById("pickArea"),
@@ -19,11 +30,47 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const actions = {
-    start:   document.getElementById("btnStartService"),
-    order:   document.getElementById("btnOpenOrder"),
-    checkout:document.getElementById("btnCheckout"),
-    cleaned: document.getElementById("btnMarkCleaned"),
+    start:    document.getElementById("btnStartService"),
+    order:    document.getElementById("btnOpenOrder"),
+    checkout: document.getElementById("btnCheckout"),
+    cleaned:  document.getElementById("btnMarkCleaned"),
   };
+
+  // ====== CLOSE SESSION MODAL (fragment) ======
+  const wtCloseModal      = document.getElementById("wtCloseSessionModal");
+  const wtCloseTableName  = document.getElementById("wtCloseTableName");
+  const wtCloseConfirmBtn = document.getElementById("wtCloseConfirmBtn");
+  const wtCloseAlert      = document.getElementById("wtCloseAlert");
+
+  const openCloseSessionModal = (t) => {
+    if (!wtCloseModal) {
+      if (typeof errorToast === "function") errorToast("Không tìm thấy modal #wtCloseSessionModal");
+      return;
+    }
+    if (wtCloseTableName) wtCloseTableName.textContent = t?.dataset?.code || t?.dataset?.id || "—";
+    if (wtCloseAlert) {
+      wtCloseAlert.classList.add("is-hidden");
+      wtCloseAlert.textContent = "";
+      wtCloseAlert.classList.remove("error");
+    }
+    wtCloseModal.classList.remove("is-hidden");
+    wtCloseModal.setAttribute("aria-hidden", "false");
+  };
+
+  const closeCloseSessionModal = () => {
+    if (!wtCloseModal) return;
+    wtCloseModal.classList.add("is-hidden");
+    wtCloseModal.setAttribute("aria-hidden", "true");
+  };
+
+  wtCloseModal?.addEventListener("click", (e) => {
+    if (e.target.closest("[data-close]")) closeCloseSessionModal();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (!wtCloseModal || wtCloseModal.classList.contains("is-hidden")) return;
+    if (e.key === "Escape") closeCloseSessionModal();
+  });
 
   const fmtDuration = (minutes) => {
     const h = Math.floor(minutes / 60);
@@ -39,19 +86,17 @@ document.addEventListener("DOMContentLoaded", () => {
     return Math.max(0, Math.floor((Date.now() - t) / 60000));
   };
 
-  const escapeHtml = (s) => {
-    return String(s ?? "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  };
+  const escapeHtml = (s) => String(s ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 
   const applyStatusClasses = () => {
     tables.forEach(t => {
       const s = t.dataset.status;
-      t.classList.remove("is-available","is-reserved","is-vip","is-selected","is-occupied","is-clean");
+      t.classList.remove("is-available","is-reserved","is-vip","is-occupied","is-clean");
 
       if (s === "AVAILABLE") t.classList.add("is-available");
       else if (s === "RESERVED") t.classList.add("is-reserved");
@@ -100,55 +145,63 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
+  const disableAllActions = () => {
+    Object.values(actions).forEach(b => { if (b) b.disabled = true; });
+  };
+
   const clearSelected = () => {
     tables.forEach(t => t.classList.remove("is-selected"));
     Array.from(document.querySelectorAll(".wtm-item")).forEach(i => i.classList.remove("is-active"));
 
-    pick.table.textContent = "—";
-    pick.area.textContent = "—";
-    pick.seats.textContent = "—";
-    pick.status.textContent = "—";
-    pick.guest.textContent = "—";
-    pick.time.textContent = "—";
+    if (pick.table)  pick.table.textContent  = "—";
+    if (pick.area)   pick.area.textContent   = "—";
+    if (pick.seats)  pick.seats.textContent  = "—";
+    if (pick.status) pick.status.textContent = "—";
+    if (pick.guest)  pick.guest.textContent  = "—";
+    if (pick.time)   pick.time.textContent   = "—";
 
-    Object.values(actions).forEach(b => b.disabled = true);
+    disableAllActions();
   };
 
   const setActionEnabled = (t) => {
-    Object.values(actions).forEach(b => b.disabled = true);
+    disableAllActions();
     if (!t) return;
 
     const s = t.dataset.status;
 
     if (s === "AVAILABLE" || s === "VIP_AVAILABLE" || s === "RESERVED") {
-      actions.start.disabled = false;
+      if (actions.start) actions.start.disabled = false;
     }
+
     if (s === "OCCUPIED") {
-      actions.order.disabled = false;
-      actions.checkout.disabled = false;
+      if (actions.order) actions.order.disabled = false;
+      if (actions.checkout) actions.checkout.disabled = false;
     }
+
     if (s === "NEED_CLEAN") {
-      actions.cleaned.disabled = false;
+      if (actions.cleaned) actions.cleaned.disabled = false;
     }
   };
 
   const setPicked = (t) => {
-    pick.table.textContent  = t.dataset.code || "—";
-    pick.area.textContent   = t.dataset.area || "—";
-    pick.seats.textContent  = (t.dataset.seats ? `${t.dataset.seats} chỗ` : "—");
-    pick.status.textContent = t.dataset.status || "—";
+    if (pick.table)  pick.table.textContent  = t.dataset.code || "—";
+    if (pick.area)   pick.area.textContent   = t.dataset.area || "—";
+    if (pick.seats)  pick.seats.textContent  = (t.dataset.seats ? `${t.dataset.seats} chỗ` : "—");
+    if (pick.status) pick.status.textContent = t.dataset.status || "—";
 
     const guest = t.dataset.guestName || t.dataset.resName || "—";
-    pick.guest.textContent = guest;
+    if (pick.guest) pick.guest.textContent = guest;
 
     const mode = showSel.value;
-    if (mode === "seating") {
-      const mins = minutesSince(t.dataset.seatStart);
-      pick.time.textContent = mins != null ? fmtDuration(mins) : "—";
-    } else if (t.dataset.resTime) {
-      pick.time.textContent = t.dataset.resTime;
-    } else {
-      pick.time.textContent = "—";
+    if (pick.time) {
+      if (mode === "seating") {
+        const mins = minutesSince(t.dataset.seatStart);
+        pick.time.textContent = mins != null ? fmtDuration(mins) : "—";
+      } else if (t.dataset.resTime) {
+        pick.time.textContent = t.dataset.resTime;
+      } else {
+        pick.time.textContent = "—";
+      }
     }
 
     setActionEnabled(t);
@@ -211,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (items.length === 0) {
       list.innerHTML = `
         <div class="wtm-item" style="cursor:default;">
-          <div class="wtm-item-name">Không có bàn seated/reserved</div>
+          <div class="wtm-item-name">Không có bàn seated/reserved/need clean</div>
           <div class="wtm-item-sub">Hãy thử đổi tầng hoặc tìm kiếm.</div>
         </div>`;
       return;
@@ -265,7 +318,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const getSelectedTable = () => tables.find(t => t.classList.contains("is-selected"));
 
-  actions.start.addEventListener("click", () => {
+  // ✅ Xem Order = nhảy sang bill review
+  const goBillReviewPage = (t) => {
+    window.location.href = `${ctx}/waiter/bill/review?tableId=${encodeURIComponent(t.dataset.id)}`;
+  };
+
+  const goOrderPage = (t) => {
+    window.location.href = `${ctx}/waiter/order?tableId=${encodeURIComponent(t.dataset.id)}`;
+  };
+
+  // ===== ACTIONS =====
+  actions.start?.addEventListener("click", () => {
     const t = getSelectedTable();
     if (!t) return;
 
@@ -280,29 +343,33 @@ document.addEventListener("DOMContentLoaded", () => {
     setPicked(t);
 
     if (typeof successToast === "function") successToast(`Bắt đầu phục vụ ${t.dataset.code}`);
+    goOrderPage(t);
   });
 
-  actions.order.addEventListener("click", () => {
+  actions.order?.addEventListener("click", () => {
     const t = getSelectedTable();
     if (!t) return;
 
-    window.location.href = `./order?tableId=${encodeURIComponent(t.dataset.id)}`;
+    if (typeof infoToast === "function") infoToast(`Xem bill ${t.dataset.code}`);
+    goBillReviewPage(t);
   });
 
-  actions.checkout.addEventListener("click", () => {
+  actions.checkout?.addEventListener("click", () => {
+    const t = getSelectedTable();
+    if (!t) return;
+    openCloseSessionModal(t);
+  });
+
+  wtCloseConfirmBtn?.addEventListener("click", () => {
     const t = getSelectedTable();
     if (!t) return;
 
-    t.dataset.status = "NEED_CLEAN";
-    applyStatusClasses();
-    updateBadges();
-    renderList();
-    setPicked(t);
-
-    if (typeof successToast === "function") successToast(`Đã chuyển ${t.dataset.code} sang NEED_CLEAN`);
+    closeCloseSessionModal();
+    if (typeof infoToast === "function") infoToast(`Đang tạo bill cho ${t.dataset.code}...`);
+    goBillReviewPage(t);
   });
 
-  actions.cleaned.addEventListener("click", () => {
+  actions.cleaned?.addEventListener("click", () => {
     const t = getSelectedTable();
     if (!t) return;
 
@@ -317,18 +384,23 @@ document.addEventListener("DOMContentLoaded", () => {
     renderList();
     setPicked(t);
 
-    if (typeof successToast === "function") successToast(`Đã dọn xong ${t.dataset.code}`);
+    if (typeof successToast === "function") successToast(`Đã dọn xong ${t.dataset.code} → AVAILABLE`);
   });
 
+  // ===== EVENTS =====
   tables.forEach(t => t.addEventListener("click", () => selectTable(t)));
 
-  btnClearPick.addEventListener("click", clearSelected);
+  btnClearPick?.addEventListener("click", clearSelected);
 
-  btnRefresh.addEventListener("click", () => {
+  btnRefresh?.addEventListener("click", () => {
     applyStatusClasses();
     updateBadges();
     renderList();
-    if (typeof infoToast === "function") infoToast("Refreshed (demo)");
+
+    const t = getSelectedTable();
+    if (t) setPicked(t);
+
+    if (typeof infoToast === "function") infoToast("Refreshed (UI demo)");
   });
 
   floorSel.addEventListener("change", () => {
@@ -344,6 +416,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   queryInp.addEventListener("input", renderList);
 
+  // init
   applyStatusClasses();
   applyFloorFilter();
   updateBadges();

@@ -1,0 +1,45 @@
+<div th:fragment="waiterCloseSessionModal"
+     class="fp-modal is-hidden"
+     id="wtCloseSessionModal"
+     aria-hidden="true">
+
+  <div class="fp-backdrop" data-close="1"></div>
+
+  <div class="fp-panel wtclose-panel"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="wtCloseSessionTitle">
+
+    <div class="fp-head">
+      <h3 class="fp-title" id="wtCloseSessionTitle">Xác nhận kết phiên</h3>
+      <button class="fp-x" type="button" data-close="1" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <p class="fp-sub">
+      Bạn có chắc chắn muốn <b>kết phiên</b> cho bàn <b id="wtCloseTableName">—</b> không?
+    </p>
+
+    <div class="auth-alert is-hidden" id="wtCloseAlert"></div>
+
+    <div class="fp-form">
+      <div class="wtclose-note">
+        <div class="wtclose-line">
+          <i class="fa-solid fa-receipt"></i>
+          <span>Hệ thống sẽ tạo <b>Bill</b> để thu ngân thanh toán.</span>
+        </div>
+        <div class="wtclose-line is-muted">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>Nếu còn món chưa phục vụ, hệ thống có thể từ chối kết phiên.</span>
+        </div>
+      </div>
+
+      <div class="wtclose-actions">
+        <button class="btn-light" type="button" data-close="1">Huỷ</button>
+        <button class="btn-save" type="button" id="wtCloseConfirmBtn">Xác nhận</button>
+      </div>
+    </div>
+
+  </div>
+</div>

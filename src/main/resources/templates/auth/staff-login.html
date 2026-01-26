@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+  <title>DINIO — Staff Sign in</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/auth/login.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/auth/staff-login.css}" />
+
+  <script th:src="@{/assets/js/header-dropdown.js}"></script>
+  <script th:src="@{/assets/js/toast.js}" defer></script>
+  <script th:src="@{/assets/js/auth/staff-login.js}" defer></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+
+<body>
+  <div th:replace="~{fragments/header :: header}"></div>
+
+  <main class="auth">
+    <section class="auth-shell">
+
+      <div class="auth-card">
+        <div class="auth-head">
+          <p class="auth-eyebrow">STAFF PORTAL</p>
+          <h1 class="auth-title">Đăng nhập</h1>
+        </div>
+
+        <div class="auth-row sl-row">
+          <div class="sl-seg" id="roleSeg" role="tablist" aria-label="Chọn vai trò đăng nhập">
+            <button class="sl-seg-btn is-active" type="button" data-role="staff" aria-pressed="true">Nhân viên</button>
+            <button class="sl-seg-btn" type="button" data-role="admin" aria-pressed="false">Admin</button>
+          </div>
+        </div>
+
+        <form class="auth-form" th:action="@{/staff/login}" method="post" id="staffLoginForm">
+          <div class="auth-alert is-hidden" id="authAlert"></div>
+
+          <label class="field">
+            <span class="label">Tài khoản</span>
+            <div class="control">
+              <i class="fa-regular fa-user"></i>
+              <input type="text" name="identifier" id="identifier" autocomplete="username" required />
+            </div>
+          </label>
+
+          <label class="field">
+            <span class="label">Mật khẩu</span>
+            <div class="control">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" name="password" id="password" placeholder="••••••••"
+                     autocomplete="current-password" required />
+              <button type="button" class="pw-toggle" id="pwToggle" aria-label="Toggle password">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </label>
+
+          <div class="auth-row">
+            <label class="check">
+              <input type="checkbox" name="remember-me" />
+              <span>Remember me</span>
+            </label>
+            <span class="sl-note">Nội bộ</span>
+          </div>
+
+          <button class="btn-order" type="submit" id="submitBtn">
+            <span>Đăng nhập</span>
+          </button>
+
+          <p class="auth-foot">
+            Khách hàng?
+            <a class="link" th:href="@{/login}">Đăng nhập tại đây</a>
+          </p>
+        </form>
+      </div>
+
+      <aside class="auth-visual" aria-label="Dinio visual panel">
+        <div class="visual-bg" aria-hidden="true"></div>
+
+        <div class="visual-top">
+          <div class="brand-chip">
+            <span class="dot"></span>
+            <span class="brand">DINIO</span>
+            <span class="sep">•</span>
+            <span class="tagline">Staff console</span>
+          </div>
+
+          <h2 class="visual-title">
+            Work smarter,<br>
+            serve faster.
+          </h2>
+
+          <p class="visual-sub">
+            Quản lý bàn — theo dõi bếp — phục vụ mượt.
+          </p>
+        </div>
+
+        <div class="visual-mid">
+          <div class="quote-card">
+            <p class="quote-text">
+              “Everything your team needs — in one clean dashboard.”
+            </p>
+            <div class="quote-meta">
+              <span class="avatar-mini">DN</span>
+              <div>
+                <p class="meta-name">DINIO</p>
+                <p class="meta-sub">Operational tools</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mini-features" aria-label="Dinio highlights">
+            <span class="mini-pill"><i class="fa-solid fa-shield-halved"></i> Secure</span>
+            <span class="mini-pill"><i class="fa-solid fa-bolt"></i> Fast</span>
+            <span class="mini-pill"><i class="fa-solid fa-layer-group"></i> Control</span>
+          </div>
+        </div>
+
+        <div class="badge-strip" aria-label="Trust badges">
+          <span class="badge">Role-based access</span>
+          <span class="badge">Audit-ready</span>
+          <span class="badge">Staff-friendly</span>
+        </div>
+      </aside>
+
+    </section>
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+/* =========================================================
+   WAITER ORDER DETAIL — waiter-order-detail.css
+   Reuse preorder.css (po-*) and override with wo-*
+   ========================================================= */
+
+/* ---------- Page layout ---------- */
+.wo-main { padding-top: 18px; padding-bottom: 48px; }
+.wo-section { margin-bottom: 52px; }
+
+.wo-shell{
+  display:grid;
+  grid-template-columns: 1fr 360px;
+  gap:22px;
+  align-items:start;
+}
+
+@media (max-width: 1100px){
+  .wo-shell{ grid-template-columns: 1fr; }
+  .wo-cart{ position: static; }
+}
+
+/* =========================================================
+   REMOVE / NEUTRALIZE PREORDER WRAPPERS
+   ========================================================= */
+.wo-menu.po-menu{
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.wo-toolbar.po-toolbar{
+  background: transparent !important;
+  padding: 0 !important;
+  margin-bottom: 14px;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+.wo-search.po-search{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  height:44px;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid var(--border-strong);
+}
+
+.wo-search input{
+  width:100%;
+  background:none;
+  border:none;
+  outline:none;
+  color:var(--text-strong);
+}
+
+/* =========================================================
+   STATUS SEGMENT
+   ========================================================= */
+.wo-statusbar{
+  display:flex;
+  justify-content:flex-start;
+  margin-bottom:14px;
+}
+
+.wo-seg{
+  display:flex;
+  gap:6px;
+  padding:6px;
+  border-radius:999px;
+  border:1px solid var(--border-soft);
+  background:rgba(255,255,255,.03);
+}
+
+.wo-seg-btn{
+  padding:8px 12px;
+  border-radius:999px;
+  border:none;
+  background:none;
+  font-size:13px;
+  font-weight:700;
+  color:var(--text-normal);
+  cursor:pointer;
+}
+
+.wo-seg-btn.is-active{
+  background:rgba(255,255,255,.08);
+  color:var(--text-strong);
+}
+
+/* =========================================================
+   REVIEW HEADER
+   ========================================================= */
+.wo-review-head{
+  margin:14px 0 12px;
+}
+
+.wo-muted{
+  font-size:13px;
+  color:var(--text-muted);
+}
+
+/* =========================================================
+   KPI — FULL WIDTH = BẰNG LIST MÓN
+   ========================================================= */
+.wo-review-kpis{
+  width:100%;
+  margin-top:12px;
+}
+
+.wo-review-kpis .wo-kpi-grid{
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:12px;
+}
+
+@media (max-width:900px){
+  .wo-review-kpis .wo-kpi-grid{
+    grid-template-columns:repeat(2, 1fr);
+  }
+}
+@media (max-width:520px){
+  .wo-review-kpis .wo-kpi-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+.wo-kpi{
+  padding:10px;
+  border-radius:14px;
+  border:1px solid var(--border-soft);
+  background:rgba(255,255,255,.03);
+}
+
+.wo-kpi .k-label{
+  font-size:12px;
+  color:var(--text-muted);
+}
+.wo-kpi .k-val{
+  font-size:17px;
+  font-weight:900;
+  margin-top:6px;
+}
+.wo-kpi .k-sub{
+  font-size:12px;
+  color:var(--text-muted);
+  margin-top:4px;
+}
+
+/* =========================================================
+   LIST — ITEM CARD (NHỎ GỌN)
+   ========================================================= */
+.wo-review-list{
+  display:grid;
+  gap:10px;
+}
+
+.wo-ritem{
+  padding:12px;
+  border-radius:16px;
+  border:1px solid var(--border-soft);
+  background:rgba(255,255,255,.03);
+}
+
+.wo-ritem-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.wo-rname{
+  font-size:14px;
+  font-weight:900;
+  margin:0;
+}
+
+.wo-rmeta{
+  display:flex;
+  gap:8px;
+  font-size:12.5px;
+  color:var(--text-muted);
+  margin-top:6px;
+}
+
+.wo-rside{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:6px;
+}
+
+.wo-status{
+  padding:5px 9px;
+  border-radius:999px;
+  font-size:11.5px;
+  font-weight:800;
+  border:1px solid var(--border-soft);
+}
+
+.wo-mini-qty{
+  padding:5px 9px;
+  border-radius:999px;
+  border:1px solid var(--border-soft);
+  font-size:12.5px;
+  font-weight:900;
+}
+
+/* =========================================================
+   TAGS / NOTE / TIME
+   ========================================================= */
+.wo-tags{
+  margin-top:10px;
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+
+.wo-tag{
+  padding:3px 8px;
+  font-size:11.5px;
+  border-radius:999px;
+  border:1px solid var(--border-soft);
+}
+
+.wo-note{
+  margin-top:9px;
+  padding-top:9px;
+  border-top:1px solid var(--border-soft);
+  font-size:12.5px;
+  color:var(--text-muted);
+}
+
+.wo-timebar{
+  margin-top:9px;
+  display:flex;
+  gap:8px;
+  font-size:12px;
+}
+
+.wo-time{
+  padding:5px 9px;
+  border-radius:999px;
+  border:1px solid var(--border-soft);
+}
+
+/* =========================================================
+   RIGHT PANEL
+   ========================================================= */
+.wo-cart{
+  position:sticky;
+  top:18px;
+}
+
+.wo-actions{
+  display:grid;
+  gap:10px;
+  margin-top:12px;
+}

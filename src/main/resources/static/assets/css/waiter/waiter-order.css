@@ -1,0 +1,430 @@
+/* =========================================================
+   WAITER ORDER — waiter-order.css
+   Reuse preorder.css (po-*) and override with wo-*
+   ========================================================= */
+
+/* ---------- Page layout ---------- */
+.wo-main { padding-top: 18px; padding-bottom: 48px; }
+.wo-section { margin-bottom: 52px; }
+
+.wo-shell{
+  display:grid;
+  grid-template-columns: 1fr 360px;
+  gap:22px;
+  align-items:start;
+}
+
+@media (max-width: 1100px){
+  .wo-shell{ grid-template-columns: 1fr; }
+  .wo-cart{ position: static; }
+}
+
+/* =========================================================
+   REMOVE / NEUTRALIZE PREORDER WRAPPERS (menu side)
+   ========================================================= */
+.wo-menu.po-menu{
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Toolbar wrapper của preorder hay có border + nền => gây "bọc vuông mỏng" */
+.wo-toolbar.po-toolbar{
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 0 14px 0 !important;
+  border-radius: 0 !important;
+  border: none !important;       /* ✅ fix khung vuông mỏng */
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Nếu preorder có thêm wrapper khác vô tình bọc filter/search */
+.wo-filterbar.po-filterbar{
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  padding: 0 !important;
+  margin-bottom: 18px !important;
+}
+
+/* =========================================================
+   SEARCH (pill only)
+   ========================================================= */
+.wo-search.po-search{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+
+  border: 1px solid var(--border-strong) !important;
+  border-radius: 999px !important;
+  padding: 10px 14px !important;
+  height: 44px;
+}
+
+.wo-search.po-search i{ opacity:.85; font-size:14px; }
+
+.wo-search.po-search input{
+  width:100%;
+  height:100%;
+  background:transparent;
+  border:none;
+  outline:none;
+  color: var(--text-strong);
+  font-size: 14px;
+}
+.wo-search.po-search input::placeholder{ opacity:.7; }
+
+/* =========================================================
+   CHIP BAR + DIVIDER + ACCENT CHIP
+   ========================================================= */
+.wo-chipbar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+}
+
+.wo-chip-divider{
+  width: 1px;
+  height: 22px;
+  background: var(--border-soft);
+  margin: 0 6px;
+  display:inline-block;
+  opacity: .95;
+}
+
+.chip.chip-accent{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border: 1px solid var(--accent-border-soft);
+  background: var(--accent-tint);
+  color: var(--accent);
+}
+.chip.chip-accent.is-active{
+  border-color: var(--accent-border-active);
+  background: var(--accent-tint-hover);
+}
+
+/* =========================================================
+   MENU GRID — show more items
+   ========================================================= */
+.wo-grid.po-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap:16px;
+  margin-top:8px;
+}
+
+/* Card: reuse po-card style, but compact */
+.wo-card.po-card{
+  position: relative;
+  padding: 14px !important;
+  border-radius: 16px;
+  min-height: auto !important;
+}
+
+.wo-card-body.po-body{ padding:0 !important; }
+
+.wo-row.po-row{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.wo-title.po-title{
+  font-size: 15px;
+  font-weight: 650;
+  margin: 0 !important;
+  line-height: 1.25;
+}
+
+.wo-price.po-price{
+  font-size: 14px;
+  font-weight: 650;
+  opacity: .9;
+  white-space: nowrap;
+}
+
+.wo-hint{
+  margin-top: 6px;
+  font-size: 12px;
+  opacity: .75;
+}
+
+/* Add button */
+.wo-actions-row.po-actions{ margin-top: 10px; }
+.wo-actions-row .btn-order{
+  width:100%;
+  border-radius: 999px;
+}
+
+/* =========================================================
+   RIGHT CART (sticky panel)
+   ========================================================= */
+.wo-cart{ position: sticky; top: 18px; }
+.wo-cart-card{ border-radius: 18px; }
+
+/* order lines scroll */
+.wo-lines{
+  min-height: 120px;
+  max-height: 290px;
+  overflow:auto;
+  padding-right: 6px;
+
+  display:grid;
+  gap: 10px;
+}
+
+.wo-lines::-webkit-scrollbar{ width: 8px; }
+.wo-lines::-webkit-scrollbar-thumb{
+  background: rgba(255,255,255,0.14);
+  border-radius: 10px;
+}
+
+/* order line cards */
+.wo-line{
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  padding: 12px 12px;
+
+  display:grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+
+.wo-line .ol-name{
+  font-weight: 650;
+  font-size: 14px;
+  line-height: 1.25;
+  margin: 0;
+  color: var(--text-strong);
+}
+
+.wo-line .ol-sub{
+  margin-top: 6px;
+  display:flex;
+  flex-wrap: wrap;
+  align-items:center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.wo-line .ol-price{ font-weight: 650; color: var(--text-normal); }
+
+.wo-line .ol-tags{
+  margin-top: 8px;
+  display:flex;
+  flex-wrap:wrap;
+  gap: 6px;
+}
+
+.wo-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  color: var(--text-normal);
+}
+
+.wo-line .ol-right{
+  display:grid;
+  justify-items:end;
+  align-content:space-between;
+  gap: 10px;
+}
+
+/* qty */
+.wo-qty{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+
+  background: rgba(0,0,0,0.22);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  padding: 6px 8px;
+}
+
+.wo-qty button{
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: rgba(255,255,255,0.05);
+  cursor:pointer;
+}
+
+.wo-qty button:hover{
+  background: rgba(255,255,255,0.08);
+}
+
+.wo-qty b{
+  min-width: 18px;
+  text-align:center;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.wo-remove{
+  border:none;
+  background: transparent;
+  cursor:pointer;
+  opacity: .85;
+}
+.wo-remove:hover{ opacity: 1; }
+
+/* right actions */
+.wo-actions{
+  display:grid;
+  gap:10px;
+  margin-top: 12px;
+}
+
+/* =========================================================
+   TOPPING MODAL
+   ========================================================= */
+.wo-modal{ position: fixed; inset: 0; z-index: 9999; }
+.wo-modal.is-hidden{ display:none; }
+
+.wo-modal-backdrop{
+  position:absolute; inset:0;
+  background: rgba(0,0,0,0.55);
+}
+
+.wo-modal-panel{
+  position: relative;
+  width: min(560px, calc(100% - 24px));
+  margin: 10vh auto 0 auto;
+
+  background: rgba(18,18,18,0.92);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
+
+  padding: 14px;
+}
+
+.wo-modal-head{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.wo-modal-title{
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.wo-modal-x{
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+  background: rgba(255,255,255,0.05);
+  cursor:pointer;
+}
+
+.wo-modal-sub{
+  margin: 0 0 12px 0;
+  color: var(--text-muted);
+}
+
+.wo-tp-list{
+  display:grid;
+  gap: 10px;
+  max-height: 40vh;
+  overflow:auto;
+  padding-right: 6px;
+}
+
+.wo-tp-list::-webkit-scrollbar{ width: 8px; }
+.wo-tp-list::-webkit-scrollbar-thumb{
+  background: rgba(255,255,255,0.14);
+  border-radius: 10px;
+}
+
+.wo-tp-item{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 12px;
+
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+
+.wo-tp-left{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+
+.wo-tp-check{
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+
+.wo-tp-name{
+  font-weight: 650;
+  color: var(--text-strong);
+}
+
+.wo-tp-price{
+  font-weight: 650;
+  color: var(--text-normal);
+  white-space: nowrap;
+}
+
+.wo-modal-foot{
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-soft);
+
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.wo-tp-total{
+  display:flex;
+  align-items:baseline;
+  gap: 10px;
+  color: var(--text-muted);
+}
+
+.wo-tp-total b{ color: var(--text-strong); }
+
+.wo-modal-actions{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}

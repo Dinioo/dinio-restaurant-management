@@ -52,6 +52,11 @@ public class AuthController {
         }
     }
 
+    @GetMapping("/staff/login")
+    public String staffLoginPage() {
+        return "auth/staff-login";
+    }
+
     @GetMapping("/login")
     public String loginPage(HttpSession session) {
         if (session.getAttribute("currentUser") != null)
@@ -64,7 +69,8 @@ public class AuthController {
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<?> handleUnifiedLogin(@RequestParam(name = "identifier", required = false) String identifier,
-        @RequestParam(name = "password", required = false) String password, HttpSession session, HttpServletRequest request,HttpServletResponse response) {
+            @RequestParam(name = "password", required = false) String password, HttpSession session,
+            HttpServletRequest request, HttpServletResponse response) {
 
         Map<String, String> resp = new HashMap<>();
         SecurityContextRepository repo = new HttpSessionSecurityContextRepository();
@@ -76,8 +82,8 @@ public class AuthController {
         Customer customer = customerService.login(identifier, password);
         if (customer != null) {
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                identifier, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
-        
+                    identifier, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+
             SecurityContext sc = SecurityContextHolder.createEmptyContext();
             sc.setAuthentication(auth);
             SecurityContextHolder.setContext(sc);
@@ -97,8 +103,9 @@ public class AuthController {
             }
 
             UsernamePasswordAuthenticationToken authStaff = new UsernamePasswordAuthenticationToken(
-                identifier, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + staff.getRole().getName().toString())));
-        
+                    identifier, null, Collections
+                            .singletonList(new SimpleGrantedAuthority("ROLE_" + staff.getRole().getName().toString())));
+
             SecurityContext scStaff = SecurityContextHolder.createEmptyContext();
             scStaff.setAuthentication(authStaff);
             SecurityContextHolder.setContext(scStaff);
@@ -116,7 +123,7 @@ public class AuthController {
 
         return ResponseEntity.badRequest().body("{\"message\": \"Tài khoản hoặc mật khẩu không đúng!\"}");
     }
-    
+
     private String determineRedirectUrl(RoleName roleName) {
         switch (roleName) {
             case ADMIN:
@@ -138,9 +145,9 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    @ResponseBody 
+    @ResponseBody
     public ResponseEntity<?> handleRegister(@RequestBody Map<String, String> body) {
-        
+
         String fullName = body.get("fullName");
         String identifier = body.get("identifier");
         String password = body.get("password");
@@ -171,14 +178,14 @@ public class AuthController {
     @GetMapping("/profile")
     public String profilePage(HttpSession session, Authentication auth, Model model) {
         Object user = session.getAttribute("currentUser");
-        
+
         if (user == null && auth != null && auth.isAuthenticated()) {
-            user = auth.getPrincipal(); 
+            user = auth.getPrincipal();
         }
 
-        if (user == null) 
+        if (user == null)
             return "redirect:/login";
-        
+
         model.addAttribute("user", user);
         return "customer/profile-customer";
     }

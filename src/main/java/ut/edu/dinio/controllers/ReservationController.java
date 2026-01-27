@@ -1,5 +1,6 @@
 package ut.edu.dinio.controllers;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
 import ut.edu.dinio.pojo.Customer;
+import ut.edu.dinio.pojo.Reservation;
 import ut.edu.dinio.service.ReservationService;
 import ut.edu.dinio.service.TableMapService;
 
@@ -52,20 +55,18 @@ public class ReservationController {
 
     @PostMapping("/api/reservations/create")
     @ResponseBody
-    public ResponseEntity<?> createReservation(@RequestBody Map<String, Object> data, HttpSession session) {
+    public ResponseEntity<?> createReservation(
+            @RequestBody Map<String, Object> data,
+            HttpSession session) {
         Customer user = (Customer) session.getAttribute("currentUser");
-        
-        if (user == null) {
-            return ResponseEntity.status(401).body("Vui lòng đăng nhập!");
-        }
+        if (user == null)
+            return ResponseEntity.status(401).build();
 
-        String result = tableMapService.createReservation(data, user);
-        
-        if ("success".equals(result)) {
-            return ResponseEntity.ok(Map.of("status", "success", "message", "Đặt bàn thành công!"));
-        } else {
-            return ResponseEntity.badRequest().body(Map.of("status", "error", "message", result));
-        }
+        Reservation saved = tableMapService.createReservation(data, user);
+
+        return ResponseEntity.ok(Map.of(
+                "status", "success",
+                "reservationId", saved.getId()));
     }
 
     @GetMapping("/api/reservations/occupied")
@@ -78,4 +79,46 @@ public class ReservationController {
             return ResponseEntity.badRequest().body("Lỗi định dạng ngày: " + e.getMessage());
         }
     }
+
+    @GetMapping("/api/reservations/{id}/summary")
+    @ResponseBody
+    public ResponseEntity<?> reservationSummary(@PathVariable Integer id) {
+
+        Reservation r = reservationService.getById(id);
+        if (r == null)
+            return ResponseEntity.notFound().build();
+
+        Map<String, Object> res = new HashMap<>();
+        res.put("id", r.getId());
+        res.put("reservedAt", r.getReservedAt());
+        res.put("partySize", r.getPartySize());
+
+        if (r.getTable() != null) {
+            res.put("tableCode", r.getTable().getCode());
+            res.put("tableSeats", r.getTable().getSeats());
+        }
+
+        if (r.getArea() != null) {
+            res.put("areaName", r.getArea().getName());
+        }
+
+        return ResponseEntity.ok(res);
+    }
+
+    @PostMapping("/api/reservations/{id}/preorder")
+    @ResponseBody
+    public ResponseEntity<?> savePreorder(
+            @PathVariable Integer id,
+            @RequestBody Map<String, Object> body) {
+        Reservation r = reservationService.getById(id);
+        if (r == null)
+            return ResponseEntity.notFound().build();
+
+        List<Map<String, Object>> items = (List<Map<String, Object>>) body.get("items");
+
+        reservationService.replaceReservationItems(r, items);
+
+        return ResponseEntity.ok(Map.of("status", "success"));
+    }
+
 }

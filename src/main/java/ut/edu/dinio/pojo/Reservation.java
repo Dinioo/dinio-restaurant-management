@@ -1,9 +1,12 @@
 package ut.edu.dinio.pojo;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,6 +17,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import ut.edu.dinio.pojo.enums.ReservationStatus;
 
@@ -66,6 +71,12 @@ public class Reservation {
     @Column(name = "CreatedAt", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ReservationItem> items = new ArrayList<>();
+
+    @OneToOne(mappedBy = "reservation", fetch = FetchType.LAZY)
+    private TableSession session;
+
     public Reservation() {}
 
     public Reservation(Customer customer, LocalDateTime reservedAt, Integer partySize, String note) {
@@ -95,6 +106,12 @@ public class Reservation {
     @JsonIgnore
     public Area getArea() { return area; }
 
+    @JsonIgnore
+    public List<ReservationItem> getItems() { return items; }
+
+    @JsonIgnore
+    public TableSession getSession() { return session; }
+
     public void setId(Integer id) { this.id = id; }
     public void setCustomer(Customer customer) { this.customer = customer; }
     public void setTable(DiningTable table) { this.table = table; }
@@ -108,4 +125,6 @@ public class Reservation {
     public void setGuestNote(String guestNote) { this.guestNote = guestNote; }
     public void setStatus(ReservationStatus status) { this.status = status; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public void setItems(List<ReservationItem> items) { this.items = items; }
+    public void setSession(TableSession session) { this.session = session; }
 }

@@ -38,10 +38,11 @@
     if (e.key === "Escape" && !modal.classList.contains("is-hidden")) close();
   });
 
-  yesBtn?.addEventListener("click", () => {
-    close();
-    window.location.href = "/dinio/preorder"; 
-  });
+yesBtn?.addEventListener("click", () => {
+  close();
+  const rid = sessionStorage.getItem("dinio_preorder_rid");
+  window.location.href = rid ? `/dinio/preorder?rid=${encodeURIComponent(rid)}` : "/dinio/preorder";
+});
 
   noBtn?.addEventListener("click", () => {
     close();

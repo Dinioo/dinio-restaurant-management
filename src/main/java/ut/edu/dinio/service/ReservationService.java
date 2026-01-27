@@ -12,8 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ut.edu.dinio.pojo.Customer;
+import ut.edu.dinio.pojo.MenuItem;
 import ut.edu.dinio.pojo.Reservation;
+import ut.edu.dinio.pojo.ReservationItem;
 import ut.edu.dinio.pojo.enums.ReservationStatus;
+import ut.edu.dinio.repositories.MenuItemRepository;
 import ut.edu.dinio.repositories.ReservationRepository;
 
 @Service
@@ -21,6 +24,8 @@ public class ReservationService {
 
     @Autowired
     private ReservationRepository reservationRepository;
+    @Autowired
+    private MenuItemRepository menuItemRepository;
 
     public List<Reservation> getReservationsByCustomer(Integer customerId) {
         return reservationRepository.findByCustomerIdOrderByReservedAtDesc(customerId);
@@ -70,4 +75,36 @@ public class ReservationService {
             return map;
         }).collect(Collectors.toList());
     }
+
+    public Reservation getById(Integer id) {
+        return reservationRepository.findById(id).orElse(null);
+    }
+
+    public void replaceReservationItems(
+            Reservation r,
+            List<Map<String, Object>> items) {
+        r.getItems().clear();
+
+        for (Map<String, Object> it : items) {
+            Integer menuItemId = Integer.valueOf(it.get("menuItemId").toString());
+            Integer qty = Integer.valueOf(it.get("qty").toString());
+            String note = (String) it.get("note");
+
+            MenuItem mi = menuItemRepository.findById(menuItemId)
+                    .orElseThrow(() -> new RuntimeException("MenuItem not found"));
+
+            ReservationItem ri = new ReservationItem();
+            ri.setReservation(r);
+            ri.setMenuItem(mi);
+            ri.setQty(qty);
+            ri.setUnitPrice(mi.getBasePrice());
+            ri.setNote(note);
+
+            r.getItems().add(ri);
+        }
+
+        reservationRepository.save(r);
+    }
+
+    
 }

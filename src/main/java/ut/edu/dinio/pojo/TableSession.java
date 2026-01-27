@@ -58,6 +58,10 @@ public class TableSession {
     @OneToOne(mappedBy = "session", fetch = FetchType.LAZY)
     private Invoice invoice;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ReservationID", unique = true)
+    private Reservation reservation;
+
     public TableSession() {}
 
     public TableSession(DiningTable table, Integer covers, StaffUser assignedStaff) {
@@ -86,6 +90,9 @@ public class TableSession {
     @JsonIgnore
     public Invoice getInvoice() { return invoice; }
 
+    @JsonIgnore
+    public Reservation getReservation() { return reservation; }
+
     public void setId(Integer id) { this.id = id; }
     public void setTable(DiningTable table) { this.table = table; }
     public void setOpenedAt(LocalDateTime openedAt) { this.openedAt = openedAt; }
@@ -95,4 +102,5 @@ public class TableSession {
     public void setStatus(SessionStatus status) { this.status = status; }
     public void setOrders(List<Order> orders) { this.orders = orders; }
     public void setInvoice(Invoice invoice) { this.invoice = invoice; }
+    public void setReservation(Reservation reservation) { this.reservation = reservation; }
 }

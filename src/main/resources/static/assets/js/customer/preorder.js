@@ -3,6 +3,13 @@
   const qsa = (s, el = document) => Array.from(el.querySelectorAll(s));
   const fmt = (v) => new Intl.NumberFormat("vi-VN").format(v) + "đ";
 
+  const getHeaders = () => {
+    const token = document.querySelector('meta[name="_csrf"]')?.content;
+    const header = document.querySelector('meta[name="_csrf_header"]')?.content;
+    const headers = { "Content-Type": "application/json" };
+    if (token && header) headers[header] = token;
+    return headers;
+  };
   const safeParse = (s) => { try { return JSON.parse(s); } catch { return null; } };
 
   const searchInput = qs("#menuSearch");
@@ -26,6 +33,9 @@
 
   const CART_KEY = "dinio_preorder_cart_v3";
 
+  const rid = new URLSearchParams(location.search).get("rid")
+    || sessionStorage.getItem("dinio_preorder_rid");
+
   let activeCat = "all";
   let activeTags = new Set();
   let query = "";
@@ -35,6 +45,19 @@
 
   const allCards = () => qsa(".po-card");
   const allSections = () => qsa(".po-section");
+
+  async function loadReservationSummary() {
+    const res = await fetch(`/dinio/api/reservations/${rid}/summary`);
+    const d = await res.json();
+
+    document.querySelector("#pickTable").textContent = d.tableCode;
+    document.querySelector("#pickArea").textContent = d.areaName;
+    document.querySelector("#pickSeats").textContent = d.partySize;
+
+    const dt = new Date(d.reservedAt);
+    document.querySelector("#pickTime").textContent =
+      dt.toLocaleString("vi-VN");
+  }
 
   function cardData(card) {
     const price = Number(card.dataset.price || 0);
@@ -62,18 +85,18 @@
   function matchCard(card) {
     const d = cardData(card);
 
-    if (activeCat !== "all" && d.cat !== activeCat) 
+    if (activeCat !== "all" && d.cat !== activeCat)
       return false;
 
     if (activeTags.size > 0) {
       const ok = d.tags.some(t => activeTags.has(t));
-      if (!ok) 
+      if (!ok)
         return false;
     }
 
     if (query) {
       const hay = (d.name + " " + (card.textContent || "")).toLowerCase();
-      if (!hay.includes(query)) 
+      if (!hay.includes(query))
         return false;
     }
 
@@ -85,16 +108,16 @@
       const A = cardData(a);
       const B = cardData(b);
 
-      if (sortBy === "low") 
+      if (sortBy === "low")
         return A.price - B.price;
-      if (sortBy === "high") 
+      if (sortBy === "high")
         return B.price - A.price;
-      if (sortBy === "newest") 
+      if (sortBy === "newest")
         return (B.isNew ? 1 : 0) - (A.isNew ? 1 : 0);
 
       const ra = A.recommended ? 1 : 0;
       const rb = B.recommended ? 1 : 0;
-      if (rb !== ra) 
+      if (rb !== ra)
         return rb - ra;
       return A.price - B.price;
     });
@@ -109,7 +132,7 @@
 
     allSections().forEach(section => {
       const grid = qs(".po-grid", section);
-      if (!grid) 
+      if (!grid)
         return;
 
       const visible = qsa(".po-card", grid).filter(c => c.style.display !== "none");
@@ -135,7 +158,7 @@
 
   function addToCartById(id) {
     const card = qs(`.po-card[data-id="${CSS.escape(id)}"]`);
-    if (!card) 
+    if (!card)
       return;
 
     const d = cardData(card);
@@ -146,7 +169,7 @@
   }
 
   function changeQty(id, delta) {
-    if (!cart[id]) 
+    if (!cart[id])
       return;
     cart[id].qty += delta;
     if (cart[id].qty <= 0) delete cart[id];
@@ -228,19 +251,19 @@
 
   document.addEventListener("click", (e) => {
     const add = e.target.closest("[data-add]");
-    if (add) 
+    if (add)
       return addToCartById(add.dataset.add);
 
     const quick = e.target.closest("[data-quick]");
-    if (quick) 
+    if (quick)
       return addToCartById(quick.dataset.quick);
 
     const inc = e.target.closest("[data-inc]");
-    if (inc) 
+    if (inc)
       return changeQty(inc.dataset.inc, +1);
 
     const dec = e.target.closest("[data-dec]");
-    if (dec) 
+    if (dec)
       return changeQty(dec.dataset.dec, -1);
 
     const chip = e.target.closest("#catChips .chip");
@@ -255,7 +278,7 @@
     const tag = e.target.closest("#tagToggles .tag");
     if (tag) {
       const t = (tag.dataset.tag || "").toLowerCase();
-      if (!t) 
+      if (!t)
         return;
 
       if (activeTags.has(t)) {
@@ -273,6 +296,114 @@
   function updateClearBtn() {
     const show = !!(searchInput?.value?.trim());
     if (btnClearSearch) btnClearSearch.style.display = show ? "grid" : "none";
+  }
+
+  function slugFromCategoryName(name) {
+    const s = String(name || "").toLowerCase();
+    if (s.includes("starter") || s.includes("khai")) return "starter";
+    if (s.includes("main") || s.includes("chính")) return "main";
+    if (s.includes("dessert") || s.includes("tráng")) return "dessert";
+    if (s.includes("drink") || s.includes("đồ uống")) return "drink";
+    return "other";
+  }
+
+  function sectionHint(slug) {
+    if (slug === "starter") return "Món khai vị";
+    if (slug === "main") return "Món chính";
+    if (slug === "dessert") return "Tráng miệng";
+    if (slug === "drink") return "Đồ uống";
+    return "";
+  }
+
+  async function loadMenuFromDb() {
+    const res = await fetch(`/dinio/api/menu/page-data?view=customer`);
+    if (!res.ok) throw new Error("Menu API failed");
+
+    const data = await res.json();
+    const cats = data.categories || [];
+    const items = data.items || [];
+
+    const menuSections = qs("#menuSections");
+    if (!menuSections) return;
+
+    menuSections.innerHTML = "";
+
+    const catMeta = new Map();
+    cats.forEach(c => {
+      const slug = slugFromCategoryName(c.name);
+      catMeta.set(String(c.id), { slug, title: c.name });
+    });
+
+    const group = { starter: [], main: [], dessert: [], drink: [], other: [] };
+    items.forEach(it => {
+      const meta = catMeta.get(String(it.categoryId));
+      const slug = meta?.slug || "other";
+      group[slug].push({ ...it, _catTitle: meta?.title || slug });
+    });
+
+    const order = ["starter", "main", "dessert", "drink", "other"];
+
+    order.forEach(slug => {
+      const arr = group[slug];
+      if (!arr || !arr.length) return;
+
+      const sec = document.createElement("section");
+      sec.className = "po-section";
+      sec.dataset.section = slug;
+
+      sec.innerHTML = `
+      <div class="po-section-head">
+        <h3>${slug === "main" ? "Main" : (slug.charAt(0).toUpperCase() + slug.slice(1))}</h3>
+        <span class="section-hint">${sectionHint(slug)}</span>
+      </div>
+      <div class="po-grid"></div>
+    `;
+
+      const grid = qs(".po-grid", sec);
+
+      arr.forEach(it => {
+        const tags = (it.tags || []).map(t => String(t).toLowerCase());
+        const isNew = tags.includes("new");
+        const recommended = tags.includes("best") || tags.includes("signature");
+
+        const card = document.createElement("article");
+        card.className = "po-card";
+
+        card.dataset.id = String(it.id);
+        card.dataset.cat = slug;
+        card.dataset.tags = tags.join(",");
+        card.dataset.name = it.name || "";
+        card.dataset.price = String(it.price || 0);
+        card.dataset.new = isNew ? "1" : "0";
+        card.dataset.recommended = recommended ? "1" : "0";
+
+        const priceText = new Intl.NumberFormat("vi-VN").format(Number(it.price || 0)) + "đ";
+
+        card.innerHTML = `
+        <div class="po-thumb">
+          <img src="${it.imageUrl || "/assets/pic/food1.jpeg"}" alt="${escapeHtml(it.name || "")}" />
+          ${isNew ? `<span class="po-badge">New</span>` : (tags.includes("best") ? `<span class="po-badge">Best</span>` : (tags.includes("premium") ? `<span class="po-badge">Premium</span>` : (tags.includes("signature") ? `<span class="po-badge">Signature</span>` : ``)))}
+        </div>
+        <div class="po-body">
+          <div class="po-row">
+            <h4 class="po-title">${escapeHtml(it.name || "")}</h4>
+            <div class="po-price">${priceText}</div>
+          </div>
+          <p class="po-desc">${escapeHtml(it.description || "")}</p>
+          <div class="po-actions">
+            <button class="btn-add" type="button" data-add="${it.id}">
+              <i class="fa-solid fa-plus"></i> Thêm
+            </button>
+            <button class="btn-mini" type="button" data-quick="${it.id}"></button>
+          </div>
+        </div>
+      `;
+
+        grid.appendChild(card);
+      });
+
+      menuSections.appendChild(sec);
+    });
   }
 
   searchInput?.addEventListener("input", () => {
@@ -298,16 +429,40 @@
     clearCart();
   });
 
-  btnCheckout?.addEventListener("click", () => {
-    if (Object.keys(cart).length === 0) {
-      alert("Bạn chưa chọn món nào.");
+  btnCheckout.addEventListener("click", async () => {
+    if (!rid) return errorToast("Thiếu reservationId (rid)");
+    if (Object.keys(cart).length === 0) return errorToast("Bạn chưa chọn món");
+
+    const payload = {
+      items: Object.values(cart).map(it => ({
+        menuItemId: it.id,
+        qty: it.qty,
+        note: it.note || ""
+      }))
+    };
+
+    const res = await fetch(`/dinio/api/reservations/${rid}/preorder`, {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      errorToast(await res.text());
       return;
     }
-    console.log("PREORDER PAYLOAD:", Object.values(cart));
-    alert("Đã chuẩn bị payload (xem console). Nối endpoint backend là xong.");
+
+    successToast("Đã lưu món đặt trước!");
   });
 
-  updateClearBtn();
-  renderCart();
-  applyFilterAndSort();
+  (async () => {
+    try {
+      await loadMenuFromDb();
+      await loadReservationSummary();
+    } catch (e) { }
+
+    updateClearBtn();
+    renderCart();
+    applyFilterAndSort();
+  })();
 })();

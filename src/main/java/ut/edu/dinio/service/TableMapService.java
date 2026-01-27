@@ -1,6 +1,8 @@
 package ut.edu.dinio.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,91 +92,40 @@ public class TableMapService {
         return "floor1";
     }
 
-    public String createReservation(Map<String, Object> data, Customer customer) {
-        try {
-            if (customer == null) {
-                return "Vui lòng đăng nhập để đặt bàn!";
-            }
+   public Reservation createReservation(Map<String, Object> data, Customer customer) {
 
-            Integer tableId = (Integer) data.get("tableId");
-            String dateStr = (String) data.get("date");
-            String timeStr = (String) data.get("time");
-            Integer partySize = (Integer) data.get("guests");
-            String note = (String) data.get("note");
-            String mode = (String) data.get("mode");
-            String guestName = (String) data.get("guestName");
-            String guestPhone = (String) data.get("guestPhone");
+    Integer tableId = Integer.valueOf(data.get("tableId").toString());
+    Integer guests = Integer.valueOf(data.get("guests").toString());
+    String date = data.get("date").toString();
+    String time = data.get("time").toString();
+    String note = (String) data.get("note");
+    String mode = (String) data.get("mode");
 
-            if (tableId == null || dateStr == null || timeStr == null || partySize == null) {
-                return "Thiếu thông tin bắt buộc!";
-            }
+    DiningTable table = tableRepository.findById(tableId)
+        .orElseThrow(() -> new RuntimeException("Table not found"));
 
-            Optional<DiningTable> tableOpt = tableRepository.findById(tableId);
-            if (tableOpt.isEmpty()) {
-                return "Không tìm thấy bàn!";
-            }
+    Reservation r = new Reservation();
+    r.setCustomer(customer);
+    r.setTable(table);
+    r.setArea(table.getArea());
+    r.setPartySize(guests);
+    r.setNote(note);
 
-            DiningTable table = tableOpt.get();
+    LocalDate d = LocalDate.parse(date);
+    LocalTime t = LocalTime.parse(time);
+    r.setReservedAt(LocalDateTime.of(d, t));
 
-            if (table.getSeats() < partySize) {
-                return "Số khách vượt quá sức chứa của bàn!";
-            }
+    boolean isForOther = "other".equals(mode);
+    r.setIsForOther(isForOther);
 
-            LocalDateTime reservedAt;
-            try {
-                String datetimeStr = dateStr + "T" + timeStr + ":00";
-                reservedAt = LocalDateTime.parse(datetimeStr, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            } catch (Exception e) {
-                return "Định dạng ngày giờ không hợp lệ!";
-            }
-
-            if (reservedAt.isBefore(LocalDateTime.now())) {
-                return "Không thể đặt bàn trong quá khứ!";
-            }
-
-            Reservation reservation = new Reservation();
-            reservation.setCustomer(customer);
-            reservation.setTable(table);
-            reservation.setArea(table.getArea());
-            reservation.setReservedAt(reservedAt);
-            reservation.setPartySize(partySize);
-            reservation.setNote(note);
-            reservation.setStatus(ReservationStatus.PENDING);
-
-            if ("other".equals(mode)) {
-                if (guestName == null || guestName.trim().isEmpty()) {
-                    return "Vui lòng nhập tên khách!";
-                }
-                if (guestPhone == null || guestPhone.trim().isEmpty()) {
-                    return "Vui lòng nhập số điện thoại khách!";
-                }
-
-                String phoneDigits = guestPhone.trim().replaceAll("\\D", "");
-                if (phoneDigits.length() != 10) {
-                    return "Số điện thoại phải có đúng 10 chữ số!";
-                }
-
-                reservation.setIsForOther(true);
-                reservation.setGuestName(guestName.trim());
-                reservation.setGuestPhone(phoneDigits);
-            } else {
-                reservation.setIsForOther(false);
-                reservation.setGuestName(customer.getFullName());
-                reservation.setGuestPhone(customer.getPhone());
-            }
-
-            reservationRepository.save(reservation);
-            tableRepository.save(table);
-
-            return "success";
-
-        } catch (Exception e) {
-            System.out.println("Error creating reservation: " + e.getMessage());
-            e.printStackTrace();
-            return "Có lỗi xảy ra khi đặt bàn!";
-        }
+    if (isForOther) {
+        r.setGuestName((String) data.get("guestName"));
+        r.setGuestPhone((String) data.get("guestPhone"));
+        r.setGuestNote((String) data.get("guestNote"));
     }
 
+    return reservationRepository.save(r);
+}
     @Transactional
     public void updateTableStatus(Integer tableId, TableStatus newStatus, StaffUser staff) {
         DiningTable table = tableRepository.findById(tableId).orElse(null);

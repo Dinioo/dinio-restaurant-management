@@ -10,12 +10,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import ut.edu.dinio.pojo.Customer;
 import ut.edu.dinio.repositories.CustomerRepository;
 
 @Service
 public class CustomerService implements UserDetailsService {
+
+    @Autowired
+    private CloudinaryStorageService cloudinaryStorageService;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -118,6 +122,25 @@ public class CustomerService implements UserDetailsService {
         c.setEmail(newEmail);
         customerRepository.save(c);
         return "success";
+    }
+
+    public Customer updateAvatar(Integer id, MultipartFile avatarFile) {
+        Customer c = getById(id);
+        if (c == null)
+            return null;
+
+        if (avatarFile == null || avatarFile.isEmpty()) {
+            throw new IllegalArgumentException("Vui lòng chọn ảnh.");
+        }
+
+        String contentType = avatarFile.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new IllegalArgumentException("File không phải ảnh.");
+        }
+
+        String avatarUrl = cloudinaryStorageService.uploadImage(avatarFile, "dinio/avatars");
+        c.setImageUrl(avatarUrl);
+        return customerRepository.save(c);
     }
 
     public Customer getById(Integer id) {

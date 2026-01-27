@@ -36,7 +36,7 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain staffSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-            .securityMatcher("/waiter/**", "/admin/**", "/kitchen/**", "/cashier/**", "/staff/**", "/api/tables/**", "/api/reservations/**")
+            .securityMatcher("/waiter/**", "/admin/**", "/kitchen/**", "/cashier/**", "/staff/**", "/api/tables/**", "/api/reservations/**", "/assets/**", "/favicon.ico", "/error")
             .securityContext(context -> context.securityContextRepository(securityContextRepository()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/staff/login", "/assets/**", "/favicon.ico").permitAll()
@@ -53,6 +53,9 @@ public class SecurityConfig {
             .logout(logout -> logout
                 .logoutUrl("/staff/logout")
                 .logoutSuccessUrl("/staff/login?logout")
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID")
                 .permitAll()
             );
         return http.build();

@@ -25,7 +25,7 @@ public class WaiterController {
 
   @GetMapping("/waiter/dashboard")
   public String waiterDashboard() {
-    return "waiter/waiter-dashboard";
+    return "component/dashboard";
   }
 
   @GetMapping("/waiter/tables")

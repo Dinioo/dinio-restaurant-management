@@ -106,11 +106,11 @@ public class AuthController {
             case ADMIN:
                 return "/dinio/admin/dashboard";
             case KITCHEN:
-                return "/dinio/kitchen/orders";
+                return "/dinio/kitchen";
             case CASHIER_MANAGER:
-                return "/dinio/cashier/orders";
+                return "/dinio/dashboard";
             case WAITER:
-                return "/dinio/waiter/dashboard";
+                return "/dinio/dashboard";
             default:
                 return "/dinio/admin/dashboard";
         }

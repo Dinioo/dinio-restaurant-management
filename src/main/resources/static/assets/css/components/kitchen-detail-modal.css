@@ -1,0 +1,126 @@
+.kd-modal{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.kd-modal.is-hidden{display:none}
+
+.kd-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.55);
+}
+
+.kd-panel{
+  position:relative;
+  width:min(680px,calc(100% - 32px));
+  border-radius:18px;
+  padding:18px 18px 16px;
+  background:rgba(20,20,20,.72);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 18px 48px rgba(0,0,0,.45);
+  backdrop-filter:blur(12px);
+}
+
+.kd-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:6px;
+}
+
+.kd-head-left{display:grid;gap:3px}
+
+.kd-mini{
+  font-size:11px;
+  letter-spacing:.16em;
+  opacity:.72;
+  font-weight:600;
+  color:var(--text-muted);
+}
+
+.kd-title{
+  margin:0;
+  font-size:18px;
+  font-weight:700;
+  letter-spacing:-0.01em;
+  color:var(--text-strong);
+}
+
+.kd-sub{
+  margin:0 0 12px;
+  font-size:13px;
+  color:var(--text-muted);
+  opacity:.95;
+}
+
+.kd-x{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+}
+
+.kd-meta{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin-bottom:12px;
+}
+
+@media (max-width:620px){
+  .kd-meta{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+.kd-meta-item{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:16px;
+  padding:10px 12px;
+  display:grid;
+  gap:6px;
+}
+
+.kd-meta-item span{
+  font-size:12px;
+  color:var(--text-muted);
+  font-weight:600;
+}
+
+.kd-meta-item b{
+  font-weight:700;
+  letter-spacing:-0.01em;
+  color:var(--text-strong);
+}
+
+.kd-note{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:16px;
+  padding:12px;
+  display:grid;
+  gap:6px;
+}
+
+.kd-note-text{
+  color:var(--text-strong);
+  font-weight:500;
+  line-height:1.4;
+  white-space:pre-wrap;
+}
+
+.kd-foot{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}

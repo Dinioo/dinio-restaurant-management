@@ -1,0 +1,46 @@
+<div th:fragment="kitchenDetailModal" class="kd-modal is-hidden" id="kdModal" aria-hidden="true">
+  <div class="kd-backdrop" data-close="1"></div>
+
+  <div class="kd-panel" role="dialog" aria-modal="true" aria-labelledby="kdTitle">
+    <div class="kd-head">
+      <div class="kd-head-left">
+        <div class="kd-mini">DETAIL</div>
+        <h3 class="kd-title" id="kdTitle">Chi tiết món</h3>
+      </div>
+
+      <button class="kd-x btn-light" type="button" data-close="1" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <p class="kd-sub" id="kdSub">Thông tin món</p>
+
+    <div class="kd-meta">
+      <div class="kd-meta-item">
+        <span>Khu</span>
+        <b id="kdStation">—</b>
+      </div>
+      <div class="kd-meta-item">
+        <span>Thời gian</span>
+        <b id="kdAge">—</b>
+      </div>
+      <div class="kd-meta-item">
+        <span>Trạng thái</span>
+        <b id="kdStatus">—</b>
+      </div>
+      <div class="kd-meta-item">
+        <span>ID</span>
+        <b id="kdId">—</b>
+      </div>
+    </div>
+
+    <div class="kd-note">
+      <div class="kd-mini">NOTE</div>
+      <div class="kd-note-text" id="kdNote">—</div>
+    </div>
+
+    <div class="kd-foot">
+      <button class="btn-light" type="button" data-close="1">Đóng</button>
+    </div>
+  </div>
+</div>

@@ -305,6 +305,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       const result = await response.json();
       if (response.ok && result.status === "success") {
+        sessionStorage.setItem("dinio_preorder_rid", result.reservationId);
         successToast("Đặt bàn thành công!");
         window.openPreOrderModal?.();
       } else {

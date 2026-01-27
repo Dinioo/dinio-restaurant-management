@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DINIO - Kitchen History</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/kitchen/kitchen-history.css}" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+  <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
+  <script th:src="@{/assets/js/kitchen/kitchen-history.js}" defer></script>
+</head>
+
+<body>
+
+  <main class="kh">
+    <section class="kh-top">
+      <div class="kh-title">
+      </div>
+
+      <div class="kh-actions">
+        <a class="kh-link" href="/dinio/kitchen">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Quay lại KDS</span>
+        </a>
+        <button class="kh-btn" id="btnClear" type="button">
+          <i class="fa-regular fa-trash-can"></i>
+          <span>Xoá lịch sử</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="kh-toolbar">
+      <div class="kh-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input id="hq" type="text" placeholder="Tìm món / note…" autocomplete="off" />
+      </div>
+
+      <div class="kh-filters">
+        <div class="kh-chips" id="hStation">
+          <button class="chip is-active" data-station="all" type="button">All</button>
+          <button class="chip" data-station="hot" type="button">Bếp nóng</button>
+          <button class="chip" data-station="cold" type="button">Bếp nguội</button>
+          <button class="chip" data-station="bar" type="button">Bar</button>
+        </div>
+
+        <span class="kh-divider" aria-hidden="true"></span>
+
+        <div class="kh-chips" id="hRange">
+          <button class="chip is-active" data-range="today" type="button">Hôm nay</button>
+          <button class="chip" data-range="2h" type="button">2 giờ</button>
+          <button class="chip" data-range="30m" type="button">30 phút</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="kh-card">
+      <div class="kh-head">
+        <div class="kh-head-left">
+          <div class="kh-mini">HISTORY</div>
+          <div class="kh-h2">Món đã READY</div>
+        </div>
+        <div class="kh-head-right">
+          <span class="kh-chip" id="hCount">0 món</span>
+        </div>
+      </div>
+
+      <div class="kh-table" role="table" aria-label="Lịch sử món">
+        <div class="kh-tr kh-th" role="row">
+          <div class="kh-td" role="columnheader">Món</div>
+          <div class="kh-td" role="columnheader">Note</div>
+          <div class="kh-td" role="columnheader">Khu</div>
+          <div class="kh-td" role="columnheader">Nhận</div>
+          <div class="kh-td" role="columnheader">READY</div>
+          <div class="kh-td" role="columnheader">Mất</div>
+        </div>
+
+        <div id="hRows" role="rowgroup"></div>
+      </div>
+
+      <div class="kh-empty" id="hEmpty">
+        <i class="fa-regular fa-clock"></i>
+        <div>
+          <div class="kh-empty-title">Chưa có dữ liệu</div>
+          <div class="kh-empty-sub">Khi món được chuyển sang READY, sẽ xuất hiện ở đây.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+</body>
+</html>

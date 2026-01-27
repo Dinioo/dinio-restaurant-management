@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DINIO - Kitchen KDS</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/kitchen/kitchen-kds.css}" />
+  <!-- (nếu modal có css riêng) -->
+  <link rel="stylesheet" th:href="@{/assets/css/kitchen/kitchen-detail-modal.css}" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+  <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
+  <script th:src="@{/assets/js/kitchen/kitchen-kds.js}" defer></script>
+</head>
+
+<body>
+
+  <main class="kds">
+    <section class="kds-top">
+      <div class="kds-title"></div>
+
+      <div class="kds-actions">
+        <a class="kds-link" href="/dinio/kitchen/history">Lịch sử</a>
+
+        <button class="kds-btn kds-btn-ghost" id="btnSound" type="button" aria-pressed="false">
+          <span class="kds-btn-dot" aria-hidden="true"></span>
+          <span>Âm báo</span>
+        </button>
+
+        <button class="kds-btn kds-btn-ghost" id="btnFullscreen" type="button">
+          <span>Full</span>
+        </button>
+
+        <button class="kds-btn kds-btn-primary" id="btnRefresh" type="button">
+          <span>Làm mới</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="kds-toolbar">
+      <div class="kds-search">
+        <input id="q" type="text" placeholder="Tìm món / bàn / note…" inputmode="search" autocomplete="off"/>
+        <button class="kds-clear" id="btnClear" type="button" aria-label="Xoá">×</button>
+      </div>
+
+      <div class="kds-filters">
+        <div class="kds-chips" id="stationChips">
+          <button class="chip is-active" data-station="all" type="button">All</button>
+          <button class="chip" data-station="hot" type="button">Bếp nóng</button>
+          <button class="chip" data-station="cold" type="button">Bếp nguội</button>
+          <button class="chip" data-station="bar" type="button">Bar</button>
+        </div>
+
+        <span class="kds-divider" aria-hidden="true"></span>
+
+        <div class="kds-chips" id="typeChips">
+          <button class="chip is-active" data-type="all" type="button">All</button>
+          <button class="chip chip-accent" data-type="priority" type="button">Ưu tiên</button>
+          <button class="chip" data-type="takeaway" type="button">Mang đi</button>
+          <button class="chip" data-type="vip" type="button">VIP</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="kds-board">
+      <div class="kcol" data-col="NEW">
+        <div class="kcol-head">
+          <div class="kcol-left">
+            <div class="kcol-title">Mới vào</div>
+            <div class="kcol-sub">NEW</div>
+          </div>
+          <div class="kcol-right">
+            <span class="kcol-count" id="countNEW">0</span>
+          </div>
+        </div>
+        <div class="kcol-body" id="colNEW"></div>
+        <div class="kcol-empty" id="emptyNEW">
+          <div class="kempty-title">Trống</div>
+          <div class="kempty-sub">Không có món mới.</div>
+        </div>
+      </div>
+
+      <div class="kcol" data-col="COOKING">
+        <div class="kcol-head">
+          <div class="kcol-left">
+            <div class="kcol-title">Đang làm</div>
+            <div class="kcol-sub">COOKING</div>
+          </div>
+          <div class="kcol-right">
+            <span class="kcol-count" id="countCOOKING">0</span>
+          </div>
+        </div>
+        <div class="kcol-body" id="colCOOKING"></div>
+        <div class="kcol-empty" id="emptyCOOKING">
+          <div class="kempty-title">Trống</div>
+          <div class="kempty-sub">Chưa có món đang làm.</div>
+        </div>
+      </div>
+
+      <div class="kcol" data-col="READY">
+        <div class="kcol-head">
+          <div class="kcol-left">
+            <div class="kcol-title">Sẵn sàng</div>
+            <div class="kcol-sub">READY</div>
+          </div>
+          <div class="kcol-right">
+            <span class="kcol-count" id="countREADY">0</span>
+          </div>
+        </div>
+        <div class="kcol-body" id="colREADY"></div>
+        <div class="kcol-empty" id="emptyREADY">
+          <div class="kempty-title">Trống</div>
+          <div class="kempty-sub">Chưa có món sẵn sàng.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ✅ Include modal fragment ở đây -->
+    <div th:replace="~{fragments/kitchen-detail-modal :: kitchenDetailModal}"></div>
+  </main>
+
+</body>
+</html>

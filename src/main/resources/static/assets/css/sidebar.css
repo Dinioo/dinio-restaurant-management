@@ -1,9 +1,7 @@
-/* ========== sidebar.css (no :root here) ========== */
 
 .app-shell{display:flex;gap:16px;padding:18px}
 .app-main{flex:1;min-width:0}
 
-/* sidebar container */
 .app-side{
   width:var(--sideW);
   flex:0 0 var(--sideW);
@@ -42,7 +40,6 @@
 .app-menu-btn:hover{background:var(--surface-2)}
 .app-menu-btn:focus-visible{outline:none; box-shadow:0 0 0 4px var(--ring-accent)}
 
-/* brand */
 .app-brand{
   padding:10px 12px;
   border-radius:16px;
@@ -54,7 +51,6 @@
 
 .app-brand:hover{background:var(--surface-2)}
 
-/* nav */
 .app-side-nav{
   display:flex;
   flex-direction:column;
@@ -71,7 +67,6 @@
   margin-left:6px;
 }
 
-/* item */
 .app-side-item{
   display:flex;
   align-items:center;
@@ -142,4 +137,11 @@
     z-index:1000;
   }
   .app-side.is-open{transform:translateX(0)}
+}
+.app-shell{
+  align-items: stretch;   /* ✅ 2 cột cùng top & cùng cao */
+}
+
+.app-main{
+  align-self: stretch;    /* ✅ main không tự tụt */
 }

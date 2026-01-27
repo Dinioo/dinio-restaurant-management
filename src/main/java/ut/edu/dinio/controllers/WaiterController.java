@@ -23,7 +23,7 @@ public class WaiterController {
   @Autowired
   private TableMapService tableMapService;
 
-  @GetMapping("/waiter/dashboard")
+  @GetMapping("/dashboard")
   public String waiterDashboard() {
     return "component/dashboard";
   }

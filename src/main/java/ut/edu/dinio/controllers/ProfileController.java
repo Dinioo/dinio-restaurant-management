@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpSession;
 import ut.edu.dinio.pojo.Customer;
@@ -25,7 +27,7 @@ public class ProfileController {
 
     @GetMapping("/me")
     public String profilePage(HttpSession session) {
-        if (session.getAttribute("currentUser") == null) 
+        if (session.getAttribute("currentUser") == null)
             return "redirect:/login";
         return "customer/profile-customer";
     }
@@ -34,12 +36,12 @@ public class ProfileController {
     @ResponseBody
     public ResponseEntity<?> getProfileData(HttpSession session) {
         Customer current = (Customer) session.getAttribute("currentUser");
-        if (current == null) 
+        if (current == null)
             return ResponseEntity.status(401).build();
 
         Customer user = customerService.getById(current.getId());
         Map<String, Object> map = new HashMap<>();
-        
+
         map.put("fullName", user.getFullName());
         map.put("phone", user.getPhone());
         map.put("email", user.getEmail());
@@ -83,5 +85,30 @@ public class ProfileController {
         Customer current = (Customer) session.getAttribute("currentUser");
         String result = customerService.updatePassword(current.getId(), body.get("oldPwd"), body.get("newPwd"));
         return "success".equals(result) ? ResponseEntity.ok("success") : ResponseEntity.badRequest().body(result);
+    }
+
+    @PostMapping("/api/avatar")
+    @ResponseBody
+    public ResponseEntity<?> updateAvatar(
+            @RequestParam("avatarFile") MultipartFile avatarFile,
+            HttpSession session) {
+        Customer current = (Customer) session.getAttribute("currentUser");
+        if (current == null) {
+            return ResponseEntity.status(401).body("Chưa đăng nhập");
+        }
+
+        try {
+            Customer updated = customerService.updateAvatar(current.getId(), avatarFile);
+            session.setAttribute("currentUser", updated);
+
+            Map<String, Object> res = new HashMap<>();
+            res.put("avatarUrl", updated.getImageUrl());
+            return ResponseEntity.ok(res);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Không thể cập nhật avatar");
+        }
     }
 }

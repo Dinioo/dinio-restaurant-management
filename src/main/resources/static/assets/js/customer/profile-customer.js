@@ -41,14 +41,85 @@ function loadToUI() {
   if ($("#dob")) $("#dob").value = (userData.dob === "N/A") ? "" : userData.dob;
   if ($("#address")) $("#address").value = (userData.address === "N/A") ? "" : userData.address;
   if ($("#note")) $("#note").value = (userData.note === "N/A") ? "" : userData.note;
+   if ($("#avatarImg")) $("#avatarImg").src = userData.avatarUrl || $("#avatarImg").src;
 }
+
+function bindAvatar() {
+  const btn = $("#btnChangeAvatar");
+  const fileInput = $("#avatarFile");
+  const img = $("#avatarImg");
+
+  if (!btn || !fileInput || !img) return;
+
+  btn.addEventListener("click", () => fileInput.click());
+
+  fileInput.addEventListener("change", async () => {
+    const file = fileInput.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      errorToast("File không hợp lệ");
+      fileInput.value = "";
+      return;
+    }
+
+    const oldSrc = img.src;
+
+    const url = URL.createObjectURL(file);
+    img.src = url;
+    img.onload = () => URL.revokeObjectURL(url);
+
+    btn.disabled = true;
+    btn.textContent = "Đang tải...";
+
+    try {
+      const fd = new FormData();
+      fd.append("avatarFile", file);
+
+      const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+      const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+
+      const headers = {};
+      if (csrfToken && csrfHeader) headers[csrfHeader] = csrfToken;
+
+      const res = await fetch("/dinio/profile/api/avatar", {
+        method: "POST",
+        headers,
+        body: fd
+      });
+
+      if (!res.ok) {
+        const msg = await res.text();
+        img.src = oldSrc;
+        errorToast(msg || "Upload ảnh thất bại");
+        return;
+      }
+
+      const data = await res.json();
+      if (data?.avatarUrl) {
+        img.src = data.avatarUrl;
+        userData.avatarUrl = data.avatarUrl;
+      }
+
+      successToast("Đổi ảnh thành công");
+      fileInput.value = "";
+    } catch (e) {
+      img.src = oldSrc;
+      errorToast("Upload ảnh thất bại");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Đổi ảnh";
+    }
+  });
+}
+
 
 function bindForms() {
   $("#profileForm")?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const res = await fetch('/dinio/profile/api/update', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getHeaders(),
       body: JSON.stringify({
         fullName: $("#fullName").value,
         phone: $("#phone").value
@@ -119,4 +190,5 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchProfileData();
   bindTabs();
   bindForms();
+  bindAvatar();
 });

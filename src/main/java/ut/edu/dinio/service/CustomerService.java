@@ -10,12 +10,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import ut.edu.dinio.pojo.Customer;
 import ut.edu.dinio.repositories.CustomerRepository;
 
 @Service
 public class CustomerService implements UserDetailsService {
+
+    @Autowired
+    private CloudinaryStorageService cloudinaryStorageService;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -26,13 +30,13 @@ public class CustomerService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
         Optional<Customer> customerOpt = customerRepository.findByEmail(identifier);
-        
-        if (customerOpt.isEmpty()) 
+
+        if (customerOpt.isEmpty())
             customerOpt = customerRepository.findByPhone(identifier);
-        
-        if (customerOpt.isEmpty()) 
+
+        if (customerOpt.isEmpty())
             throw new UsernameNotFoundException("User not found with identifier: " + identifier);
-        
+
         Customer customer = customerOpt.get();
 
         return User.builder().username(customer.getEmail()).password(customer.getPasswordHash()).roles("USER").build();
@@ -63,14 +67,14 @@ public class CustomerService implements UserDetailsService {
 
         Customer customer = new Customer();
         customer.setFullName(fullName);
-        
+
         if (identifier.contains("@")) {
             customer.setEmail(identifier);
-            customer.setPhone("N/A"); 
+            customer.setPhone("N/A");
         } else {
             customer.setPhone(identifier);
         }
-        
+
         customer.setPasswordHash(passwordEncoder.encode(password));
         customer.setCreatedAt(LocalDateTime.now());
 
@@ -90,7 +94,7 @@ public class CustomerService implements UserDetailsService {
 
     public String updatePassword(Integer id, String oldPwd, String newPwd) {
         Customer c = getById(id);
-        if (c == null) 
+        if (c == null)
             return "Người dùng không tồn tại";
         if (!passwordEncoder.matches(oldPwd, c.getPasswordHash())) {
             return "Mật khẩu hiện tại không đúng";
@@ -102,12 +106,13 @@ public class CustomerService implements UserDetailsService {
 
     public String updateEmail(Integer id, String newEmail, String password) {
         Customer c = getById(id);
-        if (c == null) return "Người dùng không tồn tại";
-        
+        if (c == null)
+            return "Người dùng không tồn tại";
+
         if (!passwordEncoder.matches(password, c.getPasswordHash())) {
             return "Xác nhận mật khẩu không chính xác";
         }
-    
+
         Optional<Customer> existing = customerRepository.findByEmail(newEmail);
         if (existing.isPresent() && !existing.get().getId().equals(id)) {
             return "Email này đã được đăng ký bởi tài khoản khác";
@@ -117,10 +122,30 @@ public class CustomerService implements UserDetailsService {
         customerRepository.save(c);
         return "success";
     }
-    
+
+    public Customer updateAvatar(Integer id, MultipartFile avatarFile) {
+        Customer c = getById(id);
+        if (c == null)
+            return null;
+
+        if (avatarFile == null || avatarFile.isEmpty()) {
+            throw new IllegalArgumentException("Vui lòng chọn ảnh.");
+        }
+
+        String contentType = avatarFile.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new IllegalArgumentException("File không phải ảnh.");
+        }
+
+        String avatarUrl = cloudinaryStorageService.uploadImage(avatarFile, "dinio/avatars");
+        c.setImageUrl(avatarUrl);
+        return customerRepository.save(c);
+    }
+
     public Customer getById(Integer id) {
         return customerRepository.findById(id).orElse(null);
     }
+
     public Customer findByEmail(String email) {
         return customerRepository.findByEmail(email).orElse(null);
     }

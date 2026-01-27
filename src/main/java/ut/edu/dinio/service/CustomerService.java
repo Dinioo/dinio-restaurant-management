@@ -67,6 +67,7 @@ public class CustomerService implements UserDetailsService {
 
         Customer customer = new Customer();
         customer.setFullName(fullName);
+        customer.setAddress("N/A");
 
         if (identifier.contains("@")) {
             customer.setEmail(identifier);

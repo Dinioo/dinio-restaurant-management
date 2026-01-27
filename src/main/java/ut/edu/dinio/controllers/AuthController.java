@@ -1,7 +1,6 @@
 package ut.edu.dinio.controllers;
 
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -68,74 +66,53 @@ public class AuthController {
 
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<?> handleUnifiedLogin(@RequestParam(name = "identifier", required = false) String identifier,
-            @RequestParam(name = "password", required = false) String password, HttpSession session,
-            HttpServletRequest request, HttpServletResponse response) {
-
-        Map<String, String> resp = new HashMap<>();
-        SecurityContextRepository repo = new HttpSessionSecurityContextRepository();
-
-        if (identifier == null || identifier.trim().isEmpty() || password == null || password.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("{\"message\": \"Vui lòng nhập đầy đủ thông tin!\"}");
+    public ResponseEntity<?> handleUnifiedLogin(@RequestParam String identifier, @RequestParam String password,
+            HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+        if (identifier == null || identifier.isBlank() || password == null || password.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Vui lòng nhập đầy đủ thông tin!"));
         }
 
         Customer customer = customerService.login(identifier, password);
         if (customer != null) {
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                    identifier, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
-
-            SecurityContext sc = SecurityContextHolder.createEmptyContext();
-            sc.setAuthentication(auth);
-            SecurityContextHolder.setContext(sc);
-            repo.saveContext(sc, request, response);
+            saveSecurityContext(request, response, identifier, "USER");
             session.setAttribute("currentUser", customer);
-            session.setMaxInactiveInterval(30 * 60);
-
-            resp.put("status", "success");
-            resp.put("redirectUrl", "/dinio");
-            return ResponseEntity.ok(resp);
+            return ResponseEntity.ok(Map.of("status", "success", "redirectUrl", "/dinio"));
         }
 
         StaffUser staff = staffService.loginStaff(identifier, password);
-        if (staff != null) {
-            if (staff.getRole() == null || staff.getRole().getName() == null) {
-                return ResponseEntity.badRequest().body("{\"message\": \"Tài khoản chưa được cấp quyền!\"}");
-            }
-
-            UsernamePasswordAuthenticationToken authStaff = new UsernamePasswordAuthenticationToken(
-                    identifier, null, Collections
-                            .singletonList(new SimpleGrantedAuthority("ROLE_" + staff.getRole().getName().toString())));
-
-            SecurityContext scStaff = SecurityContextHolder.createEmptyContext();
-            scStaff.setAuthentication(authStaff);
-            SecurityContextHolder.setContext(scStaff);
-            repo.saveContext(scStaff, request, response);
-
+        if (staff != null && staff.getRole() != null) {
+            String roleName = staff.getRole().getName().toString();
+            saveSecurityContext(request, response, identifier, roleName);
             session.setAttribute("currentStaff", staff);
-            session.setMaxInactiveInterval(8 * 60 * 60);
-
-            String dashboardUrl = determineRedirectUrl(staff.getRole().getName());
-
-            resp.put("status", "success");
-            resp.put("redirectUrl", dashboardUrl);
-            return ResponseEntity.ok(resp);
+            return ResponseEntity
+                    .ok(Map.of("status", "success", "redirectUrl", determineRedirectUrl(staff.getRole().getName())));
         }
 
-        return ResponseEntity.badRequest().body("{\"message\": \"Tài khoản hoặc mật khẩu không đúng!\"}");
+        return ResponseEntity.badRequest().body(Map.of("message", "Tài khoản hoặc mật khẩu không đúng!"));
+    }
+
+    private void saveSecurityContext(HttpServletRequest request, HttpServletResponse response, String username,
+            String role) {
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, null,
+                List.of(new SimpleGrantedAuthority("ROLE_" + role)));
+        SecurityContext sc = SecurityContextHolder.createEmptyContext();
+        sc.setAuthentication(auth);
+        SecurityContextHolder.setContext(sc);
+        securityContextRepository.saveContext(sc, request, response);
     }
 
     private String determineRedirectUrl(RoleName roleName) {
         switch (roleName) {
             case ADMIN:
-                return "/admin/dashboard";
+                return "/dinio/admin/dashboard";
             case KITCHEN:
-                return "/kitchen/orders";
+                return "/dinio/kitchen/orders";
             case CASHIER_MANAGER:
-                return "/cashier/orders";
+                return "/dinio/cashier/orders";
             case WAITER:
-                return "/waiter/tables";
+                return "/dinio/waiter/dashboard";
             default:
-                return "/admin/home";
+                return "/dinio/admin/dashboard";
         }
     }
 

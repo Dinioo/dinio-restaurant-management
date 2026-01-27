@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<div th:fragment="appSidebar(active)">
+  <aside class="app-side" id="appSidebar">
+    <div class="app-side-head">
+      <div class="app-side-top">
+        <button class="app-menu-btn" id="menuToggle" type="button" aria-label="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+
+      <a class="app-brand" href="/dinio">
+        <span class="app-brand-mark">DINIO</span>
+        <span class="app-brand-sub">Restaurant</span>
+      </a>
+    </div>
+
+    <nav class="app-side-nav">
+
+      <div class="app-side-group" sec:authorize="hasRole('WAITER')">
+        <a class="app-side-item" th:classappend="${active}=='waiter_tables' ? ' is-active' : ''"
+           href="/dinio/waiter/tables">
+          <i class="fa-solid fa-chair"></i>
+          <span>Bàn</span>
+        </a>
+
+        <a class="app-side-item" th:classappend="${active}=='waiter_orders' ? ' is-active' : ''"
+           href="/dinio/waiter/order">
+          <i class="fa-solid fa-receipt"></i>
+          <span>Order</span>
+        </a>
+
+        <a class="app-side-item" th:classappend="${active}=='waiter_reservations' ? ' is-active' : ''"
+           href="/dinio/waiter/reservations">
+          <i class="fa-solid fa-calendar-check"></i>
+          <span>Đặt bàn</span>
+        </a>
+
+        <a class="app-side-item" th:classappend="${active}=='waiter_shift' ? ' is-active' : ''"
+           href="/dinio/waiter/shift-history">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>History ca</span>
+        </a>
+      </div>
+
+      <div class="app-side-group" sec:authorize="hasRole('CASHIER')">
+        <div class="app-side-label">Thu ngân</div>
+
+        <a class="app-side-item" href="/dinio/cashier/checkout">
+          <i class="fa-solid fa-cash-register"></i>
+          <span>Thanh toán</span>
+        </a>
+
+        <a class="app-side-item" href="/dinio/cashier/bills">
+          <i class="fa-solid fa-file-invoice"></i>
+          <span>Hóa đơn</span>
+        </a>
+      </div>
+
+      <div class="app-side-group" sec:authorize="hasRole('MANAGER')">
+        <div class="app-side-label">Quản lý</div>
+
+        <a class="app-side-item" href="/dinio/manager/dashboard">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Tổng quan</span>
+        </a>
+
+        <a class="app-side-item" href="/dinio/manager/settings">
+          <i class="fa-solid fa-gear"></i>
+          <span>Cấu hình</span>
+        </a>
+      </div>
+
+      <div class="app-side-group" sec:authorize="hasRole('KITCHEN')">
+        <a class="app-side-item" href="/dinio/kitchen">
+          <i class="fa-solid fa-fire-burner"></i>
+          <span>KDS</span>
+        </a>
+
+        <a class="app-side-item" href="/dinio/kitchen/history">
+          <i class="fa-solid fa-clock"></i>
+          <span>Lịch sử</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="app-side-foot">
+      <form th:action="@{/logout}" method="post">
+        <button class="app-logout" type="submit">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Đăng xuất</span>
+        </button>
+      </form>
+    </div>
+  </aside>
+</div>
+
+</body>
+</html>

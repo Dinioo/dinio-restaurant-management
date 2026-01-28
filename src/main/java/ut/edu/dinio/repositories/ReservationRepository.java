@@ -21,4 +21,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 
     @Query("SELECT r FROM Reservation r WHERE r.table.id = :tableId AND r.status != 'CANCELLED'")
     Optional<Reservation> findActiveReservationByTable(@Param("tableId") Integer tableId);
+
+    long countByStatusAndCreatedAtAfter(ReservationStatus status, LocalDateTime startOfDay);
 }

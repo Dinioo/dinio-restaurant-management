@@ -12,6 +12,7 @@ import ut.edu.dinio.pojo.enums.SessionStatus;
 
 @Repository
 public interface TableSessionRepository extends JpaRepository<TableSession, Integer> {
+    Optional<TableSession> findTopByTableIdAndStatusOrderByOpenedAtDesc(Integer tableId, SessionStatus status);
     Optional<TableSession> findByTableIdAndStatus(Integer tableId, SessionStatus status);
     List<TableSession> findByStatusAndOpenedAtAfter(SessionStatus status, LocalDateTime startOfDay);
 }

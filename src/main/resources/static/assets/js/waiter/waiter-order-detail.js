@@ -1,304 +1,217 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const searchInp = document.getElementById("orderSearch");
-  const chipsWrap = document.getElementById("stChips");
-  const listEl    = document.getElementById("reviewList");
-  const kpiWrap   = document.getElementById("kpiWrap");
+  const orderList = document.getElementById("orderList");
+  const orderEmpty = document.getElementById("orderEmpty");
+  const wdOrderCount = document.getElementById("wdOrderCount");
 
-  const hdrTableId   = document.getElementById("hdrTableId");
-  const rightTableId = document.getElementById("rightTableId");
-  const rightArea  = document.getElementById("rightArea");
-  const rightParty = document.getElementById("rightParty");
-  const rightStart = document.getElementById("rightStart");
+  const kvTable = document.getElementById("kvTable");
+  const kvArea = document.getElementById("kvArea");
+  const kvSeats = document.getElementById("kvSeats");
+  const kvSession = document.getElementById("kvSession");
+  const kvCovers = document.getElementById("kvCovers");
 
-  const sumItems = document.getElementById("sumItems");
-  const sumSub   = document.getElementById("sumSub");
-  const sumSvc   = document.getElementById("sumSvc");
-  const sumVat   = document.getElementById("sumVat");
-  const sumTotal = document.getElementById("sumTotal");
+  const selOrderPill = document.getElementById("selOrderPill");
+  const selOrderId = document.getElementById("selOrderId");
+  const selOrderCreatedAt = document.getElementById("selOrderCreatedAt");
+  const selOrderStatus = document.getElementById("selOrderStatus");
+  const selItemCount = document.getElementById("selItemCount");
+  const selItems = document.getElementById("selItems");
+  const selItemsEmpty = document.getElementById("selItemsEmpty");
 
-  const btnSendKitchenAll = document.getElementById("btnSendKitchenAll");
-  const btnPrint = document.getElementById("btnPrint");
-  const btnGoBillReview = document.getElementById("btnGoBillReview");
+  const params = new URLSearchParams(location.search);
+  const tableId = params.get("tableId");
+  const btnCreateOrder = document.getElementById("btnCreateOrder");
+  if (btnCreateOrder && tableId) {
+    btnCreateOrder.href = `/dinio/waiter/order?tableId=${encodeURIComponent(tableId)}`;
+  }
 
-  const parts = location.pathname.split("/").filter(Boolean);
-  const ctx = (parts[0] === "dinio") ? "/dinio" : "";
-
-  const tableId = new URLSearchParams(location.search).get("tableId")
-    || (hdrTableId?.textContent || "—").trim();
-
-  if (hdrTableId) hdrTableId.textContent = tableId;
-  if (rightTableId) rightTableId.textContent = tableId;
-
-  const fmtMoney = (n) => {
-    const x = Number(n || 0);
-    return x.toLocaleString("vi-VN") + "đ";
+  let state = {
+    table: null,
+    session: null,
+    orders: [],
+    activeOrderId: null
   };
 
-  const escapeHtml = (s) => String(s ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+  if (!tableId) {
+    toast("Thiếu tableId trên URL. Ví dụ: /waiter/order-detail?tableId=1", true);
+    return;
+  }
 
-  const fakeData = () => ({
-    table: { id: tableId, area: "Tầng 1", party: 4, start: "18:10" },
-    lines: [
-      {
-        id: "L1",
-        name: "Spring Rolls",
-        qty: 2,
-        unitPrice: 79000,
-        status: "SENT",
-        createdAt: "18:12",
-        sentAt: "18:13",
-        servedAt: null,
-        note: "Ít sốt, thêm chanh.",
-        tags: ["No spicy"],
-      },
-      {
-        id: "L2",
-        name: "Grilled Steak",
-        qty: 1,
-        unitPrice: 259000,
-        status: "COOKING",
-        createdAt: "18:15",
-        sentAt: "18:16",
-        servedAt: null,
-        note: "Medium rare, không hành.",
-        tags: ["Medium rare", "No onion"],
-      },
-      {
-        id: "L3",
-        name: "Cold Brew",
-        qty: 2,
-        unitPrice: 59000,
-        status: "SERVED",
-        createdAt: "18:11",
-        sentAt: "18:12",
-        servedAt: "18:20",
-        note: "",
-        tags: ["+Caramel", "+Whipped cream"],
-      },
-      {
-        id: "L4",
-        name: "Cheesecake",
-        qty: 1,
-        unitPrice: 79000,
-        status: "NOT_SENT",
-        createdAt: "18:22",
-        sentAt: null,
-        servedAt: null,
-        note: "Để sau cùng.",
-        tags: [],
-      },
-      {
-        id: "L5",
-        name: "Bruschetta",
-        qty: 1,
-        unitPrice: 79000,
-        status: "CANCELLED",
-        createdAt: "18:14",
-        sentAt: null,
-        servedAt: null,
-        note: "Khách đổi món.",
-        tags: [],
-      },
-    ]
-  });
+  load();
 
-  let state = fakeData();
-  let activeFilter = "all";
+  async function load() {
+    try {
+      const res = await fetch(`/dinio/waiter/api/order-detail?tableId=${encodeURIComponent(tableId)}`, {
+        headers: { "Accept": "application/json" }
+      });
 
-  const statusToUI = (st) => {
-    switch (st) {
-      case "NOT_SENT":
-        return { cls: "is-not-sent", text: "CHƯA GỬI", icon: "fa-hourglass-start" };
-      case "SENT":
-        return { cls: "is-sent", text: "ĐÃ GỬI BẾP", icon: "fa-paper-plane" };
-      case "COOKING":
-        return { cls: "is-cooking", text: "ĐANG LÀM", icon: "fa-fire-burner" };
-      case "SERVED":
-        return { cls: "is-served", text: "ĐÃ PHỤC VỤ", icon: "fa-circle-check" };
-      case "CANCELLED":
-        return { cls: "is-cancelled", text: "ĐÃ HUỶ", icon: "fa-ban" };
-      default:
-        return { cls: "is-sent", text: st, icon: "fa-circle-info" };
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      state.table = data.table || null;
+      state.session = data.session || null;
+      state.orders = Array.isArray(data.orders) ? data.orders : [];
+      state.activeOrderId = state.orders.length ? state.orders[0].id : null;
+
+      renderOverview();
+      renderOrders();
+      renderSelected();
+
+    } catch (e) {
+      toast(`Không tải được dữ liệu: ${e.message}`, true);
     }
-  };
+  }
 
-  const calcSummary = (lines) => {
-    const items = lines.reduce((s, x) => s + (Number(x.qty) || 0), 0);
-    const sub = lines
-      .filter(x => x.status !== "CANCELLED")
-      .reduce((s, x) => s + (Number(x.qty)||0) * (Number(x.unitPrice)||0), 0);
+  function renderOverview() {
+    const t = state.table;
+    const s = state.session;
 
-    const svc = Math.round(sub * 0.05); // demo 5%
-    const vat = Math.round((sub + svc) * 0.08); // demo 8%
-    const total = sub + svc + vat;
+    kvTable.textContent = t ? `${t.code || "—"} (#${t.id})` : "—";
+    kvArea.textContent = t ? (t.areaName || "—") : "—";
+    kvSeats.textContent = t && t.seats != null ? `${t.seats}` : "—";
+    kvSession.textContent = s ? `#${s.id} • ${s.status || "—"} • ${s.openedAt || "—"}` : "Chưa có session OPEN";
+    kvCovers.textContent = s && s.covers != null ? `${s.covers}` : "—";
+  }
 
-    return { items, sub, svc, vat, total };
-  };
+  function renderOrders() {
+    orderList.innerHTML = "";
 
-  const renderKPIs = (lines) => {
-    const count = (st) => lines.filter(x => x.status === st).length;
+    wdOrderCount.textContent = `${state.orders.length} orders`;
+    orderEmpty.classList.toggle("is-hidden", state.orders.length > 0);
 
-    const html = `
-      <div class="wo-kpi-grid">
-        <div class="wo-kpi">
-          <div class="k-label">Món</div>
-          <div class="k-val">${lines.filter(x => x.status !== "CANCELLED").length}</div>
-        </div>
-        <div class="wo-kpi">
-          <div class="k-label">Chưa gửi</div>
-          <div class="k-val">${count("NOT_SENT")}</div>
-        </div>
-        <div class="wo-kpi">
-          <div class="k-label">Đang làm</div>
-          <div class="k-val">${count("COOKING")}</div>
-        </div>
-        <div class="wo-kpi">
-          <div class="k-label">Đã phục vụ</div>
-          <div class="k-val">${count("SERVED")}</div>
-        </div>
-      </div>
-    `;
-    kpiWrap.innerHTML = html;
-  };
+    state.orders.forEach((o) => {
+      const row = document.createElement("div");
+      row.className = "wd-order-row";
+      row.dataset.id = o.id;
 
-  const filterLines = (lines) => {
-    const q = (searchInp?.value || "").trim().toLowerCase();
+      if (o.id === state.activeOrderId) row.classList.add("is-active", "is-open");
 
-    return lines.filter(x => {
-      const okSt = (activeFilter === "all") ? true : x.status === activeFilter;
-      if (!okSt) return false;
+      const itemCount = Array.isArray(o.items) ? o.items.length : 0;
 
-      if (!q) return true;
-      const hay = `${x.name} ${x.note || ""} ${x.id}`.toLowerCase();
-      return hay.includes(q);
-    });
-  };
-
-  const renderList = () => {
-    const lines = filterLines(state.lines);
-
-    if (!lines.length) {
-      listEl.innerHTML = `
-        <div class="wo-ritem">
-          <p class="wo-rname">Không có món phù hợp bộ lọc.</p>
-          <div class="wo-rmeta"><span>Hãy đổi trạng thái hoặc tìm kiếm.</span></div>
-        </div>
+      row.innerHTML = `
+        <button class="wd-order-btn" type="button">
+          <div class="wd-order-l">
+            <div class="wd-order-id">ORD-${o.id}</div>
+            <div class="wd-order-sub">
+              <span>${o.createdAt || "—"}</span>
+              <span class="wd-pill">${o.status || "—"}</span>
+              <span>${itemCount} món</span>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="wd-order-items-mini"></div>
       `;
+
+      const mini = row.querySelector(".wd-order-items-mini");
+      mini.innerHTML = (o.items || []).map(it => {
+        const price = formatMoney(it.unitPrice);
+        const note = it.note ? ` • ${escapeHtml(it.note)}` : "";
+        return `
+          <div class="mini-item">
+            <div>
+              <div class="mini-name">${escapeHtml(it.menuItemName || "—")}</div>
+              <div class="mini-sub">x${it.qty ?? 0}${note}</div>
+            </div>
+            <div class="wd-pill">${it.status || "—"}</div>
+          </div>
+        `;
+      }).join("");
+
+      row.querySelector(".wd-order-btn").addEventListener("click", () => {
+        const isSame = state.activeOrderId === o.id;
+
+        state.activeOrderId = o.id;
+
+        document.querySelectorAll(".wd-order-row").forEach(el => {
+          el.classList.remove("is-active", "is-open");
+        });
+
+        row.classList.add("is-active");
+        row.classList.toggle("is-open", !isSame ? true : !row.classList.contains("is-open"));
+
+        renderSelected();
+      });
+
+      orderList.appendChild(row);
+    });
+  }
+
+  function renderSelected() {
+    const o = state.orders.find(x => x.id === state.activeOrderId) || null;
+
+    if (!o) {
+      selOrderPill.textContent = "—";
+      selOrderId.textContent = "—";
+      selOrderCreatedAt.textContent = "—";
+      selOrderStatus.textContent = "—";
+      selItemCount.textContent = "—";
+      selItems.innerHTML = "";
+      selItemsEmpty.classList.remove("is-hidden");
       return;
     }
 
-    listEl.innerHTML = lines.map(x => {
-      const ui = statusToUI(x.status);
-      const lineTotal = (Number(x.qty)||0) * (Number(x.unitPrice)||0);
+    selOrderPill.textContent = o.status || "—";
+    selOrderId.textContent = `ORD-${o.id}`;
+    selOrderCreatedAt.textContent = o.createdAt || "—";
+    selOrderStatus.textContent = o.status || "—";
 
-      const tags = (x.tags || [])
-        .map(t => `<span class="wo-tag"><i class="fa-solid fa-tag"></i>${escapeHtml(t)}</span>`)
-        .join("");
+    const items = Array.isArray(o.items) ? o.items : [];
+    selItemCount.textContent = `${items.length} món`;
 
-      const timeBits = [
-        x.createdAt ? `<span class="wo-time"><i class="fa-regular fa-clock"></i> Tạo: <b>${escapeHtml(x.createdAt)}</b></span>` : "",
-        x.sentAt ? `<span class="wo-time"><i class="fa-solid fa-paper-plane"></i> Gửi: <b>${escapeHtml(x.sentAt)}</b></span>` : "",
-        x.servedAt ? `<span class="wo-time"><i class="fa-solid fa-circle-check"></i> Serve: <b>${escapeHtml(x.servedAt)}</b></span>` : "",
-      ].filter(Boolean).join("");
+    selItemsEmpty.classList.toggle("is-hidden", items.length > 0);
 
+    selItems.innerHTML = items.map(it => {
+      const unit = formatMoney(it.unitPrice);
+      const total = formatMoney(mulMoney(it.unitPrice, it.qty));
+      const note = it.note ? `• ${escapeHtml(it.note)}` : "";
       return `
-        <div class="wo-ritem" data-line="${escapeHtml(x.id)}">
-          <div class="wo-ritem-top">
-            <div>
-              <p class="wo-rname">${escapeHtml(x.name)}</p>
-              <div class="wo-rmeta">
-                <span class="wo-rprice">${fmtMoney(x.unitPrice)} / món</span>
-                <span class="dot"></span>
-                <span>Mã: <b>${escapeHtml(x.id)}</b></span>
-                <span class="dot"></span>
-                <span>Thành tiền: <b>${fmtMoney(lineTotal)}</b></span>
-              </div>
-            </div>
-
-            <div class="wo-rside">
-              <span class="wo-status ${ui.cls}">
-                <i class="fa-solid ${ui.icon}"></i> ${ui.text}
-              </span>
-              <span class="wo-mini-qty">x${Number(x.qty)||0}</span>
+        <div class="it-row">
+          <div class="it-l">
+            <div class="it-name">${escapeHtml(it.menuItemName || "—")}</div>
+            <div class="it-sub">
+              <span>x${it.qty ?? 0}</span>
+              <span>${unit}/món</span>
+              <span class="wd-pill">${it.status || "—"}</span>
+              ${note ? `<span>${note}</span>` : ""}
             </div>
           </div>
-
-          ${(tags ? `<div class="wo-tags">${tags}</div>` : "")}
-          ${(x.note ? `<div class="wo-note"><b>Ghi chú:</b> ${escapeHtml(x.note)}</div>` : "")}
-          ${(timeBits ? `<div class="wo-timebar">${timeBits}</div>` : "")}
+          <div class="it-price">${total}</div>
         </div>
       `;
     }).join("");
-  };
+  }
 
-  const renderRight = () => {
-    if (rightArea) rightArea.textContent = state.table.area || "—";
-    if (rightParty) rightParty.textContent = state.table.party ?? "—";
-    if (rightStart) rightStart.textContent = state.table.start || "—";
+  function toast(msg, danger) {
+    Toastify({
+      text: msg,
+      duration: 2500,
+      close: true,
+      gravity: "top",
+      position: "right",
+      style: danger ? { background: "rgba(220,38,38,.95)" } : { background: "rgba(34,197,94,.95)" }
+    }).showToast();
+  }
 
-    const s = calcSummary(state.lines);
-    if (sumItems) sumItems.textContent = String(s.items);
-    if (sumSub) sumSub.textContent = fmtMoney(s.sub);
-    if (sumSvc) sumSvc.textContent = fmtMoney(s.svc);
-    if (sumVat) sumVat.textContent = fmtMoney(s.vat);
-    if (sumTotal) sumTotal.textContent = fmtMoney(s.total);
+  function formatMoney(v) {
+    if (v == null) return "0đ";
+    const n = typeof v === "number" ? v : Number(String(v));
+    if (Number.isNaN(n)) return "0đ";
+    return Math.round(n).toLocaleString("vi-VN") + "đ";
+  }
 
-    renderKPIs(state.lines);
-  };
+  function mulMoney(unitPrice, qty) {
+    const u = unitPrice == null ? 0 : Number(String(unitPrice));
+    const q = qty == null ? 0 : Number(String(qty));
+    if (Number.isNaN(u) || Number.isNaN(q)) return 0;
+    return u * q;
+  }
 
-  const setActiveFilter = (st) => {
-    activeFilter = st;
-
-    // active state cho segmented buttons
-    chipsWrap?.querySelectorAll(".wo-seg-btn").forEach(b => {
-      b.classList.toggle("is-active", (b.dataset.st || "all") === st);
-    });
-
-    renderList();
-  };
-
-  // ===== EVENTS =====
-  chipsWrap?.addEventListener("click", (e) => {
-    const btn = e.target.closest(".wo-seg-btn");
-    if (!btn) return;
-    setActiveFilter(btn.dataset.st || "all");
-  });
-
-  searchInp?.addEventListener("input", () => renderList());
-
-  btnSendKitchenAll?.addEventListener("click", () => {
-    // demo: set NOT_SENT -> SENT
-    let changed = 0;
-    state.lines = state.lines.map(x => {
-      if (x.status === "NOT_SENT") {
-        changed++;
-        return { ...x, status: "SENT", sentAt: x.sentAt || "18:25" };
-      }
-      return x;
-    });
-
-    renderRight();
-    renderList();
-
-    if (typeof successToast === "function") {
-      successToast(changed ? `Đã gửi ${changed} món lên bếp.` : "Không có món nào cần gửi.");
-    }
-  });
-
-  btnPrint?.addEventListener("click", () => {
-    if (typeof infoToast === "function") infoToast("Demo: In tạm tính (chưa nối máy in).");
-  });
-
-  btnGoBillReview?.addEventListener("click", () => {
-    window.location.href = `${ctx}/waiter/bill/review?tableId=${encodeURIComponent(tableId)}`;
-  });
-
-  // init
-  renderRight();
-  setActiveFilter("all");
+  function escapeHtml(s) {
+    return String(s)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
 });

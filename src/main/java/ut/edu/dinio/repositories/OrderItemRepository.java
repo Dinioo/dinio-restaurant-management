@@ -13,6 +13,9 @@ import ut.edu.dinio.pojo.enums.OrderItemStatus;
 @Repository
 public interface OrderItemRepository extends JpaRepository<OrderItem, Integer> {
 
+    List<OrderItem> findByOrderIdOrderByIdAsc(Integer orderId);
+    List<OrderItem> findByOrderId(Integer orderId);
+
     @Query("SELECT oi FROM OrderItem oi " +
             "JOIN FETCH oi.order o " +
             "JOIN FETCH o.session s " +

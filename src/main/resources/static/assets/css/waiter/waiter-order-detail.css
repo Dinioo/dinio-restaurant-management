@@ -262,3 +262,206 @@
   gap:10px;
   margin-top:12px;
 }
+
+.wd{
+  width:min(1360px,calc(100% - 40px));
+  margin:0 auto;
+  padding:24px 0 70px;
+}
+
+.wd-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:18px;
+}
+
+.wd-title h1{
+  font-size:30px;
+  line-height:1.1;
+  margin:0 0 6px;
+}
+
+.wd-sub{
+  margin:0;
+  opacity:.78;
+}
+
+.wd-actions{ display:flex; gap:10px; }
+.wd-back{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.04);
+  text-decoration:none;
+  color:inherit;
+}
+
+.wd-grid{
+  display:grid;
+  grid-template-columns:360px 1fr;
+  gap:16px;
+  align-items:start;
+}
+
+.wd-card{
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.04);
+  overflow:hidden;
+}
+
+.wd-card-h{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 14px 10px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.wd-card-t{ font-weight:700; }
+.wd-muted{ opacity:.7; font-size:13px; }
+
+.wd-list{
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.wd-order-row{
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  overflow:hidden;
+}
+
+.wd-order-row.is-active{
+  border-color: rgba(255,255,255,.22);
+  box-shadow: 0 0 0 2px rgba(255,255,255,.05) inset;
+}
+
+.wd-order-btn{
+  width:100%;
+  padding:12px 12px;
+  background:transparent;
+  border:0;
+  color:inherit;
+  text-align:left;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  cursor:pointer;
+}
+
+.wd-order-l{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.wd-order-id{ font-weight:700; }
+.wd-order-sub{ opacity:.75; font-size:13px; display:flex; gap:10px; flex-wrap:wrap; }
+.wd-pill{
+  display:inline-flex;
+  align-items:center;
+  padding:5px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.04);
+  font-size:12px;
+  opacity:.92;
+}
+
+.wd-order-items-mini{
+  display:none;
+  padding:10px 12px 12px;
+  border-top:1px solid rgba(255,255,255,.08);
+  gap:8px;
+  flex-direction:column;
+}
+
+.wd-order-row.is-open .wd-order-items-mini{ display:flex; }
+
+.mini-item{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 10px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);
+}
+
+.mini-name{ font-weight:650; }
+.mini-sub{ opacity:.75; font-size:13px; margin-top:4px; }
+
+.wd-right{ display:flex; flex-direction:column; gap:16px; }
+
+.wd-kv{
+  padding:12px 14px 14px;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+
+.kv{ display:flex; flex-direction:column; gap:4px; }
+.k{ font-size:12px; opacity:.7; }
+.v{ font-weight:650; }
+
+.wd-order{ overflow:hidden; }
+.wd-order-meta{
+  padding:12px 14px 14px;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.wd-items{ padding:12px 14px 14px; }
+.wd-items-h{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+
+.wd-items-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.it-row{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  padding:12px 12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);
+}
+
+.it-l{ display:flex; flex-direction:column; gap:6px; }
+.it-name{ font-weight:750; }
+.it-sub{ opacity:.78; font-size:13px; display:flex; gap:10px; flex-wrap:wrap; }
+.it-price{ font-weight:800; white-space:nowrap; }
+
+.wd-empty{
+  padding:14px;
+  opacity:.75;
+}
+.is-hidden{ display:none !important; }
+
+@media (max-width: 980px){
+  .wd-grid{ grid-template-columns:1fr; }
+  .wd-kv,.wd-order-meta{ grid-template-columns:1fr; }
+}
+

@@ -31,4 +31,5 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Integer> {
     List<MenuItem> findFavoriteItems();
     
     List<MenuItem> findByIsActiveTrueAndIsAvailableTrue();
+    List<MenuItem> findByIsActiveTrueOrderByCategoryIdAscNameAsc();
 }

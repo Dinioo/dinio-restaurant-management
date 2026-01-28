@@ -1,28 +1,8 @@
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
-const KDS_RULES = {
-  "Starters": { station: "cold", time: 10 },
-  "Main": { station: "hot", time: 20 },
-  "Desserts": { station: "hot", time: 15 },
-  "Drinks": { station: "bar", time: 5 }
-};
-
-const getHeaders = () => {
-  const token = document.querySelector('meta[name="_csrf"]')?.content;
-  const header = document.querySelector('meta[name="_csrf_header"]')?.content;
-  const headers = { 'Content-Type': 'application/json' };
-
-  if (token && header) {
-    headers[header] = token;
-  }
-  return headers;
-};
-
-
 function showToast(message, type = "info", duration = 2200) {
-  if (typeof Toastify !== "function") 
-    return;
+  if (typeof Toastify !== "function") return;
   Toastify({
     text: message,
     duration,
@@ -40,16 +20,19 @@ const state = {
   type: "all",
   sound: false,
   selectedId: null,
-  items: []
+  items: [
+    { id: "a1", name: "Gỏi cuốn", table: "Bàn 7", qty: 3, station: "cold", type: "takeaway", note: "Ít rau", status: "NEW", createdAt: Date.now() - 8 * 60 * 1000, tags: ["Mang đi"] },
+    { id: "a2", name: "Phở bò tái", table: "Bàn 12", qty: 2, station: "hot", type: "priority", note: "Ít hành", status: "NEW", createdAt: Date.now() - 3 * 60 * 1000, tags: ["Ưu tiên"] },
+    { id: "b1", name: "Cơm gà xối mỡ", table: "Bàn 9", qty: 1, station: "hot", type: "all", note: "Không cay", status: "COOKING", createdAt: Date.now() - 15 * 60 * 1000, tags: [] },
+    { id: "b2", name: "Trà đào", table: "Bàn 3", qty: 2, station: "bar", type: "vip", note: "Ít đá", status: "COOKING", createdAt: Date.now() - 11 * 60 * 1000, tags: ["VIP"] },
+    { id: "c1", name: "Bánh flan", table: "Bàn 5", qty: 2, station: "cold", type: "vip", note: "", status: "READY", createdAt: Date.now() - 21 * 60 * 1000, tags: ["VIP"] }
+  ]
 };
 
 function fmtStation(st) {
-  if (st === "hot") 
-    return "Bếp nóng";
-  if (st === "cold") 
-    return "Bếp nguội";
-  if (st === "bar") 
-    return "Bar";
+  if (st === "hot") return "Bếp nóng";
+  if (st === "cold") return "Bếp nguội";
+  if (st === "bar") return "Bar";
   return "—";
 }
 
@@ -59,112 +42,60 @@ function fmtAge(ms) {
 }
 
 function ageClass(mins) {
-  if (mins >= 20) 
-    return "danger";
-  if (mins >= 12) 
-    return "warn";
+  if (mins >= 20) return "danger";
+  if (mins >= 12) return "warn";
   return "ok";
 }
 
 function stationPill(st) {
-  if (st === "hot") 
-    return { cls: "hot", label: "HOT" };
-  if (st === "cold") 
-    return { cls: "cold", label: "COLD" };
+  if (st === "hot") return { cls: "hot", label: "HOT" };
+  if (st === "cold") return { cls: "cold", label: "COLD" };
   return { cls: "bar", label: "BAR" };
 }
 
+function typeLabel(t) {
+  if (t === "priority") return "Ưu tiên";
+  if (t === "takeaway") return "Mang đi";
+  if (t === "vip") return "VIP";
+  return "";
+}
+
 function statusLabel(s) {
-  if (s === "NEW") 
-    return "Mới vào";
-  if (s === "COOKING") 
-    return "Đang làm";
-  if (s === "READY") 
-    return "Sẵn sàng";
+  if (s === "NEW") return "Mới vào";
+  if (s === "COOKING") return "Đang làm";
+  if (s === "READY") return "Sẵn sàng";
   return s || "—";
 }
 
 function matchesFilters(it) {
-  if (it.status === "SERVED") 
-    return false;
   const q = state.q.trim().toLowerCase();
-  const hay = `${it.name} ${it.note || ""} ${fmtStation(it.station)} ${statusLabel(it.status)}`.toLowerCase();
-  if (q && !hay.includes(q)) 
-    return false;
-  if (state.station !== "all" && it.station !== state.station) 
-    return false;
+  const hay = `${it.name} ${it.note || ""} ${typeLabel(it.type)} ${fmtStation(it.station)} ${statusLabel(it.status)}`.toLowerCase();
+  if (q && !hay.includes(q)) return false;
+  if (state.station !== "all" && it.station !== state.station) return false;
+  if (state.type !== "all" && it.type !== state.type) return false;
   return true;
 }
-
-
-async function fetchKdsData() {
-  try {
-    const res = await fetch('/dinio/api/kitchen/items');
-    const data = await res.json();
-
-    state.items = data.filter(it => it.status !== "SERVED")
-      .map(it => { const rule = KDS_RULES[it.categoryName] || { station: "hot", time: 15 };
-      return {
-        ...it,
-        table: it.tableCode,
-        station: rule.station,
-        targetTime: rule.time,
-        createdAt: new Date(it.createdAt).getTime(),
-        status: it.status === "QUEUED" ? "NEW" : (it.status === "PREPARING" ? "COOKING" : "READY")
-      };
-    });
-    renderBoard();
-  } catch (e) { console.error("Lỗi fetch:", e); }
-}
-
-async function handleNextStatus(it) {
-  try {
-    const res = await fetch(`/dinio/api/kitchen/items/${it.id}/next`, {
-      method: 'POST',
-      headers: getHeaders()
-    });
-    const result = await res.json();
-
-    if (result.status === "SERVED") {
-      showToast(`Món ${it.name} đã được phục vụ`, "success");
-      closeModal();
-    } else {
-      showToast("Đã chuyển trạng thái", "success");
-    }
-    await fetchKdsData();
-  } catch (e) { showToast("Lỗi hệ thống", "error"); }
-}
-
 
 function renderCard(it) {
   const mins = Math.round((Date.now() - it.createdAt) / 60000);
   const acls = ageClass(mins);
   const pill = stationPill(it.station);
 
-  const remaining = Math.max(0, it.targetTime - mins);
-  const urgent = (remaining <= 2 && it.status !== "READY") ? "kcard-urgent" : "";
-
   const note = (it.note || "").trim();
-  const extraLine = note ? `<div class="kextra"><i class="fa-solid fa-pen"></i> ${note}</div>` : "";
+  const extraLine = note ? `<div class="kextra">${note}</div>` : "";
 
   return `
-    <div class="kcard ${urgent}" data-id="${it.id}" role="button" tabindex="0">
+    <div class="kcard" data-id="${it.id}" role="button" tabindex="0">
       <div class="krow">
         <p class="kname">${it.name}</p>
-        <span class="kage ${acls}">${remaining}</span>
+        <span class="kage ${acls}">${fmtAge(Date.now() - it.createdAt)}</span>
       </div>
 
       <div class="ksub">
         <span class="kpill ${pill.cls}">${pill.label}</span>
-        <span class="ktable-tag">${it.table}</span>
       </div>
 
       ${extraLine}
-      
-      <div class="ktime-info" style="margin-top:8px; font-size:12px; opacity:0.8; display:flex; justify-content:space-between;">
-         <span>Target: ${it.targetTime}m</span>
-         <span>Đã làm: <strong>${fmtAge(Date.now() - it.createdAt)}m</strong></span>
-      </div>
 
       <div class="kactions">
         <button class="btn-light" data-action="detail" type="button">Chi tiết</button>
@@ -174,58 +105,58 @@ function renderCard(it) {
   `;
 }
 
+function updateCounts() {
+  const cols = ["NEW", "COOKING", "READY"];
+  cols.forEach((c) => {
+    const count = state.items.filter((it) => it.status === c && matchesFilters(it)).length;
+
+    const el = $(`#count${c}`);
+    if (el) el.textContent = String(count);
+
+    const empty = $(`#empty${c}`);
+    if (empty) empty.style.display = count === 0 ? "grid" : "none";
+  });
+}
 
 function renderBoard() {
   const colNEW = $("#colNEW");
   const colCOOKING = $("#colCOOKING");
   const colREADY = $("#colREADY");
-  if (!colNEW || !colCOOKING || !colREADY) 
-    return;
+  if (!colNEW || !colCOOKING || !colREADY) return;
 
-  colNEW.innerHTML = ""; colCOOKING.innerHTML = ""; colREADY.innerHTML = "";
+  colNEW.innerHTML = "";
+  colCOOKING.innerHTML = "";
+  colREADY.innerHTML = "";
 
   state.items
     .filter(matchesFilters)
-    .filter(it => it.status !== "SERVED") 
     .sort((a, b) => a.createdAt - b.createdAt)
     .forEach((it) => {
       const html = renderCard(it);
-      if (it.status === "NEW") 
-        colNEW.insertAdjacentHTML("beforeend", html);
-      if (it.status === "COOKING") 
-        colCOOKING.insertAdjacentHTML("beforeend", html);
-      if (it.status === "READY") 
-        colREADY.insertAdjacentHTML("beforeend", html);
+      if (it.status === "NEW") colNEW.insertAdjacentHTML("beforeend", html);
+      if (it.status === "COOKING") colCOOKING.insertAdjacentHTML("beforeend", html);
+      if (it.status === "READY") colREADY.insertAdjacentHTML("beforeend", html);
     });
 
   updateCounts();
 }
 
-function updateCounts() {
-  const cols = ["NEW", "COOKING", "READY"];
-  cols.forEach((c) => {
-    const count = state.items.filter((it) => 
-      it.status === c && 
-      it.status !== "SERVED" && 
-      matchesFilters(it)
-    ).length;
-
-    if ($(`#count${c}`)) 
-      $(`#count${c}`).textContent = String(count);
-    if ($(`#empty${c}`))
-      $(`#empty${c}`).style.display = count === 0 ? "grid" : "none";
-  });
+function nextStatus(it) {
+  if (it.status === "NEW") it.status = "COOKING";
+  else if (it.status === "COOKING") it.status = "READY";
+  else it.status = "READY";
 }
 
 function getSelectedItem() {
-  return state.items.find((x) => x.id == state.selectedId) || null;
+  if (!state.selectedId) return null;
+  return state.items.find((x) => x.id === state.selectedId) || null;
 }
 
 function openModal(it) {
   state.selectedId = it.id;
+
   const modal = $("#kdModal");
-  if (!modal) 
-    return;
+  if (!modal) return;
 
   const kdTitle = $("#kdTitle");
   const kdSub = $("#kdSub");
@@ -234,32 +165,23 @@ function openModal(it) {
   const kdStatus = $("#kdStatus");
   const kdId = $("#kdId");
   const kdNote = $("#kdNote");
-  const kdQty = $("#kdQty");
 
+  if (kdTitle) kdTitle.textContent = it.name || "Chi tiết món";
+  if (kdSub) kdSub.textContent = "Thông tin món";
 
-  if (kdTitle) 
-    kdTitle.textContent = it.name || "Chi tiết món";
-  if (kdSub) 
-    kdSub.textContent = `Bàn: ${it.table || it.tableCode || "—"}`;
+  if (kdStation) kdStation.textContent = fmtStation(it.station);
 
-  if (kdStation) 
-    kdStation.textContent = fmtStation(it.station);
+  const mins = Math.round((Date.now() - it.createdAt) / 60000);
+  if (kdAge) kdAge.textContent = `${mins} phút`;
 
-  if (kdAge) 
-    kdAge.textContent = fmtAge(Date.now() - it.createdAt);
+  if (kdStatus) kdStatus.textContent = statusLabel(it.status);
+  if (kdId) kdId.textContent = it.id || "—";
 
-  if (kdStatus) 
-    kdStatus.textContent = statusLabel(it.status);
-
-  if (kdId) 
-    kdId.textContent = it.id;
-  if (kdNote) 
-    kdNote.textContent = it.note || "—";
-
-  if (kdQty) 
-    kdQty.textContent = it.qty || "1";
+  const note = (it.note || "").trim() || "—";
+  if (kdNote) kdNote.textContent = note;
 
   modal.classList.remove("is-hidden");
+  modal.setAttribute("aria-hidden", "false");
 }
 
 function closeModal() {
@@ -271,54 +193,17 @@ function closeModal() {
   state.selectedId = null;
 }
 
-function initBoardEvents() {
-  document.addEventListener("click", (e) => {
-    const card = e.target.closest(".kcard");
-    if (!card) 
-      return;
-
-    const it = state.items.find((x) => x.id == card.dataset.id);
-    if (!it) 
-      return;
-
-    const actionBtn = e.target.closest("button[data-action]");
-    if (actionBtn) {
-      const act = actionBtn.dataset.action;
-      if (act === "detail") 
-        openModal(it);
-      if (act === "next") 
-        handleNextStatus(it);
-      return;
-    }
-    openModal(it);
-  });
-
-  $("#kdNext")?.addEventListener("click", () => {
-    const it = getSelectedItem();
-    if (it) 
-      handleNextStatus(it);
-  });
-
-  const modal = $("#kdModal");
-  if (modal) {
-    modal.addEventListener("click", (e) => {
-      if (e.target.closest("[data-close='1']")) 
-        closeModal();
-    });
-  }
-}
-
-
 function bindChips(rootId, key) {
   const root = $(`#${rootId}`);
-  if (!root) 
-    return;
+  if (!root) return;
+
   root.addEventListener("click", (e) => {
     const btn = e.target.closest("button");
-    if (!btn) 
-      return;
+    if (!btn) return;
+
     $$("#" + rootId + " .chip").forEach((b) => b.classList.remove("is-active"));
     btn.classList.add("is-active");
+
     state[key] = btn.dataset[key] || "all";
     renderBoard();
   });
@@ -326,25 +211,140 @@ function bindChips(rootId, key) {
 
 function initSearch() {
   const input = $("#q");
-  if (!input) 
-    return;
+  const clear = $("#btnClear");
+  if (!input || !clear) return;
+
+  const syncClear = () => {
+    clear.style.display = input.value.trim() ? "inline-flex" : "none";
+  };
+
   input.addEventListener("input", () => {
     state.q = input.value;
+    syncClear();
     renderBoard();
   });
+
+  clear.addEventListener("click", () => {
+    input.value = "";
+    state.q = "";
+    syncClear();
+    input.focus();
+    renderBoard();
+  });
+
+  syncClear();
+}
+
+function initActions() {
+  const btnSound = $("#btnSound");
+  const btnFullscreen = $("#btnFullscreen");
+  const btnRefresh = $("#btnRefresh");
+
+  if (btnSound) {
+    btnSound.addEventListener("click", () => {
+      state.sound = !state.sound;
+      btnSound.classList.toggle("is-on", state.sound);
+      showToast(state.sound ? "Bật âm báo" : "Tắt âm báo", "info");
+    });
+  }
+
+  if (btnFullscreen) {
+    btnFullscreen.addEventListener("click", async () => {
+      try {
+        if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+        else await document.exitFullscreen();
+      } catch {
+        showToast("Trình duyệt không hỗ trợ fullscreen", "warning");
+      }
+    });
+  }
+
+  if (btnRefresh) {
+    btnRefresh.addEventListener("click", () => {
+      renderBoard();
+      showToast("Đã làm mới", "success");
+    });
+  }
+}
+
+function initBoardEvents() {
+  document.addEventListener("click", (e) => {
+    const card = e.target.closest(".kcard");
+    if (!card) return;
+
+    const id = card.dataset.id;
+    const it = state.items.find((x) => x.id === id);
+    if (!it) return;
+
+    const actionBtn = e.target.closest("button[data-action]");
+    if (actionBtn) {
+      const act = actionBtn.dataset.action;
+      if (act === "detail") openModal(it);
+      if (act === "next") {
+        nextStatus(it);
+        renderBoard();
+        showToast("Đã chuyển trạng thái", "success");
+      }
+      return;
+    }
+
+    openModal(it);
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeModal();
+  });
+
+  const modal = $("#kdModal");
+  if (modal) {
+    modal.addEventListener("click", (e) => {
+      if (e.target.closest("[data-close='1']")) closeModal();
+    });
+  }
+
+  const kdNext = $("#kdNext");
+  if (kdNext) {
+    kdNext.addEventListener("click", () => {
+      const it = getSelectedItem();
+      if (!it) return;
+
+      nextStatus(it);
+      renderBoard();
+      openModal(it);
+      showToast("Đã chuyển trạng thái", "success");
+    });
+  }
 }
 
 function initAutoAgeTick() {
-  setInterval(() => {
-    renderBoard();
-  }, 15000);
+  const tick = () => {
+    $$(".kcard").forEach((card) => {
+      const id = card.dataset.id;
+      const it = state.items.find((x) => x.id === id);
+      if (!it) return;
+
+      const mins = Math.round((Date.now() - it.createdAt) / 60000);
+      const badge = card.querySelector(".kage");
+      if (!badge) return;
+
+      badge.textContent = fmtAge(Date.now() - it.createdAt);
+      badge.classList.remove("ok", "warn", "danger");
+      badge.classList.add(ageClass(mins));
+    });
+
+    updateCounts();
+  };
+
+  tick();
+  setInterval(tick, 15000);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   bindChips("stationChips", "station");
+  bindChips("typeChips", "type");
   initSearch();
+  initActions();
   initBoardEvents();
-  fetchKdsData();
+  renderBoard();
   initAutoAgeTick();
-  setInterval(fetchKdsData, 30000);
 });

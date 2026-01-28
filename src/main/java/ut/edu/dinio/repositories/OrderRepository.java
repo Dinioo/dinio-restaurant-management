@@ -1,5 +1,7 @@
 package ut.edu.dinio.repositories;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query; 
 import org.springframework.data.repository.query.Param;
@@ -14,4 +16,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     
     @Query("SELECT COUNT(DISTINCT o.session) FROM Order o " + "WHERE o.status = :orderStatus " + "AND o.session.status = :sessionStatus")
     long countTablesWithSentOrders( @Param("orderStatus") OrderStatus orderStatus,  @Param("sessionStatus") SessionStatus sessionStatus);
+    List<Order> findBySessionIdOrderByCreatedAtDesc(Integer sessionId);
+    List<Order> findBySessionIdAndStatusIn(Integer sessionId, List<OrderStatus> statuses);
 }

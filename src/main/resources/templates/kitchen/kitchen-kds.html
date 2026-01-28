@@ -5,6 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <title>DINIO - Kitchen KDS</title>
 
   <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
@@ -63,16 +65,6 @@
             <button class="chip" data-station="cold" type="button">Bếp nguội</button>
             <button class="chip" data-station="bar" type="button">Bar</button>
           </div>
-
-          <span class="kds-divider" aria-hidden="true"></span>
-
-          <div class="kds-chips" id="typeChips">
-            <button class="chip is-active" data-type="all" type="button">All</button>
-            <button class="chip chip-accent" data-type="priority" type="button">Ưu tiên</button>
-            <button class="chip" data-type="takeaway" type="button">Mang đi</button>
-            <button class="chip" data-type="vip" type="button">VIP</button>
-          </div>
-        </div>
       </section>
 
       <section class="kds-board">

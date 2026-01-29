@@ -22,7 +22,6 @@
 </head>
 
 <body>
-  <div th:replace="~{fragments/header :: header}"></div>
 
   <div class="app-shell">
     <div th:replace="~{fragments/app-sidebar :: appSidebar('dashboard')}"></div>
@@ -62,35 +61,18 @@
           <div class="qgo"><i class="fa-solid fa-chevron-right"></i></div>
         </button>
 
-        <button class="qcard" type="button" data-nav="/dinio/waiter/bill/review">
+        <button class="qcard" type="button" data-nav="/dinio/cashier/pending">
           <div class="qicon"><i class="fa-solid fa-receipt"></i></div>
           <div class="qbody">
-            <div class="qtitle">Bill tạm tính / Thanh toán</div>
+            <div class="qtitle">Bàn chờ xác nhận</div>
           </div>
           <div class="qgo"><i class="fa-solid fa-chevron-right"></i></div>
         </button>
 
-        <button class="qcard" type="button" data-nav="/dinio/waiter/order-detail">
-          <div class="qicon"><i class="fa-solid fa-clipboard-check"></i></div>
-          <div class="qbody">
-            <div class="qtitle">Order đang phục vụ</div>
-          </div>
-          <div class="qgo"><i class="fa-solid fa-chevron-right"></i></div>
-        </button>
-
-        <button class="qcard" type="button" id="btnPatchers">
-          <div class="qicon"><i class="fa-solid fa-box-archive"></i></div>
-          <div class="qbody">
-            <div class="qtitle">Patcher đang lưu</div>
-          </div>
-          <div class="qgo"><i class="fa-solid fa-chevron-right"></i></div>
-        </button>
-
-        <!-- NEW: Bill đã thanh toán (cho Cashier/Manager) -->
         <button class="qcard" type="button" data-nav="/dinio/cashier/bills">
           <div class="qicon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
           <div class="qbody">
-            <div class="qtitle">Bill đã thanh toán</div>
+            <div class="qtitle">Hoá đơn</div>
           </div>
           <div class="qgo"><i class="fa-solid fa-chevron-right"></i></div>
         </button>

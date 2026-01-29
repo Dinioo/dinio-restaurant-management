@@ -1,0 +1,26 @@
+<!— templates/fragments/void-bill-modal.html —>
+<div th:fragment="voidBillConfirmModal"
+     class="fp-modal is-hidden"
+     id="vbModal"
+     aria-hidden="true">
+
+  <div class="fp-backdrop" data-close="1"></div>
+
+  <div class="fp-panel vb-panel" role="dialog" aria-modal="true" aria-labelledby="vbTitle">
+    <div class="fp-head">
+      <h3 class="fp-title" id="vbTitle">Bạn có chắc chắn muốn void bill?</h3>
+      <button class="fp-x" type="button" data-close="1" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <p class="fp-sub">
+      Thao tác này sẽ huỷ bill và không thể hoàn tác.
+    </p>
+
+    <div class="vb-actions">
+      <button class="btn-cancel" type="button" id="vbConfirmBtn">Void bill</button>
+      <button class="btn-light" type="button" id="vbCancelBtn" data-close="1">Huỷ</button>
+    </div>
+  </div>
+</div>

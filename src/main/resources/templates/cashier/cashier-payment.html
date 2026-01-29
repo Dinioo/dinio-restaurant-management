@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DINIO - Thanh toán</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/cashier/cashier-payment.css}" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script th:src="@{/assets/js/toast.js}" defer></script>
+
+  <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
+  <script th:src="@{/assets/js/sidebar.js}" defer></script>
+  <script th:src="@{/assets/js/cashier/cashier-payment.js}" defer></script>
+</head>
+
+<body>
+  <div class="app-shell">
+    <div th:replace="~{fragments/app-sidebar :: appSidebar('cashier_payment')}"></div>
+
+    <main class="csp">
+      <section class="csp-wrap">
+
+        <header class="csp-top">
+          <div class="csp-top-left">
+          </div>
+
+          <div class="csp-top-right">
+            <span class="csp-pill" id="pillStatus">—</span>
+            <button class="btn-light" id="btnBack" type="button">
+              <i class="fa-solid fa-arrow-left"></i> Quay lại
+            </button>
+          </div>
+        </header>
+
+        <section class="csp-layout">
+
+          <article class="csp-card csp-paybar">
+            <div class="csp-card-head">
+              <div class="t">Chọn phương thức thanh toán</div>
+              <div class="r">
+                <span class="csp-badge" id="payMeta">—</span>
+              </div>
+            </div>
+
+            <div class="csp-paygrid" id="payGrid" role="radiogroup" aria-label="Phương thức thanh toán">
+              <button class="csp-payopt is-active" type="button" data-pay="CASH" role="radio" aria-checked="true">
+                <div class="csp-payicon"><i class="fa-solid fa-money-bill-wave"></i></div>
+                <div class="csp-payname">Tiền mặt</div>
+              </button>
+
+              <button class="csp-payopt" type="button" data-pay="BANK" role="radio" aria-checked="false">
+                <div class="csp-payicon"><i class="fa-solid fa-building-columns"></i></div>
+                <div class="csp-payname">Chuyển khoản</div>
+              </button>
+
+              <button class="csp-payopt" type="button" data-pay="VISA" role="radio" aria-checked="false">
+                <div class="csp-payicon"><i class="fa-solid fa-credit-card"></i></div>
+                <div class="csp-payname">Visa</div>
+              </button>
+            </div>
+          </article>
+
+          <article class="csp-card csp-bill">
+
+            <div class="csp-sec">
+              <div class="csp-sec-head">
+                <div class="t">Thông tin khách hàng</div>
+                <div class="r"><span class="csp-pill" id="custTier">—</span></div>
+              </div>
+
+              <div class="csp-kv">
+                <div class="row"><div class="k">Bàn</div><div class="v" id="tableName">—</div></div>
+                <div class="row"><div class="k">Khu vực</div><div class="v" id="tableArea">—</div></div>
+                <div class="row"><div class="k">Tên khách</div><div class="v" id="custName">—</div></div>
+                <div class="row"><div class="k">SĐT</div><div class="v" id="custPhone">—</div></div>
+              </div>
+            </div>
+
+            <div class="csp-divider"></div>
+
+            <div class="csp-sec">
+              <div class="csp-sec-head">
+                <div class="t">Danh sách món</div>
+                <div class="r"><span class="csp-badge" id="itemCount">—</span></div>
+              </div>
+
+              <div class="csp-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="width:70px" class="ta-c">STT</th>
+                      <th>Tên món</th>
+                      <th style="width:120px" class="ta-c">SL</th>
+                      <th style="width:200px" class="ta-c">Thành tiền</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody"></tbody>
+                </table>
+              </div>
+
+              <div class="csp-note" id="billNote">—</div>
+            </div>
+
+            <div class="csp-divider"></div>
+
+            <div class="csp-sec">
+              <div class="csp-sec-head">
+                <div class="t">Discount & VAT</div>
+                <div class="r">
+                  <button class="csp-link" id="btnEditVat" type="button">VAT</button>
+                </div>
+              </div>
+
+              <div class="csp-kv">
+                <div class="row"><div class="k">Tạm tính</div><div class="v" id="sumSub">—</div></div>
+                <div class="row"><div class="k">Giảm giá</div><div class="v" id="sumDiscount">—</div></div>
+                <div class="row"><div class="k">VAT</div><div class="v" id="sumVat">—</div></div>
+              </div>
+            </div>
+
+            <div class="csp-divider"></div>
+
+            <div class="csp-sec">
+              <div class="csp-sec-head">
+                <div class="t">Tổng thanh toán</div>
+                <div class="r"></div>
+              </div>
+
+              <div class="csp-totalbox">
+                <div class="csp-total-left">
+                  <div class="k">Cần thu</div>
+                  <div class="v" id="sumTotal">—</div>
+                </div>
+                <div class="csp-total-right">
+                  <div class="k">Gợi ý</div>
+                  <div class="v" id="bottomTotal">—</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="csp-divider"></div>
+
+            <div class="csp-sec">
+              <div class="csp-sec-head">
+                <div class="t">QR hoá đơn đỏ</div>
+                <div class="r"></div>
+              </div>
+
+              <div class="csp-qrbox">
+                <div class="csp-qr" id="qrBox">QR</div>
+                <div class="csp-qrsub" id="qrHint">Quét để mở hoá đơn</div>
+                <button class="btn-light" id="btnCopyQr" type="button">
+                  <i class="fa-regular fa-copy"></i> Copy link
+                </button>
+              </div>
+            </div>
+
+            <div class="csp-divider"></div>
+
+            <div class="csp-sec">
+              <div class="csp-thanks">
+                <div class="csp-thanks-sub">Chúc quý khách một ngày an lành và hẹn gặp lại.</div>
+
+                <div class="csp-cta">
+                  <button class="btn-light" id="btnPrintTmp" type="button">
+                    <i class="fa-solid fa-receipt"></i> In tạm tính
+                  </button>
+                  <button class="btn-order" id="btnPay" type="button">
+                    <i class="fa-solid fa-circle-check"></i> Xác nhận thanh toán
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </article>
+
+        </section>
+
+        <section class="fp-modal is-hidden" id="payModal" aria-hidden="true">
+          <div class="fp-backdrop" data-close="1"></div>
+
+          <div class="fp-panel" role="dialog" aria-modal="true" aria-labelledby="payTitle">
+            <div class="fp-head">
+              <h3 class="fp-title" id="payTitle">Xác nhận thanh toán</h3>
+              <button class="fp-x" type="button" data-close="1" aria-label="Close">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            <p class="fp-sub">
+              Bạn chắc chắn muốn thanh toán bàn <strong id="mTable">—</strong> với tổng tiền <strong id="mTotal">—</strong>?
+            </p>
+
+            <div class="csp-modal-actions">
+              <button class="btn-light" type="button" data-close="1">Huỷ</button>
+              <button class="btn-order" type="button" id="payConfirm">Thanh toán</button>
+            </div>
+          </div>
+        </section>
+
+      </section>
+    </main>
+  </div>
+</body>
+
+</html>

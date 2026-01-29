@@ -12,11 +12,6 @@
           <i class="fa-solid fa-bars"></i>
         </button>
       </div>
-
-      <a class="app-brand" href="/dinio">
-        <span class="app-brand-mark">DINIO</span>
-        <span class="app-brand-sub">Restaurant</span>
-      </a>
     </div>
 
     <nav class="app-side-nav">
@@ -50,14 +45,29 @@
       <div class="app-side-group" sec:authorize="hasRole('CASHIER_MANAGER')">
         <div class="app-side-label">Thu ngân</div>
 
-        <a class="app-side-item" href="/dinio/cashier/checkout">
-          <i class="fa-solid fa-cash-register"></i>
-          <span>Thanh toán</span>
+        <a class="app-side-item" href="/dinio/cashier/dashboard">
+          <i class="fa-solid fa-house"></i>
+          <span>Trang chủ</span>
+        </a>
+
+        <a class="app-side-item" href="/dinio/cashier/tables">
+          <i class="fa-solid fa-table-cells-large"></i>
+          <span>Sơ đồ bàn</span>
+        </a>
+
+        <a class="app-side-item" href="/dinio/cashier/pending">
+          <i class="ffa-solid fa-receipt"></i>
+          <span>Bàn chờ xác nhận</span>
         </a>
 
         <a class="app-side-item" href="/dinio/cashier/bills">
-          <i class="fa-solid fa-file-invoice"></i>
-          <span>Hóa đơn</span>
+          <i class="fa-solid fa-file-invoice-dollar"></i>
+          <span>Hoá đơn</span>
+        </a>
+
+        <a class="app-side-item" href="/dinio/cashier/shift-summary">
+          <i class="fa-solid fa-chart-simple"></i>
+          <span>Tổng kết ca</span>
         </a>
       </div>
 

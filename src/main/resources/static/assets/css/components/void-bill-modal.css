@@ -1,0 +1,87 @@
+#vbModal.fp-modal{
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.is-hidden{ display:none !important; }
+
+#vbModal .fp-backdrop{
+  position:absolute;
+  inset:0;
+  background: rgba(0,0,0,.55);
+}
+
+#vbModal .fp-panel{
+  position: relative;
+  z-index: 1;
+  width: min(560px, calc(100% - 32px));
+  padding: 18px 18px 16px;
+  border-radius: 18px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
+}
+
+#vbModal .fp-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom: 8px;
+}
+
+#vbModal .fp-title{
+  margin:0;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+#vbModal .fp-sub{
+  margin: 0 0 14px;
+  font-size: 13px;
+  opacity: .85;
+  color: var(--text);
+}
+
+#vbModal .fp-x{
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: .85;
+  display:grid;
+  place-items:center;
+}
+
+#vbModal .fp-x:hover{
+  background: var(--surface-2);
+  opacity: 1;
+}
+
+#vbModal .vb-actions{
+  display: grid;
+  gap: 10px;
+}
+
+#vbModal .vb-actions .btn-cancel,
+#vbModal .vb-actions .btn-light{
+  height: 44px;
+  border-radius: 999px;
+}
+
+@media (max-width: 520px){
+  #vbModal .fp-panel{
+    padding: 16px 14px 14px;
+    border-radius: 16px;
+  }
+}

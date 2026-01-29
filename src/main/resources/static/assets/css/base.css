@@ -13,6 +13,11 @@
 
   --sideW: 260px;
   --railW: 84px;
+  --tm-gap: 18px;
+  --tm-right-top: 96px;
+  --tm-card-radius: 22px;
+  --tm-item-radius: 18px;
+  --tm-badge-radius: 12px;
 
   --r14: 14px;
   --r18: 18px;

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DINIO - Bàn chờ xác nhận</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/cashier/cashier-pending.css}" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script th:src="@{/assets/js/toast.js}" defer></script>
+
+  <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
+  <script th:src="@{/assets/js/sidebar.js}" defer></script>
+  <script th:src="@{/assets/js/cashier/cashier-pending.js}" defer></script>
+</head>
+
+<body>
+  <div class="app-shell">
+    <div th:replace="~{fragments/app-sidebar :: appSidebar('pending')}"></div>
+
+    <main class="cwc">
+      <section class="cwc-wrap">
+
+        <header class="cwc-top">
+          <div class="cwc-searchline">
+            <input class="cwc-search" id="q" placeholder="Tìm kiếm" />
+          </div>
+
+          <div class="cwc-actions">
+            <input class="cwc-input" type="date" id="date" aria-label="Chọn ngày" />
+
+            <select class="cwc-select" id="slot" aria-label="Khung giờ">
+              <option value="">Tất cả khung giờ</option>
+              <option value="MORNING">Ca sáng</option>
+              <option value="EVENING">Ca chiều</option>
+            </select>
+
+            <select class="cwc-select" id="party" aria-label="Số khách">
+              <option value="">Tất cả số khách</option>
+              <option value="1-2">1–2</option>
+              <option value="3-4">3–4</option>
+              <option value="5+">5+</option>
+            </select>
+          </div>
+        </header>
+
+        <section class="cwc-card">
+          <div class="cwc-list" id="list"></div>
+
+          <div class="cwc-foot">
+            <div class="cwc-foot-left" id="footHint">—</div>
+            <div class="cwc-foot-right">
+              <button class="btn-light" id="prevPage" type="button">Trước</button>
+              <span class="btn-order" id="pageInfo">1 / 1</span>
+              <button class="btn-light" id="nextPage" type="button">Sau</button>
+            </div>
+          </div>
+        </section>
+
+      </section>
+    </main>
+  </div>
+</body>
+</html>

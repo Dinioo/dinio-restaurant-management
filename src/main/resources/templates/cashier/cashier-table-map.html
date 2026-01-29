@@ -4,149 +4,132 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="_csrf" th:content="${_csrf?.token}"/>
-  <meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
   <title>DINIO - Cashier Table Map</title>
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
   <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
-  <link rel="stylesheet" th:href="@{/assets/css/customer/table-map.css}" />
-  <link rel="stylesheet" th:href="@{/assets/css/waiter/waiter-table-map.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/cashier/cashier-table-map.css}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-  <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
-  <script th:src="@{/assets/js/toast.js}" defer></script>
-
   <script th:src="@{/assets/js/cashier/cashier-table-map.js}" defer></script>
 </head>
 
 <body>
-  <div th:replace="~{fragments/header :: header}"></div>
+  <div class="app-shell">
+    <div th:replace="~{fragments/app-sidebar :: appSidebar('tables')}"></div>
 
-  <main class="container">
-
-    <section id="tablemap-head" class="section">
-      <div class="menu-container">
-        <div class="menu-head-card"></div>
-      </div>
-    </section>
-
-    <section id="tablemap-tools" class="section">
-      <div class="menu-container">
-        <div class="tm-toolbar">
-
-          <div class="tm-filters">
-            <div class="tm-field">
-              <label for="wtFloor">Tầng</label>
-              <select id="wtFloor">
-                <option value="all" selected>Tất cả</option>
-                <option value="floor1">Tầng 1</option>
-                <option value="floor2">Tầng 2</option>
-                <option value="floor3">Tầng 3</option>
-                <option value="vip">VIP</option>
-                <option value="outdoor">Outdoor</option>
-              </select>
-            </div>
-
-            <div class="tm-field">
-              <label for="wtShow">Hiển thị trên bàn</label>
-              <select id="wtShow">
-                <option value="none" selected>Không</option>
-                <option value="seating">Seating time</option>
-                <option value="reservation">Time of reservation</option>
-                <option value="before_reservation">Time left before reservation</option>
-                <option value="waiting">Estimated waiting time</option>
-              </select>
-            </div>
-
-            <div class="tm-field">
-              <label for="wtQuery">Tìm</label>
-              <input id="wtQuery" type="text" placeholder="Bàn / tên khách / SĐT..." />
-            </div>
-          </div>
-
-          <div class="tm-toolbar-right">
-            <div class="tm-legend" aria-label="Legend">
-              <span class="lg"><i class="dot is-available"></i> Trống</span>
-              <span class="lg"><i class="dot is-reserved"></i> Đặt trước</span>
-              <span class="lg"><i class="dot is-occupied"></i> Đang ngồi</span>
-              <span class="lg"><i class="dot is-clean"></i> Chờ dọn</span>
-              <span class="lg"><i class="dot is-vip"></i> VIP</span>
-              <span class="lg"><i class="dot is-selected"></i> Đang chọn</span>
-            </div>
-
-            <button class="icon-btn" type="button" id="btnRefresh" title="Refresh" aria-label="Refresh">
-              <i class="fa-solid fa-rotate"></i>
-            </button>
-          </div>
-
+    <main class="container">
+      <section id="tablemap-head" class="section">
+        <div class="menu-container">
+          <div class="menu-head-card"></div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section id="tablemap-layout" class="section">
-      <div class="menu-container">
+      <section id="tablemap-tools" class="section">
+        <div class="menu-container">
+          <div class="tm-toolbar">
+            <div class="tm-filters">
+              <div class="tm-field">
+                <label for="wtFloor">Tầng</label>
+                <select id="wtFloor">
+                  <option value="all" selected>Tất cả</option>
+                  <option value="floor1">Tầng 1</option>
+                  <option value="floor2">Tầng 2</option>
+                  <option value="floor3">Tầng 3</option>
+                  <option value="vip">VIP</option>
+                  <option value="outdoor">Outdoor</option>
+                </select>
+              </div>
 
-        <div class="tm-shell wt-shell">
-
-          <div class="tm-map" aria-label="Table map">
-            <div class="tm-map-head">
-              <div>
-                <p class="tm-kicker">Floor plan</p>
-                <h3 class="tm-title">Tình trạng bàn</h3>
+              <div class="tm-field">
+                <label for="wtShow">Hiển thị trên bàn</label>
+                <select id="wtShow">
+                  <option value="none" selected>Không</option>
+                  <option value="session">Thời gian ngồi</option>
+                  <option value="bill_total">Tổng bill</option>
+                </select>
               </div>
             </div>
 
-            <div class="tm-areas" id="tmAreas">
+            <div class="tm-toolbar-right">
+              <div class="tm-legend" aria-label="Legend">
+                <span class="lg"><i class="dot is-unpaid"></i> Chưa thanh toán</span>
+                <span class="lg"><i class="dot is-pending"></i> Đang đợi thanh toán</span>
+                <span class="lg"><i class="dot is-paid"></i> Đã thanh toán</span>
+                <span class="lg"><i class="dot is-selected"></i> Đang chọn</span>
+              </div>
+
+              <button class="icon-btn" type="button" id="btnRefresh" title="Refresh" aria-label="Refresh">
+                <i class="fa-solid fa-rotate"></i>
+              </button>
             </div>
           </div>
+        </div>
+      </section>
 
-          <aside class="wtm-right" aria-label="Cashier panel">
-            <div class="wtm-right-card">
-
-              <div class="wtm-right-head">
+      <section id="tablemap-layout" class="section">
+        <div class="menu-container">
+          <div class="tm-shell wt-shell">
+            <div class="tm-map" aria-label="Table map">
+              <div class="tm-map-head">
                 <div>
-                  <p class="wtm-right-kicker">Cashier</p>
+                  <p class="tm-kicker">Floor plan</p>
+                  <h3 class="tm-title">Tình trạng bàn</h3>
+                </div>
+              </div>
+
+              <div class="tm-areas" id="tmAreas"></div>
+            </div>
+
+            <aside class="wtm-right" aria-label="Cashier panel">
+              <div class="wtm-right-card">
+                <div class="wtm-right-head">
+                  <div>
+                    <p class="wtm-right-kicker">Cashier</p>
+                  </div>
+
+                  <button class="icon-btn" type="button" id="btnClearPick" title="Clear selection" aria-label="Clear">
+                    <i class="fa-solid fa-rotate-left"></i>
+                  </button>
                 </div>
 
-                <button class="icon-btn" type="button" id="btnClearPick" title="Clear selection" aria-label="Clear">
-                  <i class="fa-solid fa-rotate-left"></i>
-                </button>
+                <div class="wtm-selected">
+                  <div class="pick-row"><span class="pick-label">Bàn</span><b id="pickTable">—</b></div>
+                  <div class="pick-row"><span class="pick-label">Khu vực</span><b id="pickArea">—</b></div>
+                  <div class="pick-row"><span class="pick-label">Số chỗ</span><b id="pickSeats">—</b></div>
+                  <div class="pick-row"><span class="pick-label">Trạng thái</span><b id="pickStatus">—</b></div>
+                  <div class="pick-row"><span class="pick-label">Số khách</span><b id="pickGuest">—</b></div>
+                  <div class="pick-row"><span class="pick-label">Tổng bill</span><b id="pickTotal">—</b></div>
+                </div>
+
+                <div class="wtm-actions">
+                  <button class="btn-order" type="button" id="btnOpenBill" disabled>Xem bill</button>
+                  <button class="btn-save" type="button" id="btnPay" disabled>Thanh toán</button>
+                </div>
+
+                <template id="mockData">
+                  [
+                    {"id":"t01","code":"Bàn 01","seats":2,"area":"floor1","billStatus":"UNPAID","guestCount":2,"billTotal":180000,"seatedAt":"2026-01-30T03:55:00"},
+                    {"id":"t02","code":"Bàn 02","seats":4,"area":"floor1","billStatus":"PENDING","guestCount":4,"billTotal":520000,"seatedAt":"2026-01-30T03:10:00"},
+                    {"id":"t03","code":"Bàn 03","seats":6,"area":"floor1","billStatus":"PAID","guestCount":5,"billTotal":890000,"seatedAt":"2026-01-30T01:40:00"},
+
+                    {"id":"t11","code":"Bàn 11","seats":2,"area":"floor2","billStatus":"UNPAID","guestCount":2,"billTotal":260000,"seatedAt":"2026-01-30T04:05:00"},
+                    {"id":"t12","code":"Bàn 12","seats":4,"area":"floor2","billStatus":"PENDING","guestCount":3,"billTotal":410000,"seatedAt":"2026-01-30T03:25:00"},
+                    {"id":"t13","code":"Bàn 13","seats":6,"area":"floor2","billStatus":"PAID","guestCount":6,"billTotal":1200000,"seatedAt":"2026-01-30T00:50:00"},
+
+                    {"id":"t21","code":"Bàn 21","seats":4,"area":"floor3","billStatus":"UNPAID","guestCount":4,"billTotal":640000,"seatedAt":"2026-01-30T03:35:00"},
+                    {"id":"t22","code":"Bàn 22","seats":2,"area":"floor3","billStatus":"PAID","guestCount":2,"billTotal":220000,"seatedAt":"2026-01-30T02:05:00"},
+
+                    {"id":"v01","code":"VIP 01","seats":8,"area":"vip","billStatus":"PENDING","guestCount":7,"billTotal":2450000,"seatedAt":"2026-01-30T02:45:00"},
+                    {"id":"o01","code":"OUT 01","seats":4,"area":"outdoor","billStatus":"UNPAID","guestCount":3,"billTotal":360000,"seatedAt":"2026-01-30T04:20:00"}
+                  ]
+                </template>
+
               </div>
-
-              <div class="wtm-list" id="wtmList"></div>
-
-              <div class="wtm-divider"></div>
-
-              <div class="wtm-selected">
-                <div class="pick-row"><span class="pick-label">Bàn</span><b id="pickTable">—</b></div>
-                <div class="pick-row"><span class="pick-label">Khu vực</span><b id="pickArea">—</b></div>
-                <div class="pick-row"><span class="pick-label">Khách</span><b id="pickSeats">—</b></div>
-                <div class="pick-row"><span class="pick-label">Trạng thái</span><b id="pickStatus">—</b></div>
-                <div class="pick-row"><span class="pick-label">Số khách</span><b id="pickGuest">—</b></div>
-                <div class="pick-row"><span class="pick-label">Thời gian</span><b id="pickTime">—</b></div>
-              </div>
-
-              <div class="wtm-actions">
-                <button class="btn-order" type="button" id="btnOpenBill" disabled>Xem bill</button>
-                <button class="btn-save" type="button" id="btnPay" disabled>Thanh toán</button>
-              </div>
-
-              <p class="wtm-hint">Tip: chọn bàn đang ngồi/đã dùng dịch vụ để xem bill và thanh toán.</p>
-
-            </div>
-          </aside>
-
+            </aside>
+          </div>
         </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- <div th:replace="~{fragments/cashier-pay-modal :: cashierPayModal}"></div> -->
-
-  <div th:replace="~{fragments/footer :: footer}"></div>
+      </section>
+    </main>
+  </div>
 </body>
+
 </html>

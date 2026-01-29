@@ -5,6 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <title>DINIO - Kitchen History</title>
 
   <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
@@ -55,15 +57,6 @@
             <button class="chip" data-station="cold" type="button">Bếp nguội</button>
             <button class="chip" data-station="bar" type="button">Bar</button>
           </div>
-
-          <span class="kh-divider" aria-hidden="true"></span>
-
-          <div class="kh-chips" id="hRange">
-            <button class="chip is-active" data-range="today" type="button">Hôm nay</button>
-            <button class="chip" data-range="2h" type="button">2 giờ</button>
-            <button class="chip" data-range="30m" type="button">30 phút</button>
-          </div>
-        </div>
       </section>
 
       <section class="kh-card">

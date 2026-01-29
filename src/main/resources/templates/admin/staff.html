@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="_csrf" th:content="${_csrf?.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf?.headerName}"/>
+
+  <title>DINIO - Admin Staff</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}"/>
+  <link rel="stylesheet" th:href="@{/assets/css/admin/staff.css}"/>
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <script th:src="@{/assets/js/admin/staff.js}" defer></script>
+</head>
+
+<body>
+<div class="app-shell">
+  <div th:replace="~{fragments/admin-sidebar :: adminSidebar('admin_staff')}"></div>
+
+  <main class="app-main ad">
+    <div class="ad-top">
+      <h1 class="ad-title">Staff Management</h1>
+
+      <div class="ad-tools">
+        <div class="ad-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input id="staffSearch" type="text" placeholder="Tìm theo username..." autocomplete="off"/>
+        </div>
+
+        <select id="roleFilter" class="ad-select">
+          <option value="all">Tất cả role</option>
+          <option value="ADMIN">ADMIN</option>
+          <option value="CASHIER_MANAGER">CASHIER/MANAGER</option>
+          <option value="WAITER">WAITER</option>
+          <option value="KITCHEN">KITCHEN</option>
+        </select>
+      </div>
+    </div>
+
+    <form class="card ad-form" method="post" th:action="@{/dinio/admin/staff/create}">
+      <input name="username" placeholder="Username" required/>
+      <input name="role" placeholder="Role (ADMIN, WAITER,...)" required/>
+      <button class="btn-order" type="submit">Thêm</button>
+    </form>
+
+    <div class="card">
+      <table class="ad-table" id="staffTable">
+        <thead>
+        <tr>
+          <th style="width:80px;">ID</th>
+          <th>Username</th>
+          <th style="width:200px;">Role</th>
+          <th style="width:180px;"></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="s : ${staffs}"
+            class="staff-row"
+            th:attr="data-id=${s.id},
+                     data-username=${s.username},
+                     data-role=${s.role != null ? s.role.name : 'NONE'}">
+          <td th:text="${s.id}"></td>
+
+          <td>
+            <span class="v username-view" th:text="${s.username}"></span>
+            <input class="i username-input" type="text" th:value="${s.username}"/>
+          </td>
+
+          <td>
+            <span class="role-view" th:text="${s.role != null ? s.role.name : '—'}"></span>
+          </td>
+
+          <td class="staff-actions">
+            <button class="btn-light btn-edit" type="button">
+              <i class="fa-solid fa-pen"></i> Sửa
+            </button>
+
+            <form class="del-form" method="post" th:action="@{/dinio/admin/staff/delete}">
+              <input type="hidden" name="id" th:value="${s.id}"/>
+              <button class="btn-danger btn-del" type="submit" title="Xóa">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </form>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div class="ad-empty is-hidden" id="staffEmpty">Không có staff phù hợp.</div>
+    </div>
+
+    <div class="toast-host" id="toastHost" aria-live="polite" aria-atomic="true"></div>
+  </main>
+</div>
+</body>
+</html>

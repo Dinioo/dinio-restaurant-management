@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <title>DINIO - Admin Dashboard</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}"/>
+  <link rel="stylesheet" th:href="@{/assets/css/admin/dashboard.css}"/>
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <script th:src="@{/assets/js/sidebar.js}" defer></script>
+  <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
+  <script th:src="@{/assets/js/admin/dashboard.js}" defer></script>
+</head>
+
+<body>
+<div class="app-shell">
+  <div th:replace="~{fragments/admin-sidebar :: adminSidebar('admin_dashboard')}"></div>
+
+  <main class="app-main ad">
+    <header class="ad-head">
+      <div class="ad-head-left">
+        <h1 class="ad-title">Audit Log</h1>
+        <p class="ad-sub">Theo dõi hoạt động hệ thống gần đây.</p>
+      </div>
+
+       <div class="ad-head-right" sec:authorize="isAuthenticated()">
+        <div class="ad-user">
+          <i class="fa-solid fa-user-shield"></i>
+          <span sec:authentication="name">admin</span>
+        </div>
+      </div>
+        <div class="ad-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input id="auditSearch" type="text"
+                placeholder="Tìm theo actor / action / target..."
+                autocomplete="off"/>
+        </div>
+    </header>
+
+    <section class="card ad-card">
+      <div class="ad-table-wrap">
+        <table class="ad-table">
+          <thead>
+          <tr>
+            <th style="width:170px;">Thời gian</th>
+            <th style="width:220px;">Actor</th>
+            <th style="width:160px;">Action</th>
+            <th style="width:180px;">TargetType</th>
+            <th style="width:120px;">TargetId</th>
+            <th>MetadataJson</th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr th:if="${logs == null || #lists.isEmpty(logs)}">
+            <td colspan="6" class="ad-empty">Chưa có audit log.</td>
+          </tr>
+
+          <tr th:each="log : ${logs}" class="audit-row">
+            <td th:text="${log.timestamp != null ? #temporals.format(log.timestamp,'dd/MM/yyyy HH:mm') : '—'}"></td>
+
+            <td th:text="${log.actor != null ? (log.actor.username != null ? log.actor.username : log.actor.name) : 'SYSTEM'}"></td>
+
+            <td th:text="${log.action != null ? log.action : '—'}"></td>
+            <td th:text="${log.targetType != null ? log.targetType : '—'}"></td>
+            <td th:text="${log.targetId != null ? log.targetId : '—'}"></td>
+
+            <td th:text="${log.metadataJson != null ? #strings.abbreviate(log.metadataJson, 140) : '—'}"></td>
+          </tr>
+          <tr id="auditEmpty" style="display:none;">
+            <td colspan="6" class="ad-empty">Không có audit log phù hợp.</td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

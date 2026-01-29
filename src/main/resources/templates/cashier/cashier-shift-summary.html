@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DINIO - Tổng kết ca</title>
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/cashier/cashier-shift-summary.css}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
+  <script th:src="@{/assets/js/sidebar.js}" defer></script>
+  <script th:src="@{/assets/js/cashier/cashier-shift-summary.js}" defer></script>
+</head>
+
+<body>
+  <div class="app-shell">
+    <div th:replace="~{fragments/app-sidebar :: appSidebar('shift-summary')}"></div>
+    <main class="csu">
+      <section class="csu-wrap">
+        <header class="csu-top">
+          <div class="csu-actions"> <label class="csu-date"> <input type="date" id="csuDate" /> </label>
+            <div class="csu-tabs" role="tablist" aria-label="Chọn ca"> <button class="csu-tab is-active"
+                data-scope="morning" role="tab" aria-selected="true">Ca sáng</button> <button class="csu-tab"
+                data-scope="evening" role="tab" aria-selected="false">Ca chiều</button> <button class="csu-tab"
+                data-scope="day" role="tab" aria-selected="false">Cả ngày</button> </div>
+            <div class="csu-cta"> <button class="csu-ico" id="btnPrint" type="button" aria-label="In"> <i
+                  class="fa-solid fa-print"></i> </button> <button class="csu-ico csu-ico-accent" id="btnExport"
+                type="button" aria-label="Xuất"> <i class="fa-solid fa-file-arrow-down"></i> </button> </div>
+          </div>
+        </header>
+        <section class="csu-strip">
+          <div class="csu-chip">
+            <div class="k">Khung giờ</div>
+            <div class="v" id="metaTime">—</div>
+          </div>
+          <div class="csu-chip">
+            <div class="k">Thu ngân</div>
+            <div class="v" id="metaCashier">—</div>
+          </div>
+          <div class="csu-chip">
+            <div class="k">Số bill</div>
+            <div class="v" id="metaBills">—</div>
+          </div>
+          <div class="csu-chip">
+            <div class="k">Doanh thu</div>
+            <div class="v" id="metaRevenue">—</div>
+          </div>
+          <div class="csu-chip">
+            <div class="k">Chênh lệch</div>
+            <div class="v" id="metaDiff">—</div>
+          </div>
+        </section>
+        <section class="csu-grid">
+          <article class="csu-card csu-card-wide">
+            <div class="csu-card-head">
+              <div class="t">Tổng quan</div>
+              <div class="r"><span class="csu-pill" id="pillStatus">—</span></div>
+            </div>
+            <div class="csu-kpis csu-kpis-new">
+              <div class="kpi kpi-wide">
+                <div class="k">Doanh thu (sau giảm)</div>
+                <div class="v" id="kpiNet">—</div>
+                <div class="s" id="kpiNetSub">—</div>
+              </div>
+              <div class="kpi">
+                <div class="k">Tiền mặt</div>
+                <div class="v" id="kpiCash">—</div>
+                <div class="s" id="kpiCashSub">—</div>
+              </div>
+              <div class="kpi">
+                <div class="k">Chuyển khoản</div>
+                <div class="v" id="kpiBank">—</div>
+                <div class="s" id="kpiBankSub">—</div>
+              </div>
+              <div class="kpi">
+                <div class="k">Visa</div>
+                <div class="v" id="kpiVisa">—</div>
+                <div class="s" id="kpiVisaSub">—</div>
+              </div>
+            </div>
+            <div class="csu-mini csu-mini-new">
+              <div class="mini-card">
+                <div class="mini-k">Bill đã thanh toán</div>
+                <div class="mini-v" id="miniPaid">—</div>
+              </div>
+              <div class="mini-card">
+                <div class="mini-k">Bill đã huỷ</div>
+                <div class="mini-v" id="miniCancel">—</div>
+              </div>
+              <div class="mini-card">
+                <div class="mini-k">Bàn phục vụ</div>
+                <div class="mini-v" id="miniTables">—</div>
+              </div>
+            </div>
+          </article>
+          <article class="csu-card">
+            <div class="csu-card-head">
+              <div class="t">Đối soát tiền mặt</div>
+              <div class="r"><button class="csu-link" id="btnEditFloat" type="button">Sửa đầu ca</button></div>
+            </div>
+            <div class="csu-recon">
+              <div class="row">
+                <div class="k">Tiền đầu ca</div>
+                <div class="v" id="rcOpen">—</div>
+              </div>
+              <div class="row">
+                <div class="k">Tiền mặt thu</div>
+                <div class="v" id="rcCashIn">—</div>
+              </div>
+              <div class="row">
+                <div class="k">Chi tiền mặt</div>
+                <div class="v" id="rcCashOut">—</div>
+              </div>
+              <div class="row">
+                <div class="k">Dự kiến cuối ca</div>
+                <div class="v" id="rcExpected">—</div>
+              </div>
+              <div class="row is-strong">
+                <div class="k">Thực tế kiểm</div>
+                <div class="v" id="rcActual">—</div>
+              </div>
+              <div class="row is-diff" id="rcDiffRow">
+                <div class="k">Chênh lệch</div>
+                <div class="v" id="rcDiff">—</div>
+              </div>
+            </div>
+            <div class="csu-note"><span class="dot"></span><span>Chênh lệch được tô màu theo + / -.</span></div>
+          </article>
+          <article class="csu-card">
+            <div class="csu-card-head">
+              <div class="t">Top món bán chạy</div>
+              <div class="r"><span class="csu-badge" id="topCount">—</span></div>
+            </div>
+            <div class="csu-toplist" id="topList"></div>
+          </article>
+        </section>
+        <section class="csu-modal is-hidden" id="floatModal" aria-hidden="true">
+          <div class="csu-backdrop" data-close="1"></div>
+          <div class="csu-panel" role="dialog" aria-modal="true" aria-labelledby="floatTitle">
+            <div class="csu-panel-head">
+              <h3 class="csu-panel-title" id="floatTitle">Sửa tiền tồn</h3> <button class="csu-x" id="floatClose"
+                type="button" aria-label="Close">×</button>
+            </div>
+            <div class="csu-panel-body"> <label class="csu-field"> <span>Tiền tồn</span> <input type="number"
+                  id="floatInput" min="0" step="1000" /> </label> <label class="csu-field"> <span>Tiền thực tế kiểm
+                  (VND)</span> <input type="number" id="actualInput" min="0" step="1000" /> </label>
+              <div class="csu-panel-actions"> <button class="csu-btn" id="floatCancel" type="button">Huỷ</button>
+                <button class="csu-btn csu-btn-accent" id="floatSave" type="button">Lưu</button> </div>
+            </div>
+          </div>
+        </section>
+
+              <section class="csu-bottom">
+        <div class="csu-bottom-actions">
+          <button class="btn-light" id="btnMidDay" type="button">Mid-day</button>
+          <button class="btn-light" id="btnDayEnd" type="button">Day-end</button>
+          <button class="btn-light" id="btnPrintBottom" type="button">
+            <i class="fa-solid fa-print"></i> In
+          </button>
+          <button class="btn-light" id="btnExportBottom" type="button">
+            <i class="fa-solid fa-file-arrow-down"></i> Xuất
+          </button>
+        </div>
+      </section>
+
+      </section>
+    </main>
+  </div>
+</body>
+
+</html>

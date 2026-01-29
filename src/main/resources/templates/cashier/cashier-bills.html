@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DINIO - Bill đã thanh toán</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/cashier/cashier-bills.css}" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script th:src="@{/assets/js/toast.js}" defer></script>
+
+  <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
+  <script th:src="@{/assets/js/sidebar.js}" defer></script>
+  <script th:src="@{/assets/js/cashier/cashier-bills.js}" defer></script>
+</head>
+
+<body>
+  <div class="app-shell">
+    <div th:replace="~{fragments/app-sidebar :: appSidebar('cashier_bills')}"></div>
+    <div th:replace="~{fragments/void-bill-modal :: voidBillConfirmModal}"></div>
+
+
+    <main class="cbl">
+      <section class="cbl-wrap">
+
+        <!-- TOP: search on top, filters below -->
+        <header class="cbl-top">
+          <!-- SEARCH (TOP, LONG) -->
+          <div class="cbl-searchline">
+            <input class="cbl-search cbl-search-wide" id="q" placeholder="Tìm theo tên khách…" />
+          </div>
+
+          <!-- FILTERS (BOTTOM) -->
+          <div class="cbl-actions">
+            <input class="cbl-input" type="date" id="cblDate" aria-label="Chọn ngày" />
+
+            <select class="cbl-select" id="payType" aria-label="Lọc hình thức thanh toán">
+              <option value="">Tất cả thanh toán</option>
+              <option value="CASH">Tiền mặt</option>
+              <option value="BANK">Chuyển khoản</option>
+              <option value="VISA">Visa</option>
+            </select>
+
+            <select class="cbl-select" id="preType" aria-label="Lọc đặt trước">
+              <option value="">Tất cả</option>
+              <option value="PRE">Đặt trước</option>
+              <option value="WALKIN">Không đặt trước</option>
+            </select>
+          </div>
+        </header>
+
+        <section class="cbl-card">
+
+          <div class="cbl-table">
+            <table>
+              <thead>
+                <tr>
+                  <th class="ta-c" style="width:72px;">STT</th>
+                  <th>Thời gian order</th>
+                  <th class="ta-r">Giá tiền</th>
+                  <th>Tên chủ đặt bàn</th>
+                  <th class="ta-c" style="width:140px;">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+
+          <div class="cbl-foot">
+            <div class="cbl-foot-left" id="footHint">—</div>
+            <div class="cbl-foot-right">
+              <button class="btn-light" id="prevPage" type="button">Trước</button>
+              <span class="btn-order" id="pageInfo">1 / 1</span>
+              <button class="btn-light" id="nextPage" type="button">Sau</button>
+            </div>
+          </div>
+        </section>
+
+      </section>
+    </main>
+  </div>
+</body>
+
+</html>

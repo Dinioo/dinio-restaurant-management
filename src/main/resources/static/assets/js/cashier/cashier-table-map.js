@@ -1,419 +1,310 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const $ = (s, r = document) => r.querySelector(s);
-  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const $ = (s, r = document) => r.querySelector(s)
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s))
 
-  const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute("content") || "";
-  const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute("content") || "";
+  const elAreas = $("#tmAreas")
+  const elList = $("#wtmList")
+  const elFloor = $("#wtFloor")
+  const elShow = $("#wtShow")
+  const btnRefresh = $("#btnRefresh")
+  const btnClear = $("#btnClearPick")
+  const btnOpenBill = $("#btnOpenBill")
+  const btnPay = $("#btnPay")
 
-  const els = {
-    floor: $("#wtFloor"),
-    show: $("#wtShow"),
-    query: $("#wtQuery"),
-    refresh: $("#btnRefresh"),
-    clearPick: $("#btnClearPick"),
-    list: $("#wtmList"),
+  const pickTable = $("#pickTable")
+  const pickArea = $("#pickArea")
+  const pickSeats = $("#pickSeats")
+  const pickStatus = $("#pickStatus")
+  const pickGuest = $("#pickGuest")
+  const pickTotal = $("#pickTotal")
 
-    pickTable: $("#pickTable"),
-    pickArea: $("#pickArea"),
-    pickSeats: $("#pickSeats"),
-    pickStatus: $("#pickStatus"),
-    pickGuest: $("#pickGuest"),
-    pickTime: $("#pickTime"),
+  const mockTpl = $("#mockData")
+  let tables = []
+  let selectedId = null
 
-    btnOpenBill: $("#btnOpenBill"),
-    btnPay: $("#btnPay"),
+  const AREA_META = {
+    floor1: { title: "Tầng 1", sub: "Khu vực chung" },
+    floor2: { title: "Tầng 2", sub: "Khu vực chung" },
+    floor3: { title: "Tầng 3", sub: "Khu vực chung" },
+    vip: { title: "VIP", sub: "Phòng riêng" },
+    outdoor: { title: "Outdoor", sub: "Ngoài trời" }
+  }
 
-    areas: $("#tmAreas"),
-    tables: $$(".tm-table"),
-  };
+  const STATUS_META = {
+    UNPAID: { label: "Chưa thanh toán", cls: "is-unpaid", badge: "is-unpaid" },
+    PENDING: { label: "Đang đợi thanh toán", cls: "is-pending", badge: "is-pending" },
+    PAID: { label: "Đã thanh toán", cls: "is-paid", badge: "is-paid" }
+  }
 
-  const STATUS_LABEL = {
-    AVAILABLE: "Trống",
-    RESERVED: "Đặt trước",
-    OCCUPIED: "Đang ngồi",
-    SEATED: "Đang ngồi",
-    NEED_CLEAN: "Chờ dọn",
-    VIP_AVAILABLE: "VIP • Trống",
-    VIP_RESERVED: "VIP • Đặt trước",
-    VIP_OCCUPIED: "VIP • Đang ngồi",
-  };
+  const DEFAULT_DATA = [
+    { id: "t01", code: "Bàn 01", seats: 2, area: "floor1", billStatus: "UNPAID", guestCount: 2, billTotal: 180000, seatedAt: "2026-01-30T03:55:00" },
+    { id: "t02", code: "Bàn 02", seats: 4, area: "floor1", billStatus: "PENDING", guestCount: 4, billTotal: 520000, seatedAt: "2026-01-30T03:10:00" },
+    { id: "t03", code: "Bàn 03", seats: 6, area: "floor1", billStatus: "PAID", guestCount: 5, billTotal: 890000, seatedAt: "2026-01-30T01:40:00" },
 
-  const STATUS_BADGE_CLASS = (st) => {
-    const s = (st || "").toUpperCase();
-    if (s === "OCCUPIED" || s === "SEATED" || s === "VIP_OCCUPIED") return "badge is-seated";
-    if (s === "NEED_CLEAN") return "badge is-clean";
-    if (s === "RESERVED" || s === "VIP_RESERVED") return "badge is-res";
-    return "badge";
-  };
+    { id: "t11", code: "Bàn 11", seats: 2, area: "floor2", billStatus: "UNPAID", guestCount: 2, billTotal: 260000, seatedAt: "2026-01-30T04:05:00" },
+    { id: "t12", code: "Bàn 12", seats: 4, area: "floor2", billStatus: "PENDING", guestCount: 3, billTotal: 410000, seatedAt: "2026-01-30T03:25:00" },
+    { id: "t13", code: "Bàn 13", seats: 6, area: "floor2", billStatus: "PAID", guestCount: 6, billTotal: 1200000, seatedAt: "2026-01-30T00:50:00" },
 
-  const isPayable = (st) => {
-    const s = (st || "").toUpperCase();
-    return s === "OCCUPIED" || s === "SEATED" || s === "NEED_CLEAN" || s === "VIP_OCCUPIED";
-  };
+    { id: "t21", code: "Bàn 21", seats: 4, area: "floor3", billStatus: "UNPAID", guestCount: 4, billTotal: 640000, seatedAt: "2026-01-30T03:35:00" },
+    { id: "t22", code: "Bàn 22", seats: 2, area: "floor3", billStatus: "PAID", guestCount: 2, billTotal: 220000, seatedAt: "2026-01-30T02:05:00" },
 
-  const formatTimeHHMM = (isoOrHHMM) => {
-    if (!isoOrHHMM) return "—";
-    if (/^\d{2}:\d{2}$/.test(isoOrHHMM)) return isoOrHHMM;
-    const d = new Date(isoOrHHMM);
-    if (Number.isNaN(d.getTime())) return "—";
-    const hh = String(d.getHours()).padStart(2, "0");
-    const mm = String(d.getMinutes()).padStart(2, "0");
-    return `${hh}:${mm}`;
-  };
+    { id: "v01", code: "VIP 01", seats: 8, area: "vip", billStatus: "PENDING", guestCount: 7, billTotal: 2450000, seatedAt: "2026-01-30T02:45:00" },
+    { id: "o01", code: "OUT 01", seats: 4, area: "outdoor", billStatus: "UNPAID", guestCount: 3, billTotal: 360000, seatedAt: "2026-01-30T04:20:00" }
+  ]
 
-  const minutesSince = (iso) => {
-    const d = new Date(iso);
-    if (Number.isNaN(d.getTime())) return null;
-    const diff = Date.now() - d.getTime();
-    return Math.max(0, Math.floor(diff / 60000));
-  };
+  const fmtVnd = (n) => Number(n || 0).toLocaleString("vi-VN") + "đ"
 
-  const readTableFromButton = (btn) => {
-    const ds = btn.dataset || {};
-    const status = (ds.status || "AVAILABLE").toUpperCase();
-    const area = ds.area || btn.getAttribute("data-area") || "—";
-    const id = ds.id || btn.getAttribute("data-id") || "—";
-    const code = ds.code || btn.getAttribute("data-code") || id;
-    const seats = Number(ds.seats || 0) || 0;
+  const toMinutes = (iso) => {
+    if (!iso) return null
+    const t = new Date(iso).getTime()
+    if (Number.isNaN(t)) return null
+    return Math.max(0, Math.floor((Date.now() - t) / 60000))
+  }
 
-    const resTime = ds.resTime || "";
-    const resName = ds.resName || "";
-    const resPhone = ds.resPhone || "";
+  const statusMeta = (st) => STATUS_META[String(st || "UNPAID").toUpperCase()] || STATUS_META.UNPAID
 
-    const seatStart = ds.seatStart || "";
-    const guestName = ds.guestName || "";
-    const guestPhone = ds.guestPhone || "";
-    const party = ds.party || "";
+  const readMock = () => {
+    if (!mockTpl) return null
+    try {
+      const txt = (mockTpl.textContent || "").trim()
+      if (!txt) return null
+      const arr = JSON.parse(txt)
+      if (!Array.isArray(arr)) return null
+      return arr.map((t) => ({
+        id: String(t.id),
+        code: String(t.code),
+        seats: Number(t.seats || 0),
+        area: String(t.area || "floor1"),
+        billStatus: String(t.billStatus || "UNPAID").toUpperCase(),
+        guestCount: Number(t.guestCount || 0),
+        billTotal: Number(t.billTotal || 0),
+        seatedAt: t.seatedAt || null
+      }))
+    } catch {
+      return null
+    }
+  }
 
-    return {
-      btn,
-      id,
-      code,
-      area,
-      seats,
-      status,
-      resTime,
-      resName,
-      resPhone,
-      seatStart,
-      guestName,
-      guestPhone,
-      party,
-    };
-  };
+  const groupByArea = (list) => {
+    const g = {}
+    for (const t of list) {
+      const k = AREA_META[t.area] ? t.area : "floor1"
+      if (!g[k]) g[k] = []
+      g[k].push(t)
+    }
+    const order = ["floor1", "floor2", "floor3", "vip", "outdoor"]
+    return order.filter((k) => g[k]?.length).map((k) => [k, g[k]])
+  }
 
-  const state = {
-    all: els.tables.map(readTableFromButton),
-    filtered: [],
-    selectedId: null,
-  };
+  const clearSelectedUI = () => {
+    $$(".tm-table.is-selected").forEach((b) => b.classList.remove("is-selected"))
+    $$(".wtm-item.is-active").forEach((it) => it.classList.remove("is-active"))
+    pickTable.textContent = "—"
+    pickArea.textContent = "—"
+    pickSeats.textContent = "—"
+    pickStatus.textContent = "—"
+    pickGuest.textContent = "—"
+    pickTotal.textContent = "—"
+    btnOpenBill.disabled = true
+    btnPay.disabled = true
+  }
 
-  const clearActive = () => {
-    state.all.forEach((t) => t.btn.classList.remove("is-selected"));
-    $$(".wtm-item", els.list).forEach((x) => x.classList.remove("is-active"));
-  };
+  const setSelected = (id) => {
+    selectedId = id
+    $$(".tm-table.is-selected").forEach((b) => b.classList.remove("is-selected"))
+    $$(".wtm-item.is-active").forEach((it) => it.classList.remove("is-active"))
 
-  const setPick = (t) => {
-    els.pickTable.textContent = t ? t.code : "—";
-    els.pickArea.textContent = t ? t.area : "—";
-    els.pickSeats.textContent = t ? (t.seats ? `${t.seats} chỗ` : "—") : "—";
-    els.pickStatus.textContent = t ? (STATUS_LABEL[t.status] || t.status) : "—";
+    const btn = $(`.tm-table[data-id="${CSS.escape(id)}"]`)
+    if (btn) btn.classList.add("is-selected")
 
-    const guestLine = (() => {
-      if (!t) return "—";
-      if (t.status === "RESERVED" || t.status === "VIP_RESERVED") {
-        const name = t.resName || "—";
-        const phone = t.resPhone ? ` • ${t.resPhone}` : "";
-        return `${name}${phone}`;
+    const row = $(`.wtm-item[data-id="${CSS.escape(id)}"]`)
+    if (row) row.classList.add("is-active")
+
+    const t = tables.find((x) => x.id === id)
+    if (!t) return clearSelectedUI()
+
+    const a = AREA_META[t.area]?.title || t.area
+    const sm = statusMeta(t.billStatus)
+
+    pickTable.textContent = t.code || "—"
+    pickArea.textContent = a || "—"
+    pickSeats.textContent = t.seats ? `${t.seats}` : "—"
+    pickStatus.textContent = sm.label
+    pickGuest.textContent = t.guestCount ? `${t.guestCount}` : "—"
+    pickTotal.textContent = t.billTotal ? fmtVnd(t.billTotal) : "—"
+
+    const hasBill = t.billTotal > 0 || t.guestCount > 0
+    btnOpenBill.disabled = !hasBill
+    btnPay.disabled = !(hasBill && t.billStatus !== "PAID")
+  }
+
+  const buildTableBtn = (t) => {
+    const sm = statusMeta(t.billStatus)
+    const b = document.createElement("button")
+    b.type = "button"
+    b.className = `tm-table ${sm.cls}`
+    b.dataset.id = t.id
+
+    const code = document.createElement("span")
+    code.className = "t-code"
+    code.textContent = t.code
+
+    const meta = document.createElement("span")
+    meta.className = "t-meta"
+    meta.textContent = t.seats ? `${t.seats} chỗ` : "—"
+
+    b.append(code, meta)
+
+    const show = elShow.value
+    if (show !== "none") {
+      const badge = document.createElement("span")
+      badge.className = "t-badge"
+      if (show === "session") {
+        const mins = toMinutes(t.seatedAt)
+        badge.textContent = mins == null ? "—" : `${mins} phút`
+      } else {
+        badge.textContent = t.billTotal ? fmtVnd(t.billTotal) : "—"
       }
-      if (t.status === "OCCUPIED" || t.status === "SEATED" || t.status === "VIP_OCCUPIED") {
-        const name = t.guestName || "—";
-        const phone = t.guestPhone ? ` • ${t.guestPhone}` : "";
-        return `${name}${phone}`;
-      }
-      return "—";
-    })();
-
-    els.pickGuest.textContent = guestLine;
-
-    const timeLine = (() => {
-      if (!t) return "—";
-      if (t.status === "RESERVED" || t.status === "VIP_RESERVED") return formatTimeHHMM(t.resTime);
-      if (t.status === "OCCUPIED" || t.status === "SEATED" || t.status === "VIP_OCCUPIED") {
-        const m = minutesSince(t.seatStart);
-        if (m == null) return "—";
-        const hh = Math.floor(m / 60);
-        const mm = m % 60;
-        return hh > 0 ? `${hh}h${String(mm).padStart(2, "0")}` : `${mm}p`;
-      }
-      return "—";
-    })();
-
-    els.pickTime.textContent = timeLine;
-
-    const enable = t && isPayable(t.status);
-    els.btnOpenBill.disabled = !enable;
-    els.btnPay.disabled = !enable;
-  };
-
-  const applyStatusClasses = () => {
-    state.all.forEach((t) => {
-      t.btn.classList.remove("is-occupied", "is-clean");
-      if (t.status === "OCCUPIED" || t.status === "SEATED" || t.status === "VIP_OCCUPIED") {
-        t.btn.classList.add("is-occupied");
-      } else if (t.status === "NEED_CLEAN") {
-        t.btn.classList.add("is-clean");
-      }
-    });
-  };
-
-  const computeBadgeText = (t, showMode) => {
-    const mode = (showMode || "none").toLowerCase();
-    if (mode === "none") return "—";
-
-    if (mode === "reservation") {
-      if (t.status === "RESERVED" || t.status === "VIP_RESERVED") return formatTimeHHMM(t.resTime);
-      return "—";
+      b.appendChild(badge)
     }
 
-    if (mode === "seating") {
-      if (t.status === "OCCUPIED" || t.status === "SEATED" || t.status === "VIP_OCCUPIED") {
-        const m = minutesSince(t.seatStart);
-        if (m == null) return "—";
-        const hh = Math.floor(m / 60);
-        const mm = m % 60;
-        return hh > 0 ? `${hh}h${String(mm).padStart(2, "0")}` : `${mm}p`;
-      }
-      return "—";
+    b.addEventListener("click", () => setSelected(t.id))
+    return b
+  }
+
+  const renderAreas = () => {
+    elAreas.innerHTML = ""
+    const floor = elFloor.value
+    const list = floor === "all" ? tables : tables.filter((t) => t.area === floor)
+    const grouped = groupByArea(list)
+
+    if (!grouped.length) {
+      const empty = document.createElement("div")
+      empty.className = "tm-area"
+      empty.innerHTML = `<div class="tm-area-head"><h4>Không có dữ liệu</h4><span class="tm-area-sub">Mock rỗng</span></div>`
+      elAreas.appendChild(empty)
+      return
     }
 
-    if (mode === "before_reservation") {
-      if (t.status === "RESERVED" || t.status === "VIP_RESERVED") {
-        const now = new Date();
-        const [hh, mm] = String(t.resTime || "").split(":").map((x) => parseInt(x, 10));
-        if (!Number.isFinite(hh) || !Number.isFinite(mm)) return "—";
-        const target = new Date(now);
-        target.setHours(hh, mm, 0, 0);
-        const diff = Math.round((target.getTime() - now.getTime()) / 60000);
-        if (Number.isNaN(diff)) return "—";
-        if (diff <= 0) return "0p";
-        const h = Math.floor(diff / 60);
-        const m = diff % 60;
-        return h > 0 ? `${h}h${String(m).padStart(2, "0")}` : `${m}p`;
-      }
-      return "—";
+    for (const [areaKey, arr] of grouped) {
+      const sec = document.createElement("section")
+      sec.className = "tm-area"
+
+      const head = document.createElement("div")
+      head.className = "tm-area-head"
+
+      const h4 = document.createElement("h4")
+      h4.textContent = AREA_META[areaKey]?.title || areaKey
+
+      const sub = document.createElement("span")
+      sub.className = "tm-area-sub"
+      sub.textContent = AREA_META[areaKey]?.sub || ""
+
+      head.append(h4, sub)
+
+      const grid = document.createElement("div")
+      grid.className = "tm-grid"
+      arr.forEach((t) => grid.appendChild(buildTableBtn(t)))
+
+      sec.append(head, grid)
+      elAreas.appendChild(sec)
     }
+  }
 
-    if (mode === "waiting") {
-      if (t.status === "AVAILABLE" || t.status === "VIP_AVAILABLE") return "0p";
-      if (t.status === "RESERVED" || t.status === "VIP_RESERVED") return "—";
-      if (t.status === "OCCUPIED" || t.status === "SEATED" || t.status === "VIP_OCCUPIED") return "—";
-      if (t.status === "NEED_CLEAN") return "5p";
-      return "—";
-    }
+  const buildListItem = (t) => {
+    const sm = statusMeta(t.billStatus)
 
-    return "—";
-  };
+    const it = document.createElement("div")
+    it.className = "wtm-item"
+    it.dataset.id = t.id
 
-  const renderBadges = () => {
-    const mode = els.show?.value || "none";
-    state.all.forEach((t) => {
-      const badge = t.btn.querySelector("[data-badge]");
-      if (!badge) return;
-      badge.textContent = computeBadgeText(t, mode);
-    });
-  };
+    const top = document.createElement("div")
+    top.className = "wtm-item-top"
 
-  const matchesQuery = (t, q) => {
-    if (!q) return true;
-    const s = q.toLowerCase().trim();
-    if (!s) return true;
+    const name = document.createElement("div")
+    name.className = "wtm-item-name"
+    name.textContent = t.code
 
-    const hay = [
-      t.code,
-      t.id,
-      t.area,
-      t.status,
-      t.resName,
-      t.resPhone,
-      t.guestName,
-      t.guestPhone,
-      String(t.seats || ""),
-      String(t.party || ""),
-    ]
-      .filter(Boolean)
-      .join(" ")
-      .toLowerCase();
+    const badge = document.createElement("span")
+    badge.className = `badge ${sm.badge}`
+    badge.textContent = sm.label
 
-    return hay.includes(s);
-  };
+    top.append(name, badge)
 
-  const matchesFloor = (t, floor) => {
-    if (!floor || floor === "all") return true;
-    return String(t.area || "").toLowerCase() === String(floor).toLowerCase();
-  };
+    const sub = document.createElement("div")
+    sub.className = "wtm-item-sub"
+
+    const a = document.createElement("span")
+    a.textContent = AREA_META[t.area]?.title || t.area
+
+    const total = document.createElement("span")
+    total.textContent = t.billTotal ? fmtVnd(t.billTotal) : "—"
+
+    sub.append(a, total)
+
+    it.append(top, sub)
+    it.addEventListener("click", () => setSelected(t.id))
+    return it
+  }
 
   const renderList = () => {
-    const floor = els.floor?.value || "all";
-    const q = els.query?.value || "";
-
-    state.filtered = state.all.filter((t) => matchesFloor(t, floor) && matchesQuery(t, q));
-
-    els.list.innerHTML = state.filtered
-      .map((t) => {
-        const title = t.code;
-        const stLabel = STATUS_LABEL[t.status] || t.status;
-        const badgeCls = STATUS_BADGE_CLASS(t.status);
-
-        const subBits = [];
-        subBits.push(`${t.seats ? `${t.seats} chỗ` : "—"}`);
-        if (t.status === "RESERVED" || t.status === "VIP_RESERVED") subBits.push(`Đặt: ${formatTimeHHMM(t.resTime)}`);
-        if (t.status === "OCCUPIED" || t.status === "SEATED" || t.status === "VIP_OCCUPIED") {
-          const m = minutesSince(t.seatStart);
-          if (m != null) subBits.push(`Ngồi: ${m}p`);
-        }
-        if (t.area) subBits.push(t.area);
-
-        return `
-          <div class="wtm-item ${t.id === state.selectedId ? "is-active" : ""}" data-id="${t.id}">
-            <div class="wtm-item-top">
-              <div class="wtm-item-name">${title}</div>
-              <span class="${badgeCls}">${stLabel}</span>
-            </div>
-            <div class="wtm-item-sub">
-              ${subBits.map((x) => `<span>${x}</span>`).join("")}
-            </div>
-          </div>
-        `;
-      })
-      .join("");
-
-    state.all.forEach((t) => {
-      const show = state.filtered.some((x) => x.id === t.id);
-      t.btn.style.display = show ? "" : "none";
-    });
-  };
-
-  const selectTableById = (id) => {
-    const t = state.all.find((x) => x.id === id);
-    state.selectedId = t ? t.id : null;
-
-    clearActive();
-
-    if (t) {
-      t.btn.classList.add("is-selected");
-      const item = $(`.wtm-item[data-id="${CSS.escape(t.id)}"]`, els.list);
-      if (item) item.classList.add("is-active");
+    elList.innerHTML = ""
+    const visible = tables.filter((t) => t.billStatus !== "PAID")
+    if (!visible.length) {
+      const d = document.createElement("div")
+      d.className = "wtm-item"
+      d.style.cursor = "default"
+      d.innerHTML = `<div class="wtm-item-top"><div class="wtm-item-name">Không có bàn cần xử lý</div><span class="badge is-paid">OK</span></div><div class="wtm-item-sub"><span>Danh sách trống</span><span>—</span></div>`
+      elList.appendChild(d)
+      return
     }
+    visible.forEach((t) => elList.appendChild(buildListItem(t)))
+  }
 
-    setPick(t);
-  };
+  const renderAll = () => {
+    clearSelectedUI()
+    renderAreas()
+    renderList()
+  }
 
-  const clearSelection = () => {
-    state.selectedId = null;
-    clearActive();
-    setPick(null);
-  };
+  const load = () => {
+    const fromTpl = readMock()
+    tables = (fromTpl && fromTpl.length ? fromTpl : DEFAULT_DATA).map((t) => ({
+      ...t,
+      billStatus: String(t.billStatus || "UNPAID").toUpperCase()
+    }))
+    selectedId = null
+    renderAll()
+  }
 
-  const openBillPage = () => {
-    const t = state.all.find((x) => x.id === state.selectedId);
-    if (!t) return;
-    window.location.href = `/cashier/bill?tableId=${encodeURIComponent(t.id)}`;
-  };
+  btnClear?.addEventListener("click", () => {
+    selectedId = null
+    renderAll()
+  })
 
-  const openPay = () => {
-    const t = state.all.find((x) => x.id === state.selectedId);
-    if (!t) return;
+  btnRefresh?.addEventListener("click", () => load())
 
-    const modal =
-      document.getElementById("cashierPayModal") ||
-      document.getElementById("csPayModal") ||
-      document.querySelector(".cs-modal");
+  elFloor?.addEventListener("change", () => {
+    selectedId = null
+    renderAll()
+  })
 
-    if (!modal) {
-      window.location.href = `/cashier/bill?tableId=${encodeURIComponent(t.id)}`;
-      return;
-    }
+  elShow?.addEventListener("change", () => {
+    const keep = selectedId
+    renderAreas()
+    if (keep) setSelected(keep)
+  })
 
-    modal.classList.remove("is-hidden");
-    modal.classList.add("open");
+  btnOpenBill?.addEventListener("click", () => {
+    if (!selectedId) return
+    alert("Mock: mở bill của " + selectedId)
+  })
 
-    const setText = (sel, val) => {
-      const el = modal.querySelector(sel);
-      if (el) el.textContent = val;
-    };
+  btnPay?.addEventListener("click", () => {
+  if (!selectedId) return
+  const url = `/dinio/cashier/payment?tableId=${encodeURIComponent(selectedId)}`
+  window.location.href = url
+})
 
-    setText("[data-pay-table]", t.code);
-    setText("[data-pay-tableid]", t.id);
-    setText("[data-pay-status]", STATUS_LABEL[t.status] || t.status);
-
-    const closeEls = modal.querySelectorAll("[data-close], .fp-backdrop, .fp-x, #csPayClose, #payClose");
-    closeEls.forEach((x) =>
-      x.addEventListener(
-        "click",
-        () => {
-          modal.classList.add("is-hidden");
-          modal.classList.remove("open");
-        },
-        { once: true }
-      )
-    );
-  };
-
-  const bindEvents = () => {
-    els.floor?.addEventListener("change", () => {
-      renderList();
-      renderBadges();
-      if (state.selectedId && !state.filtered.some((x) => x.id === state.selectedId)) clearSelection();
-    });
-
-    els.query?.addEventListener("input", () => {
-      renderList();
-      if (state.selectedId && !state.filtered.some((x) => x.id === state.selectedId)) clearSelection();
-    });
-
-    els.show?.addEventListener("change", () => renderBadges());
-
-    els.refresh?.addEventListener("click", () => {
-      window.location.reload();
-    });
-
-    els.clearPick?.addEventListener("click", () => clearSelection());
-
-    els.tables.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const t = readTableFromButton(btn);
-        selectTableById(t.id);
-      });
-    });
-
-    els.list?.addEventListener("click", (e) => {
-      const item = e.target.closest(".wtm-item");
-      if (!item) return;
-      const id = item.getAttribute("data-id");
-      if (id) selectTableById(id);
-    });
-
-    els.btnOpenBill?.addEventListener("click", () => {
-      if (els.btnOpenBill.disabled) return;
-      openBillPage();
-    });
-
-    els.btnPay?.addEventListener("click", () => {
-      if (els.btnPay.disabled) return;
-      openPay();
-    });
-  };
-
-  applyStatusClasses();
-  renderBadges();
-  renderList();
-  clearSelection();
-  bindEvents();
-
-  window.__DINIO_CASHIER_TM__ = {
-    csrfToken,
-    csrfHeader,
-    getSelected: () => state.all.find((x) => x.id === state.selectedId) || null,
-  };
-});
+  load()
+})

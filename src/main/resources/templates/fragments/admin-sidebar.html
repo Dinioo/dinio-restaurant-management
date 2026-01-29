@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<div th:fragment="adminSidebar(active)">
+  <aside class="app-side" id="appSidebar">
+    <!-- HEAD -->
+    <div class="app-side-head">
+      <div class="app-side-top">
+        <button class="app-menu-btn" id="menuToggle" type="button" aria-label="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+
+      <a class="app-brand" href="/dinio/admin/dashboard">
+        <span class="app-brand-mark">DINIO</span>
+        <span class="app-brand-sub">Admin</span>
+      </a>
+    </div>
+
+    <!-- NAV -->
+    <nav class="app-side-nav">
+
+      <!-- ADMIN GROUP -->
+      <div class="app-side-group" sec:authorize="hasRole('ADMIN')">
+        <div class="app-side-label">Quản trị</div>
+
+        <a class="app-side-item"
+           th:classappend="${active}=='admin_dashboard' ? ' is-active' : ''"
+           href="/dinio/admin/dashboard">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Dashboard</span>
+        </a>
+
+        <a class="app-side-item"
+           th:classappend="${active}=='admin_menu' ? ' is-active' : ''"
+           href="/dinio/menu-items">
+          <i class="fa-solid fa-utensils"></i>
+          <span>Menu</span>
+        </a>
+
+        <a class="app-side-item"
+           th:classappend="${active}=='admin_staff' ? ' is-active' : ''"
+           href="/dinio/admin/staff">
+          <i class="fa-solid fa-users-gear"></i>
+          <span>Staff</span>
+        </a>
+      </div>
+
+    </nav>
+
+    <!-- FOOT -->
+    <div class="app-side-foot">
+      <form th:action="@{/staff/logout}" method="post">
+        <button class="app-logout" type="submit">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Đăng xuất</span>
+        </button>
+      </form>
+    </div>
+  </aside>
+</div>
+
+</body>
+</html>

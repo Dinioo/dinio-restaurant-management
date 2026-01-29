@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="_csrf" th:content="${_csrf?.token}" />
+  <meta name="_csrf_header" th:content="${_csrf?.headerName}" />
+  <title>DINIO - Cashier Billing</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/cashier/cashier-billing.css}" />
+
+  <script th:src="@{/assets/js/sidebar.js}" defer></script>
+  <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
+  <script th:src="@{/assets/js/cashier/cashier-billing.js}" defer></script>
+</head>
+
+<body>
+
+  <div class="app-shell">
+
+    <div th:replace="~{fragments/app-sidebar :: appSidebar('cashier_checkout')}"></div>
+
+    <main class="cbp app-main" id="appMain">
+      <div class="cbp-wrap">
+
+        <section class="cbp-top">
+          <div class="cbp-top-left">
+            <div class="cbp-eyebrow">CASHIER</div>
+            <h1 class="cbp-h1">Thanh toán</h1>
+          </div>
+
+          <div class="cbp-top-right">
+            <div class="cbp-pill">
+              <div class="cbp-pill-k">Bàn</div>
+              <div class="cbp-pill-v" id="sumTable">—</div>
+            </div>
+            <div class="cbp-pill">
+              <div class="cbp-pill-k">Session</div>
+              <div class="cbp-pill-v" id="sumSession">—</div>
+            </div>
+            <button class="cbp-iconbtn" id="refreshBtn" type="button" aria-label="Refresh" title="Refresh">
+              <span class="ic">⟳</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="cbp-grid">
+
+          <div class="cbp-left">
+            <div class="cbp-card">
+              <div class="cbp-card-head">
+                <div class="cbp-eyebrow">BILL PREVIEW</div>
+                <div class="cbp-head-row">
+                  <div class="cbp-meta" id="billMeta">—</div>
+                  <div class="cbp-badges">
+                    <span class="cbp-badge" id="billStatus">—</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="br" id="billReceipt">
+                <div class="br-top">
+                  <div class="br-brand">DINIO</div>
+                  <div class="br-sub">Restaurant</div>
+                </div>
+
+                <div class="br-info">
+                  <div class="br-row"><span>Bàn</span><b id="rTable">—</b></div>
+                  <div class="br-row"><span>Giờ</span><b id="rTime">—</b></div>
+                  <div class="br-row"><span>Thu ngân</span><b id="rCashier">—</b></div>
+                  <div class="br-row"><span>Phương thức</span><b id="rMethod">—</b></div>
+                </div>
+
+                <div class="br-hr"></div>
+
+                <div class="br-items">
+                  <div class="br-headrow">
+                    <span>Món</span><span class="br-right">SL</span><span class="br-right">Tiền</span>
+                  </div>
+                  <div class="br-lines" id="rLines"></div>
+                </div>
+
+                <div class="br-hr"></div>
+
+                <div class="br-sum">
+                  <div class="br-row"><span>Tạm tính</span><b id="rSubTotal">0</b></div>
+                  <div class="br-row"><span>Phí phục vụ</span><b id="rService">0</b></div>
+                  <div class="br-row"><span>VAT</span><b id="rVat">0</b></div>
+                  <div class="br-hr thin"></div>
+                  <div class="br-row total"><span>TỔNG CỘNG</span><b id="rTotal">0</b></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cbp-right">
+            <div class="cbp-card">
+              <div class="cbp-card-head">
+                <div class="cbp-eyebrow">PAYMENT</div>
+              </div>
+
+              <div class="cbp-paygrid" id="payMethods">
+                <button class="cbp-payopt is-active" type="button" data-method="CASH">Tiền mặt</button>
+                <button class="cbp-payopt" type="button" data-method="CARD">Thẻ</button>
+                <button class="cbp-payopt" type="button" data-method="QR">QR</button>
+              </div>
+
+              <div class="cbp-divider"></div>
+
+              <div class="cbp-summary">
+                <div class="cbp-srow"><span>Tạm tính</span><b id="sSubTotal">0</b></div>
+                <div class="cbp-srow"><span>Phí phục vụ</span><b id="sService">0</b></div>
+                <div class="cbp-srow"><span>VAT</span><b id="sVat">0</b></div>
+                <div class="cbp-divider thin"></div>
+                <div class="cbp-srow total"><span>TỔNG</span><b id="sTotal">0</b></div>
+              </div>
+
+              <div class="cbp-actions">
+                <button class="btn-light" id="btnPrint" type="button" disabled>In bill</button>
+                <button class="btn-save" id="btnPay" type="button" disabled>Thanh toán</button>
+              </div>
+
+              <div class="cbp-help" id="payHint">
+                Chọn bàn hợp lệ để bật thao tác.
+              </div>
+            </div>
+
+            <div class="cbp-card cbp-card-mini">
+              <div class="cbp-mini-title">Ghi chú</div>
+              <textarea class="cbp-textarea" id="noteInput" placeholder="Ghi chú thanh toán (tuỳ chọn)..."></textarea>
+            </div>
+          </div>
+
+        </section>
+      </div>
+    </main>
+
+  </div>
+
+</body>
+</html>

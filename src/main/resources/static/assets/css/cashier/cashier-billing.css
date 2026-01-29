@@ -1,0 +1,282 @@
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0}
+
+.cbp{
+  width:min(1360px,calc(100% - 40px));
+  margin:0 auto;
+  padding:20px 0 70px;
+  font-family:var(--font-body,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial);
+  font-size:16px;
+  line-height:var(--line-height-base,1.5);
+  color:var(--text-strong,rgba(255,255,255,.92));
+  --fw-r:400;
+  --fw-m:500;
+  --fw-s:600;
+  --fw-b:700;
+  --r12:12px;
+  --r14:14px;
+  --r16:16px;
+  --r18:18px;
+  --r20:20px;
+  --glass:var(--glass,blur(10px));
+  --surfaceA:var(--surface-1,rgba(255,255,255,.06));
+  --surfaceB:var(--surface-2,rgba(255,255,255,.08));
+  --strokeA:var(--border-soft,rgba(255,255,255,.12));
+  --strokeB:var(--border-strong,rgba(255,255,255,.18));
+  --shadowA:var(--shadow-soft,0 14px 44px rgba(0,0,0,.30));
+}
+
+.cbp-wrap{width:100%}
+
+.cbp-top{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:18px
+}
+
+.cbp-eyebrow{
+  font-size:12px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--text-muted,rgba(255,255,255,.68));
+  margin:0 0 6px
+}
+
+.cbp-h1{
+  margin:0;
+  font-size:28px;
+  letter-spacing:-.02em;
+  line-height:1.15
+}
+
+.cbp-top-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap
+}
+
+.cbp-pill{
+  padding:10px 14px;
+  border-radius:var(--r14);
+  background:var(--surfaceA);
+  border:1px solid var(--strokeA);
+  backdrop-filter:var(--glass);
+  box-shadow:var(--shadowA);
+  display:flex;
+  gap:10px;
+  align-items:center
+}
+
+.cbp-pill-k{
+  font-size:12px;
+  color:var(--text-muted,rgba(255,255,255,.68));
+  letter-spacing:.04em
+}
+.cbp-pill-v{font-weight:var(--fw-b)}
+
+.cbp-iconbtn{
+  width:42px;
+  height:42px;
+  border-radius:var(--r14);
+  border:1px solid var(--strokeA);
+  background:var(--surfaceA);
+  color:inherit;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  backdrop-filter:var(--glass);
+  transition:transform .08s ease, background .18s ease, border-color .18s ease
+}
+.cbp-iconbtn:hover{background:var(--surfaceB);border-color:var(--strokeB)}
+.cbp-iconbtn:active{transform:translateY(1px)}
+.cbp-iconbtn .ic{font-size:18px;line-height:1;opacity:.9}
+
+.cbp-grid{
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:18px;
+  align-items:start
+}
+
+.cbp-card{
+  border-radius:var(--r20);
+  border:1px solid var(--strokeA);
+  background:var(--surfaceA);
+  box-shadow:var(--shadowA);
+  overflow:hidden;
+  backdrop-filter:var(--glass)
+}
+
+.cbp-card-head{
+  padding:16px 18px 14px;
+  border-bottom:1px solid var(--strokeA)
+}
+
+.cbp-head-row{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px
+}
+
+.cbp-meta{font-size:13px;color:var(--text-muted,rgba(255,255,255,.68));margin-top:2px}
+
+.cbp-badges{display:flex;gap:8px;flex-wrap:wrap}
+
+.cbp-badge{
+  padding:7px 10px;
+  border-radius:999px;
+  border:1px solid var(--strokeA);
+  background:rgba(255,255,255,.04);
+  color:inherit;
+  font-size:12px;
+  letter-spacing:.04em;
+  white-space:nowrap
+}
+
+/* receipt */
+.br{padding:18px}
+
+.br-top{text-align:center;padding:6px 0 10px}
+.br-brand{font-weight:900;letter-spacing:.14em}
+.br-sub{margin-top:4px;font-size:12px;color:var(--text-muted,rgba(255,255,255,.68));letter-spacing:.06em}
+
+.br-info{margin-top:12px;display:grid;gap:8px}
+
+.br-row{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+  font-size:14px
+}
+.br-row>span{color:var(--text-muted,rgba(255,255,255,.68))}
+.br-row>b{font-weight:var(--fw-b)}
+
+.br-hr{height:1px;background:var(--strokeA);margin:14px 0}
+.br-hr.thin{opacity:.7;margin:10px 0}
+
+.br-items{display:grid;gap:10px}
+
+.br-headrow{
+  display:grid;
+  grid-template-columns:1fr 64px 96px;
+  gap:10px;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--text-muted,rgba(255,255,255,.68))
+}
+.br-right{text-align:right}
+
+.br-lines{display:grid;gap:10px}
+.br-line{
+  display:grid;
+  grid-template-columns:1fr 64px 96px;
+  gap:10px;
+  align-items:start
+}
+.br-qty,.br-price{text-align:right;font-variant-numeric:tabular-nums}
+
+.br-sum{display:grid;gap:8px}
+.br-sum .total{font-size:16px}
+.br-sum .total b{font-size:18px;letter-spacing:-.01em}
+
+/* payment */
+.cbp-paygrid{
+  padding:14px 18px 6px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px
+}
+
+.cbp-payopt{
+  padding:12px 12px;
+  border-radius:var(--r14);
+  border:1px solid var(--strokeA);
+  background:rgba(255,255,255,.04);
+  color:inherit;
+  cursor:pointer;
+  font-weight:var(--fw-s);
+  font-size:14px;
+  transition:transform .08s ease, background .18s ease, border-color .18s ease
+}
+.cbp-payopt:hover{background:var(--surfaceB);border-color:var(--strokeB)}
+.cbp-payopt:active{transform:translateY(1px)}
+.cbp-payopt.is-active{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.22)}
+
+.cbp-divider{height:1px;background:var(--strokeA);margin:10px 18px}
+.cbp-divider.thin{opacity:.7}
+
+.cbp-summary{
+  padding:6px 18px 6px;
+  display:grid;
+  gap:10px
+}
+
+.cbp-srow{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+  font-size:14px
+}
+.cbp-srow span{color:var(--text-muted,rgba(255,255,255,.68))}
+.cbp-srow b{font-variant-numeric:tabular-nums}
+.cbp-srow.total{font-size:16px}
+.cbp-srow.total b{font-size:18px}
+
+.cbp-actions{
+  padding:12px 18px 16px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px
+}
+
+
+
+.cbp-help{
+  padding:0 18px 18px;
+  color:var(--text-muted,rgba(255,255,255,.68));
+  font-size:13px
+}
+
+/* note */
+.cbp-card-mini{margin-top:14px}
+
+.cbp-mini-title{
+  padding:14px 18px 10px;
+  font-weight:var(--fw-b);
+  letter-spacing:-.01em
+}
+
+.cbp-textarea{
+  width:calc(100% - 36px);
+  margin:0 18px 18px;
+  min-height:110px;
+  resize:vertical;
+  border-radius:var(--r16);
+  border:1px solid var(--strokeA);
+  background:rgba(255,255,255,.03);
+  color:inherit;
+  padding:12px;
+  outline:none
+}
+.cbp-textarea::placeholder{color:rgba(255,255,255,.45)}
+.cbp-textarea:focus{background:rgba(255,255,255,.04);border-color:var(--strokeB)}
+
+@media (max-width:1100px){
+  .cbp{width:min(1360px,calc(100% - 28px))}
+  .cbp-grid{grid-template-columns:1fr}
+}
+
+@media (max-width:560px){
+  .cbp-top{align-items:flex-start}
+  .cbp-paygrid{grid-template-columns:1fr}
+  .cbp-actions{grid-template-columns:1fr}
+  .br-headrow,.br-line{grid-template-columns:1fr 52px 92px}
+}

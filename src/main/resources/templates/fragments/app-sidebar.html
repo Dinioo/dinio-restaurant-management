@@ -47,7 +47,7 @@
         </a>
       </div>
 
-      <div class="app-side-group" sec:authorize="hasRole('CASHIER')">
+      <div class="app-side-group" sec:authorize="hasRole('CASHIER_MANAGER')">
         <div class="app-side-label">Thu ngân</div>
 
         <a class="app-side-item" href="/dinio/cashier/checkout">
@@ -89,7 +89,7 @@
     </nav>
 
     <div class="app-side-foot">
-      <form th:action="@{/logout}" method="post">
+      <form th:action="@{/staff/logout}" method="post">
         <button class="app-logout" type="submit">
           <i class="fa-solid fa-right-from-bracket"></i>
           <span>Đăng xuất</span>

@@ -1,3 +1,4 @@
+
 package ut.edu.dinio.controllers;
 
 import java.util.Map;
@@ -23,7 +24,7 @@ public class WaiterController {
   @Autowired
   private TableMapService tableMapService;
 
-  @GetMapping("/dashboard")
+  @GetMapping("/waiter/dashboard")
   public String waiterDashboard() {
     return "component/dashboard";
   }

@@ -1,0 +1,18 @@
+@media print{
+  body *{ visibility: hidden !important; }
+  #billReceipt, #billReceipt *{ visibility: visible !important; }
+  #billReceipt{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 80mm;
+    max-width: 80mm;
+    border: none !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    color: #000 !important;
+    padding: 10mm !important;
+  }
+  .br-hr{ background: #000 !important; opacity: .25; }
+  .br-note{ color:#000 !important; opacity:.7; }
+}

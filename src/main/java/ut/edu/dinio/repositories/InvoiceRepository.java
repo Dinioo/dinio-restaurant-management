@@ -2,6 +2,7 @@ package ut.edu.dinio.repositories;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +15,8 @@ import ut.edu.dinio.pojo.Invoice;
 public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
     @Query("SELECT i FROM Invoice i JOIN i.session s WHERE s.openedAt >= :startOfDay")
     List<Invoice> findAllInvoicesOfToday(@Param("startOfDay") LocalDateTime startOfDay);
+
+    Optional<Invoice> findTopBySessionIdOrderByIdDesc(Integer sessionId);
+
+    List<Invoice> findAllBySessionIdOrderByIdDesc(Integer sessionId);
 }

@@ -25,10 +25,16 @@
 
 <body>
 <div class="app-shell">
-    <div th:replace="~{fragments/app-sidebar :: appSidebar('waiter-table-map')}"></div>
+  <div th:replace="~{fragments/app-sidebar :: appSidebar('waiter-table-map')}"></div>
 
   <main class="app-main">
     <main class="container">
+
+      <section id="tablemap-head" class="section">
+        <div class="menu-container">
+          <div class="menu-head-card"></div>
+        </div>
+      </section>
 
       <section id="tablemap-tools" class="section">
         <div class="menu-container">
@@ -96,12 +102,159 @@
               </div>
 
               <div class="tm-areas" id="tmAreas">
-                <!-- giữ nguyên toàn bộ area/buttons của bạn ở đây -->
+
+                <section class="tm-area" data-area="floor1">
+                  <div class="tm-area-head">
+                    <h4>Tầng 1</h4>
+                    <span class="tm-area-sub">Bar • Sôi động</span>
+                  </div>
+
+                  <div class="tm-grid">
+                    <button class="tm-table" type="button"
+                            data-area="floor1" data-id="T01" data-code="T01" data-seats="2" data-status="AVAILABLE">
+                      <span class="t-code">T01</span><span class="t-meta">2 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+
+                    <button class="tm-table" type="button"
+                            data-area="floor1" data-id="T02" data-code="T02" data-seats="4" data-status="RESERVED"
+                            data-res-time="18:00" data-res-name="Robert Evans" data-res-phone="0909xxxxxx">
+                      <span class="t-code">T02</span><span class="t-meta">4 chỗ</span>
+                      <span class="t-badge" data-badge>18:00</span>
+                    </button>
+
+                    <button class="tm-table" type="button"
+                            data-area="floor1" data-id="T03" data-code="T03" data-seats="4" data-status="AVAILABLE">
+                      <span class="t-code">T03</span><span class="t-meta">4 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+
+                    <button class="tm-table" type="button"
+                            data-area="floor1" data-id="T04" data-code="T04" data-seats="4" data-status="OCCUPIED"
+                            data-seat-start="2026-01-18T18:10:00"
+                            data-guest-name="William Stanley" data-guest-phone="0908xxxxxx" data-party="4">
+                      <span class="t-code">T04</span><span class="t-meta">4 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+
+                    <button class="tm-table" type="button"
+                            data-area="floor1" data-id="T05" data-code="T05" data-seats="2" data-status="AVAILABLE">
+                      <span class="t-code">T05</span><span class="t-meta">2 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+
+                    <button class="tm-table" type="button"
+                            data-area="floor1" data-id="T06" data-code="T06" data-seats="2" data-status="CLEANING">
+                      <span class="t-code">T06</span><span class="t-meta">2 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+
+                    <button class="tm-table" type="button"
+                            data-area="floor1" data-id="T07" data-code="T07" data-seats="4" data-status="AVAILABLE">
+                      <span class="t-code">T07</span><span class="t-meta">4 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+
+                    <button class="tm-table" type="button"
+                            data-area="floor1" data-id="T08" data-code="T08" data-seats="6" data-status="AVAILABLE">
+                      <span class="t-code">T08</span><span class="t-meta">6 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+
+                    <button class="tm-table" type="button"
+                            data-area="floor1" data-id="T09" data-code="T09" data-seats="2" data-status="RESERVED"
+                            data-res-time="19:00" data-res-name="Terry Brown" data-res-phone="0907xxxxxx">
+                      <span class="t-code">T09</span><span class="t-meta">2 chỗ</span>
+                      <span class="t-badge" data-badge>19:00</span>
+                    </button>
+
+                    <button class="tm-table" type="button"
+                            data-area="floor1" data-id="T10" data-code="T10" data-seats="4" data-status="AVAILABLE">
+                      <span class="t-code">T10</span><span class="t-meta">4 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+
+                    <button class="tm-table" type="button"
+                            data-area="floor1" data-id="T11" data-code="T11" data-seats="2" data-status="AVAILABLE">
+                      <span class="t-code">T11</span><span class="t-meta">2 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+
+                    <button class="tm-table" type="button"
+                            data-area="floor1" data-id="T12" data-code="T12" data-seats="6" data-status="AVAILABLE">
+                      <span class="t-code">T12</span><span class="t-meta">6 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+                  </div>
+                </section>
+
+                <section class="tm-area" data-area="floor2">
+                  <div class="tm-area-head">
+                    <h4>Tầng 2</h4>
+                    <span class="tm-area-sub">Center • Cân bằng</span>
+                  </div>
+
+                  <div class="tm-grid">
+                    <button class="tm-table" type="button" data-area="floor2" data-id="F201" data-code="F201" data-seats="2" data-status="AVAILABLE">
+                      <span class="t-code">F201</span><span class="t-meta">2 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+
+                    <button class="tm-table" type="button" data-area="floor2" data-id="F202" data-code="F202" data-seats="4" data-status="AVAILABLE">
+                      <span class="t-code">F202</span><span class="t-meta">4 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+
+                    <button class="tm-table" type="button" data-area="floor2" data-id="F203" data-code="F203" data-seats="4" data-status="RESERVED"
+                            data-res-time="18:30" data-res-name="Dorothy Thomas" data-res-phone="0906xxxxxx">
+                      <span class="t-code">F203</span><span class="t-meta">4 chỗ</span>
+                      <span class="t-badge" data-badge>18:30</span>
+                    </button>
+
+                    <button class="tm-table" type="button" data-area="floor2" data-id="F204" data-code="F204" data-seats="6" data-status="AVAILABLE">
+                      <span class="t-code">F204</span><span class="t-meta">6 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+
+                    <button class="tm-table" type="button" data-area="floor2" data-id="F205" data-code="F205" data-seats="2" data-status="AVAILABLE">
+                      <span class="t-code">F205</span><span class="t-meta">2 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+
+                    <button class="tm-table" type="button" data-area="floor2" data-id="F206" data-code="F206" data-seats="8" data-status="AVAILABLE">
+                      <span class="t-code">F206</span><span class="t-meta">8 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+
+                    <button class="tm-table" type="button" data-area="floor2" data-id="F207" data-code="F207" data-seats="6" data-status="RESERVED"
+                            data-res-time="19:30" data-res-name="James Brewer" data-res-phone="0905xxxxxx">
+                      <span class="t-code">F207</span><span class="t-meta">6 chỗ</span>
+                      <span class="t-badge" data-badge>19:30</span>
+                    </button>
+
+                    <button class="tm-table" type="button" data-area="floor2" data-id="F208" data-code="F208" data-seats="4" data-status="AVAILABLE">
+                      <span class="t-code">F208</span><span class="t-meta">4 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+
+                    <button class="tm-table" type="button" data-area="floor2" data-id="F209" data-code="F209" data-seats="2" data-status="AVAILABLE">
+                      <span class="t-code">F209</span><span class="t-meta">2 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+
+                    <button class="tm-table" type="button" data-area="floor2" data-id="F210" data-code="F210" data-seats="4" data-status="AVAILABLE">
+                      <span class="t-code">F210</span><span class="t-meta">4 chỗ</span>
+                      <span class="t-badge" data-badge>—</span>
+                    </button>
+                  </div>
+                </section>
+
               </div>
             </div>
 
             <aside class="wtm-right" aria-label="Service panel">
               <div class="wtm-right-card">
+
                 <div class="wtm-right-head">
                   <div><p class="wtm-right-kicker">Now</p></div>
                   <button class="icon-btn" type="button" id="btnClearPick" title="Clear selection" aria-label="Clear">
@@ -129,6 +282,7 @@
                 </div>
 
                 <p class="wtm-hint">Tip: click bàn trên map hoặc click khách bên phải để focus nhanh.</p>
+
               </div>
             </aside>
 
@@ -139,6 +293,7 @@
     </main>
 
     <div th:replace="~{fragments/waiter-close-session-modal :: waiterCloseSessionModal}"></div>
+    <div th:replace="~{fragments/waiter-bill-modal :: waiterBillModal}"></div>
   </main>
 </div>
 </body>

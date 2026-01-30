@@ -1,0 +1,82 @@
+<div th:fragment="waiterBillModal"
+     class="fp-modal is-hidden"
+     id="wtBillModal"
+     aria-hidden="true">
+
+  <div class="fp-backdrop" data-close="1"></div>
+
+  <div class="fp-panel wt-bill-panel"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="wtBillTitle">
+
+    <!-- ===== HEADER ===== -->
+    <div class="fp-head">
+      <h3 class="fp-title" id="wtBillTitle">Hóa đơn</h3>
+      <button class="fp-x" type="button" data-close="1" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- ===== META ===== -->
+    <div class="wt-bill-meta">
+      <div class="wt-chip">
+        <small>Bàn</small><b id="wtBillTable">—</b>
+      </div>
+      <div class="wt-chip">
+        <small>Khu vực</small><b id="wtBillArea">—</b>
+      </div>
+      <div class="wt-chip">
+        <small>Chỗ ngồi</small><b id="wtBillSeats">—</b>
+      </div>
+      <div class="wt-chip">
+        <small>Session</small><b id="wtBillSession">—</b>
+      </div>
+      <div class="wt-chip">
+        <small>Giờ mở</small><b id="wtBillOpenedAt">—</b>
+      </div>
+    </div>
+
+    <!-- ===== SCROLL BODY ===== -->
+    <div class="wt-bill-scroll" id="wtBillScroll">
+
+      <div class="wt-bill-loading" id="wtBillLoading">
+        Đang tải hóa đơn...
+      </div>
+
+      <div class="wt-bill-empty" id="wtBillEmpty" style="display:none">
+        Chưa có dữ liệu hóa đơn.
+      </div>
+
+      <table class="wt-bill-table" id="wtBillTableLines" style="display:none">
+        <thead>
+          <tr>
+            <th>Món</th>
+            <th class="num">SL</th>
+            <th class="num">Giá</th>
+            <th class="num">T.tiền</th>
+          </tr>
+        </thead>
+        <tbody id="wtBillTbody"></tbody>
+      </table>
+
+    </div>
+
+    <!-- ===== SUMMARY ===== -->
+    <div class="wt-bill-sum" id="wtBillSum" style="display:none">
+      <div class="row"><span>Tạm tính</span><b id="wtBillSubtotal">0đ</b></div>
+      <div class="row"><span>Thuế</span><b id="wtBillTax">0đ</b></div>
+      <div class="row"><span>Phí dịch vụ</span><b id="wtBillSvc">0đ</b></div>
+      <div class="row"><span>Giảm giá</span><b id="wtBillDisc">0đ</b></div>
+      <div class="row total"><span>Tổng cộng</span><b id="wtBillTotal">0đ</b></div>
+    </div>
+
+    <!-- ===== ACTIONS ===== -->
+    <div class="wt-bill-actions">
+      <button type="button" class="btn-light" data-close="1">
+        Đóng
+      </button>
+    </div>
+
+  </div>
+</div>

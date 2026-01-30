@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>DINIO - Kết quả thanh toán VNPay</title>
+
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      .vnpay-result {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 20px;
+      }
+
+      .result-card {
+        background: white;
+        border-radius: 16px;
+        padding: 48px 40px;
+        max-width: 500px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        text-align: center;
+      }
+
+      .result-icon {
+        font-size: 80px;
+        margin-bottom: 24px;
+      }
+
+      .result-icon.success {
+        color: #10b981;
+      }
+
+      .result-icon.error {
+        color: #ef4444;
+      }
+
+      .result-icon.failed {
+        color: #f59e0b;
+      }
+
+      .result-title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #1f2937;
+      }
+
+      .result-message {
+        font-size: 16px;
+        color: #6b7280;
+        margin-bottom: 32px;
+        line-height: 1.6;
+      }
+
+      .result-details {
+        background: #f9fafb;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 32px;
+        text-align: left;
+      }
+
+      .result-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .result-row:last-child {
+        border-bottom: none;
+      }
+
+      .result-label {
+        font-weight: 600;
+        color: #4b5563;
+      }
+
+      .result-value {
+        font-weight: 700;
+        color: #1f2937;
+      }
+
+      .result-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+      }
+
+      .btn {
+        padding: 14px 32px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-primary {
+        background: #667eea;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #5568d3;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-secondary {
+        background: #e5e7eb;
+        color: #374151;
+      }
+
+      .btn-secondary:hover {
+        background: #d1d5db;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="vnpay-result">
+      <div class="result-card">
+        <div
+          class="result-icon"
+          th:classappend="${status == 'success'} ? 'success' : (${status == 'error'} ? 'error' : 'failed')"
+        >
+          <i
+            class="fa-solid"
+            th:classappend="${status == 'success'} ? 'fa-circle-check' : 'fa-circle-xmark'"
+          ></i>
+        </div>
+
+        <h1
+          class="result-title"
+          th:text="${status == 'success'} ? 'Thanh toán thành công!' : 'Thanh toán thất bại'"
+        >
+          Thanh toán
+        </h1>
+
+        <p class="result-message" th:text="${message}">Thông báo</p>
+
+        <div class="result-details" th:if="${txnRef != null}">
+          <div class="result-row" th:if="${tableId != null}">
+            <span class="result-label">Bàn:</span>
+            <span class="result-value" th:text="${tableId}">—</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Mã giao dịch:</span>
+            <span class="result-value" th:text="${txnRef}">—</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Số tiền:</span>
+            <span
+              class="result-value"
+              th:text="${#numbers.formatDecimal(amount, 0, 'COMMA', 0, 'POINT')} + 'đ'"
+              >—</span
+            >
+          </div>
+        </div>
+
+        <div class="result-actions">
+          <a href="/dinio/cashier/tables" class="btn btn-primary">
+            <i class="fa-solid fa-table-cells-large"></i> Về trang bàn
+          </a>
+          <a href="/dinio/cashier/bills" class="btn btn-secondary">
+            <i class="fa-solid fa-file-invoice"></i> Xem hóa đơn
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

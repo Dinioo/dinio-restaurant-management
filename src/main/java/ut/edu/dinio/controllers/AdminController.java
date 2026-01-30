@@ -2,6 +2,7 @@ package ut.edu.dinio.controllers;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,12 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.servlet.http.HttpSession;
 import ut.edu.dinio.pojo.Role;
 import ut.edu.dinio.pojo.StaffUser;
 import ut.edu.dinio.pojo.enums.UserStatus;
 import ut.edu.dinio.repositories.AuditLogRepository;
 import ut.edu.dinio.repositories.RoleRepository;
 import ut.edu.dinio.repositories.StaffUserRepository;
+import ut.edu.dinio.service.StaffUserService;
 
 @Controller
 @RequestMapping("/admin")
@@ -27,6 +30,8 @@ public class AdminController {
     private final StaffUserRepository staffUserRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private StaffUserService staffService;
 
     public AdminController(
             AuditLogRepository auditLogRepository,
@@ -59,31 +64,28 @@ public class AdminController {
             @RequestParam String name,
             @RequestParam String username,
             @RequestParam String password,
-            @RequestParam Integer roleId) {
-        StaffUser s = new StaffUser();
-        s.setName(name);
-        s.setUsername(username);
-        s.setPasswordHash(passwordEncoder.encode(password));
-
-        Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new RuntimeException("Role not found"));
-        s.setRole(role);
-
-        staffUserRepository.save(s);
+            @RequestParam Integer roleId,
+            HttpSession session) {
+        StaffUser actor = (StaffUser) session.getAttribute("currentStaff");
+        staffService.createStaff(name, username, password, roleId, actor);
         return "redirect:/admin/staff";
     }
 
     @PostMapping("/staff/delete")
-    public String deleteStaff(@RequestParam Integer id) {
-        staffUserRepository.deleteById(id);
+    public String deleteStaff(@RequestParam Integer id, HttpSession session) {
+        StaffUser actor = (StaffUser) session.getAttribute("currentStaff");
+        staffService.deleteStaff(id, actor);
         return "redirect:/admin/staff";
     }
 
     @PostMapping("/staff/update-username")
     @ResponseBody
-    public Map<String, Object> updateUsername(@RequestBody Map<String, Object> body) {
+    public Map<String, Object> updateUsername(@RequestBody Map<String, Object> body, HttpSession session) {
+
         Integer id = body.get("id") == null ? null : Integer.valueOf(body.get("id").toString());
         String username = body.get("username") == null ? "" : body.get("username").toString().trim();
+        StaffUser actor = (StaffUser) session.getAttribute("currentStaff");
+        staffService.updateUsername(id, username, actor);
 
         if (id == null)
             return Map.of("status", "error", "message", "Thiếu id");
@@ -102,9 +104,11 @@ public class AdminController {
 
     @PostMapping("/staff/update-password")
     @ResponseBody
-    public Map<String, Object> updatePassword(@RequestBody Map<String, Object> body) {
+    public Map<String, Object> updatePassword(@RequestBody Map<String, Object> body, HttpSession session) {
         Integer id = body.get("id") == null ? null : Integer.valueOf(body.get("id").toString());
         String password = body.get("password") == null ? "" : body.get("password").toString();
+        StaffUser actor = (StaffUser) session.getAttribute("currentStaff");
+        staffService.updatePassword(id, password, actor);
 
         if (id == null || password.isBlank()) {
             return Map.of("status", "error", "message", "Thiếu dữ liệu");
@@ -123,9 +127,11 @@ public class AdminController {
 
     @PostMapping("/staff/update-name")
     @ResponseBody
-    public Map<String, Object> updateName(@RequestBody Map<String, Object> body) {
+    public Map<String, Object> updateName(@RequestBody Map<String, Object> body, HttpSession session) {
         Integer id = body.get("id") == null ? null : Integer.valueOf(body.get("id").toString());
         String name = body.get("name") == null ? "" : body.get("name").toString().trim();
+        StaffUser actor = (StaffUser) session.getAttribute("currentStaff");
+        staffService.updateName(id, name, actor);
 
         if (id == null)
             return Map.of("status", "error", "message", "Thiếu id");
@@ -143,7 +149,7 @@ public class AdminController {
 
     @PostMapping("/staff/update-status")
     @ResponseBody
-    public Map<String, Object> updateStatus(@RequestBody Map<String, Object> body) {
+    public Map<String, Object> updateStatus(@RequestBody Map<String, Object> body, HttpSession session) {
         Integer id = body.get("id") == null ? null : Integer.valueOf(body.get("id").toString());
         String st = body.get("status") == null ? "" : body.get("status").toString().trim();
 
@@ -158,8 +164,8 @@ public class AdminController {
 
         try {
             UserStatus status = UserStatus.valueOf(st);
-            s.setStatus(status);
-            staffUserRepository.save(s);
+            StaffUser actor = (StaffUser) session.getAttribute("currentStaff");
+            staffService.updateStatus(id, status, actor);
             return Map.of("status", "success");
         } catch (Exception e) {
             return Map.of("status", "error", "message", "Status không hợp lệ");

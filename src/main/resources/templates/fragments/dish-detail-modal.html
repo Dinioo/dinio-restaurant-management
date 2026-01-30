@@ -14,23 +14,61 @@
     </div>
 
     <div class="dish-modal-body">
+      <!-- MEDIA -->
       <div class="dish-modal-media" id="dishModalMedia">
         <img id="dishModalImg" alt="Dish image" />
-        <span class="dish-modal-badge" id="dishModalBadge">Hot</span>
+        <span class="dish-modal-badge" id="dishModalBadge"></span>
       </div>
 
+      <!-- INFO -->
       <div class="dish-modal-info" id="dishModalInfo">
+
+        <!-- name / desc -->
         <h4 class="dish-modal-name" id="dishModalName">Tên món</h4>
         <p class="dish-modal-desc" id="dishModalDesc">Mô tả</p>
 
-        <div class="dish-modal-foot">
-          <span class="dish-modal-price" id="dishModalPrice">0đ</span>
+        <!-- meta row: price / calories / spice -->
+        <div class="dish-modal-meta">
+          <div class="dish-modal-meta-item">
+            <div class="dish-modal-meta-k">Giá</div>
+            <div class="dish-modal-meta-v dish-modal-price" id="dishModalPrice">0đ</div>
+          </div>
+
+          <div class="dish-modal-meta-item">
+            <div class="dish-modal-meta-k">Calories</div>
+            <div class="dish-modal-meta-v" id="dishModalCalories">—</div>
+          </div>
+
+          <div class="dish-modal-meta-item">
+            <div class="dish-modal-meta-k">Độ cay</div>
+            <div class="dish-modal-meta-v" id="dishModalSpice">—</div>
+          </div>
+        </div>
+
+        <!-- tags -->
+        <div class="dish-modal-block" id="dishModalTagsBlock">
+          <div class="dish-modal-block-title">Tags</div>
+          <div class="dish-modal-chips" id="dishModalTags">
+          </div>
+        </div>
+
+        <!-- allergens -->
+        <div class="dish-modal-block" id="dishModalAllergensBlock">
+          <div class="dish-modal-block-title">Dị ứng</div>
+          <div class="dish-modal-chips dish-modal-chips--warn" id="dishModalAllergens">
+          </div>
+        </div>
+
+        <!-- ingredients -->
+        <div class="dish-modal-block" id="dishModalIngredientsBlock">
+          <div class="dish-modal-block-title">Thành phần</div>
+          <p class="dish-modal-text" id="dishModalIngredients">—</p>
         </div>
 
         <div class="dish-modal-actions">
           <button type="button" class="btn-cancel" data-close="1">Thoát</button>
-          <button type="button" class="btn-order" id="dishOrderNowBtn">Đặt ngay</button>
         </div>
+
       </div>
     </div>
   </div>

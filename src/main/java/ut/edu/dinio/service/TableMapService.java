@@ -3,12 +3,10 @@ package ut.edu.dinio.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +18,6 @@ import ut.edu.dinio.pojo.DiningTable;
 import ut.edu.dinio.pojo.Reservation;
 import ut.edu.dinio.pojo.StaffUser;
 import ut.edu.dinio.pojo.TableSession;
-import ut.edu.dinio.pojo.enums.ReservationStatus;
 import ut.edu.dinio.pojo.enums.SessionStatus;
 import ut.edu.dinio.pojo.enums.TableStatus;
 import ut.edu.dinio.repositories.AreaRepository;
@@ -42,6 +39,9 @@ public class TableMapService {
 
     @Autowired
     private TableSessionRepository sessionRepository;
+
+        @Autowired
+    private AuditLogService auditLogService;
 
     public List<Map<String, Object>> getAllAreas() {
         List<Area> areas = areaRepository.findAllByOrderByIdAsc();
@@ -131,11 +131,15 @@ public class TableMapService {
         DiningTable table = tableRepository.findById(tableId).orElse(null);
         if (table == null)
             return;
+                TableStatus oldStatus = table.getStatus();
         table.setStatus(newStatus);
+
+        Integer openedSessionId = null;
         if (newStatus == TableStatus.IN_SERVICE) {
             if (sessionRepository.findByTableIdAndStatus(tableId, SessionStatus.OPEN).isEmpty()) {
                 TableSession session = new TableSession(table, table.getSeats(), staff);
-                sessionRepository.save(session);
+                session = sessionRepository.save(session);
+                openedSessionId = session.getId();
             }
         }
         if (newStatus == TableStatus.CLEANING) {
@@ -146,15 +150,60 @@ public class TableMapService {
             });
         }
         tableRepository.save(table);
+                auditLogService.log(
+            staff,
+            "TABLE_STATUS_CHANGE",
+            "DiningTable",
+            tableId,
+            Map.of(
+                "from", oldStatus != null ? oldStatus.name() : null,
+                "to", newStatus != null ? newStatus.name() : null,
+                "openedSessionId", openedSessionId
+            )
+        );
+
+        if (openedSessionId != null) {
+            auditLogService.log(
+                staff,
+                "OPEN_SESSION",
+                "TableSession",
+                openedSessionId,
+                Map.of(
+                    "tableId", tableId,
+                    "covers", table.getSeats()
+                )
+            );
+        }
     }
 
     @Transactional
-    public void closeSession(Integer tableId) {
+    public void closeSession(Integer tableId, StaffUser staff) {
+        Integer closedSessionId = null;
+
         sessionRepository.findByTableIdAndStatus(tableId, SessionStatus.OPEN).ifPresent(s -> {
             s.setStatus(SessionStatus.CLOSED);
             s.setClosedAt(LocalDateTime.now());
+            sessionRepository.save(s);
         });
-        tableRepository.findById(tableId).ifPresent(t -> t.setStatus(TableStatus.CLEANING));
+
+        closedSessionId = sessionRepository.findByTableIdAndStatus(tableId, SessionStatus.CLOSED)
+            .stream()
+            .findFirst()
+            .map(TableSession::getId)
+            .orElse(null);
+
+        tableRepository.findById(tableId).ifPresent(t -> {
+            t.setStatus(TableStatus.CLEANING);
+            tableRepository.save(t);
+        });
+
+        auditLogService.log(
+            staff,
+            "CLOSE_SESSION",
+            "DiningTable",
+            tableId,
+            Map.of("closedSessionId", closedSessionId)
+        );
     }
 
     public DiningTable getTableById(Integer id) {

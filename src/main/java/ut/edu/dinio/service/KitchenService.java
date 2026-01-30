@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ut.edu.dinio.pojo.OrderItem;
+import ut.edu.dinio.pojo.StaffUser;
 import ut.edu.dinio.pojo.enums.OrderItemStatus;
 import ut.edu.dinio.repositories.OrderItemRepository;
 
@@ -20,14 +21,16 @@ public class KitchenService {
     @Autowired
     private OrderItemRepository orderItemRepo;
 
+    @Autowired
+    private AuditLogService auditLogService;
+
     public List<Map<String, Object>> getKitchenOrders() {
         List<OrderItemStatus> activeStatuses = Arrays.asList(
-            OrderItemStatus.QUEUED, 
-            OrderItemStatus.PREPARING, 
-            OrderItemStatus.READY,
-            OrderItemStatus.SERVED,
-            OrderItemStatus.CANCELLED
-        );
+                OrderItemStatus.QUEUED,
+                OrderItemStatus.PREPARING,
+                OrderItemStatus.READY,
+                OrderItemStatus.SERVED,
+                OrderItemStatus.CANCELLED);
         List<OrderItem> items = orderItemRepo.findKitchenItems(activeStatuses);
 
         List<Map<String, Object>> result = new ArrayList<>();
@@ -38,7 +41,7 @@ public class KitchenService {
             map.put("qty", oi.getQty());
             map.put("note", oi.getNote());
             map.put("status", oi.getStatus().name());
-            map.put("createdAt", oi.getOrder().getCreatedAt()); 
+            map.put("createdAt", oi.getOrder().getCreatedAt());
             map.put("tableCode", oi.getOrder().getSession().getTable().getCode());
             map.put("categoryName", oi.getMenuItem().getCategory().getName());
             result.add(map);
@@ -47,23 +50,39 @@ public class KitchenService {
     }
 
     @Transactional
-    public Map<String, Object> updateNextStatus(Integer orderItemId) {
+    public Map<String, Object> updateNextStatus(Integer orderItemId, StaffUser staff) {
         OrderItem item = orderItemRepo.findById(orderItemId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy món ăn"));
-        
+
         OrderItemStatus current = item.getStatus();
         OrderItemStatus next;
 
         switch (current) {
-            case QUEUED: next = OrderItemStatus.PREPARING; break;
-            case PREPARING: next = OrderItemStatus.READY; break;
-            case READY: next = OrderItemStatus.SERVED; break;
-            case CANCELLED:next = OrderItemStatus.CANCELLED;break;
-            default: next = current;
+            case QUEUED:
+                next = OrderItemStatus.PREPARING;
+                break;
+            case PREPARING:
+                next = OrderItemStatus.READY;
+                break;
+            case READY:
+                next = OrderItemStatus.SERVED;
+                break;
+            case CANCELLED:
+                next = OrderItemStatus.CANCELLED;
+                break;
+            default:
+                next = current;
         }
 
         item.setStatus(next);
         orderItemRepo.save(item);
+
+        auditLogService.log(
+                staff,
+                "UPDATE_ORDER_ITEM_STATUS",
+                "OrderItem",
+                item.getId(),
+                Map.of("from", current.name(), "to", next.name()));
 
         Map<String, Object> res = new HashMap<>();
         res.put("id", item.getId());

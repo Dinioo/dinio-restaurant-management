@@ -9,6 +9,203 @@
     return num.toLocaleString("vi-VN") + "đ";
   };
 
+  const getImageUrl = (item) => {
+    const raw =
+      item?.imageUrl ??
+      item?.image ??
+      item?.image_url ??
+      item?.thumbnailUrl ??
+      item?.thumbUrl ??
+      item?.photoUrl ??
+      null;
+
+    if (!raw) return "/assets/pic/preview.jpeg";
+
+    const val = typeof raw === "string" ? raw : (raw.url || raw.path || "");
+    if (!val) return "/assets/pic/preview.jpeg";
+
+    if (/^https?:\/\//i.test(val)) return val;
+    if (val.startsWith("/")) return val;
+    return "/" + val.replace(/^\.\//, "");
+  };
+
+
+  // ===== Dish detail modal (MenuItem) =====
+  const escapeAttr = (s) => (s == null ? "" : String(s))
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+
+  const parseList = (v) => {
+    if (!v) return [];
+    if (Array.isArray(v)) return v.map(x => String(x).trim()).filter(Boolean);
+    const s = String(v).trim();
+    if (!s) return [];
+    if (s.startsWith("[") && s.endsWith("]")) {
+      try {
+        const arr = JSON.parse(s);
+        if (Array.isArray(arr)) return arr.map(x => String(x).trim()).filter(Boolean);
+      } catch (_) {}
+    }
+    return s.split(",").map(x => x.trim()).filter(Boolean);
+  };
+
+  const labelSpice = (key) => {
+    const k = norm(key);
+    if (k === "not_spicy") return "Không cay";
+    if (k === "mild") return "Cay nhẹ";
+    if (k === "medium") return "Cay vừa";
+    if (k === "hot") return "Cay nhiều";
+    return key ? String(key) : "—";
+  };
+
+  const labelItemTag = (key) => {
+    const k = norm(key);
+    if (k === "best") return "Bán chạy";
+    if (k === "new") return "Mới";
+    if (k === "signature") return "Signature";
+    if (k === "premium") return "Cao cấp";
+    return key ? String(key) : "";
+  };
+
+  const labelAllergen = (key) => {
+    const k = norm(key);
+    if (k === "peanuts") return "Đậu phộng";
+    if (k === "tree_nuts") return "Hạt cây";
+    if (k === "milk") return "Sữa";
+    if (k === "eggs") return "Trứng";
+    if (k === "wheat_gluten") return "Gluten/Lúa mì";
+    if (k === "soy") return "Đậu nành";
+    if (k === "fish") return "Cá";
+    if (k === "shellfish") return "Hải sản có vỏ";
+    return key ? String(key) : "";
+  };
+
+  const normalizeImageUrl = (url) => {
+    const s = (url || "").toString().trim();
+    if (!s) return "";
+    if (/^https?:\/\//i.test(s)) return s;
+    if (s.startsWith("/")) return s;
+    return "/" + s.replace(/^\.\//, "");
+  };
+
+  const renderChips = (wrap, keys, labelFn) => {
+    if (!wrap) return;
+    wrap.innerHTML = "";
+    keys.forEach((k) => {
+      const chip = document.createElement("span");
+      chip.className = "dish-chip";
+      chip.textContent = labelFn(k) || k;
+      wrap.appendChild(chip);
+    });
+  };
+
+  const hideDishModal = () => {
+    const modal = document.getElementById("dishModal");
+    if (!modal) return;
+    modal.classList.add("is-hidden");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("no-scroll");
+  };
+
+  const showDishModal = (dish) => {
+    const modal = document.getElementById("dishModal");
+    if (!modal) return;
+
+    const img = modal.querySelector("#dishModalImg");
+    const badge = modal.querySelector("#dishModalBadge");
+    const nameEl = modal.querySelector("#dishModalName");
+    const descEl = modal.querySelector("#dishModalDesc");
+    const priceEl = modal.querySelector("#dishModalPrice");
+
+    const calEl = modal.querySelector("#dishModalCalories");
+    const spiceEl = modal.querySelector("#dishModalSpice");
+    const ingEl = modal.querySelector("#dishModalIngredients");
+
+    const tagsBlock = modal.querySelector("#dishModalTagsBlock");
+    const tagsWrap = modal.querySelector("#dishModalTags");
+    const alBlock = modal.querySelector("#dishModalAllergensBlock");
+    const alWrap = modal.querySelector("#dishModalAllergens");
+    const ingBlock = modal.querySelector("#dishModalIngredientsBlock");
+
+    // Core
+    if (img) {
+      img.src = normalizeImageUrl(dish.imageUrl) || "/assets/pic/preview.jpeg";
+      img.alt = dish.name || "Dish image";
+    }
+    if (nameEl) nameEl.textContent = dish.name || "—";
+    if (descEl) descEl.textContent = dish.description || "Chưa có mô tả";
+    if (priceEl) priceEl.textContent = formatVND(dish.price);
+
+    // Extra fields (exclude id/category/isActive/isAvailable)
+    if (calEl) calEl.textContent = (dish.calories != null && dish.calories !== "") ? `${dish.calories} kcal` : "—";
+    if (spiceEl) spiceEl.textContent = dish.spiceLevel ? labelSpice(dish.spiceLevel) : "—";
+
+    if (badge) {
+      const k = norm(dish.spiceLevel);
+      badge.textContent = (dish.spiceLevel && k && k !== "not_spicy") ? labelSpice(dish.spiceLevel) : "";
+    }
+
+    const ingText = (dish.ingredients || "").toString().trim();
+    if (ingEl) ingEl.textContent = ingText || "—";
+    if (ingBlock) ingBlock.style.display = ingText ? "" : "none";
+
+    const tags = parseList(dish.tags);
+    if (tagsWrap) renderChips(tagsWrap, tags, labelItemTag);
+    if (tagsBlock) tagsBlock.style.display = tags.length ? "" : "none";
+
+    const allergens = parseList(dish.allergens);
+    if (alWrap) renderChips(alWrap, allergens, labelAllergen);
+    if (alBlock) alBlock.style.display = allergens.length ? "" : "none";
+
+    modal.classList.remove("is-hidden");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("no-scroll");
+  };
+
+  const ensureDishModalBindings = () => {
+    if (window.__dishModalBound) return;
+    window.__dishModalBound = true;
+
+    // Close: backdrop / X / buttons
+    document.addEventListener("click", (e) => {
+      const closeEl = e.target.closest("[data-close]");
+      if (closeEl) {
+        const modal = closeEl.closest(".fp-modal");
+        if (modal && modal.id === "dishModal") hideDishModal();
+        return;
+      }
+
+      // Open detail
+      const btn = e.target.closest("[data-action='detail'], .js-dish-detail");
+      if (!btn) return;
+
+      // Prefer dataset on the button; fallback to closest card
+      const host = (btn.dataset && (btn.dataset.name || btn.dataset.priceRaw)) ? btn : (btn.closest(".dish-card") || btn);
+
+      const dish = {
+        name: host.dataset.name || host.dataset.title || "",
+        description: host.dataset.desc || "",
+        price: host.dataset.priceRaw || host.dataset.price || "",
+        imageUrl: host.dataset.image || host.dataset.img || "",
+        calories: host.dataset.calories || "",
+        ingredients: host.dataset.ingredients || "",
+        spiceLevel: host.dataset.spice || host.dataset.spiceLevel || "",
+        tags: host.dataset.tags || "",
+        allergens: host.dataset.allergens || "",
+      };
+
+      showDishModal(dish);
+    });
+
+    // ESC close
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") hideDishModal();
+    });
+  };
+
+
   const buildDishWrap = (item) => {
     const wrap = document.createElement("div");
     wrap.className = "dish-wrap";
@@ -25,17 +222,45 @@
     wrap.dataset.new = item.isNew ? "1" : "0";
 
     wrap.innerHTML = `
-      <article class="dish-card">
-        <div class="dish-hero">
-          <img class="dish-img" src="${item.imageUrl || "/assets/pic/preview.jpeg"}" alt="${item.name || "Dish"}"/>
-          ${item.isNew ? `<span class="dish-badge">New</span>` : ""}
+      <article class="dish-card"
+               data-title="${item.name || "—"}"
+               data-desc="${(item.description || "").replaceAll('"', "&quot;")}"
+               data-price="${formatVND(item.price)}"
+               data-price-raw="${escapeAttr(item.price ?? 0)}"
+               data-img="${getImageUrl(item)}"
+               data-ingredients="${escapeAttr(item.ingredients ?? "")}"
+               data-calories="${escapeAttr(item.calories ?? "")}"
+               data-spice="${escapeAttr(item.spiceLevel ?? "")}"
+               data-tags="${escapeAttr((item.tags || []).join(","))}"
+               data-allergens="${escapeAttr((item.allergens || []).join(","))}"
+               data-badge="${item.isNew ? "New" : ""}">
+        <div class="dish-media">
+          <img src="${getImageUrl(item)}" alt="${item.name || "Dish"}" loading="lazy"/>
+          <span class="dish-badge">${item.isNew ? "New" : ""}</span>
         </div>
+
         <div class="dish-body">
-          <div class="dish-top">
-            <h4 class="dish-name">${item.name || "—"}</h4>
-            <div class="dish-price">${formatVND(item.price)}</div>
-          </div>
+          <h4 class="dish-title">${item.name || "—"}</h4>
           <p class="dish-desc">${item.description || ""}</p>
+
+          <div class="dish-foot">
+            <span class="dish-price">${formatVND(item.price)}</span>
+            <button type="button"
+                    class="btn btn-order js-dish-detail"
+                    data-action="detail"
+                    data-id="${item.id ?? ""}"
+                    data-name="${escapeAttr(item.name || "")}"
+                    data-desc="${escapeAttr(item.description || "")}"
+                    data-price-raw="${escapeAttr(item.price ?? 0)}"
+                    data-image="${escapeAttr(getImageUrl(item))}"
+                    data-calories="${escapeAttr(item.calories ?? "")}"
+                    data-ingredients="${escapeAttr(item.ingredients ?? "")}"
+                    data-spice="${escapeAttr(item.spiceLevel ?? "")}"
+                    data-tags="${escapeAttr((item.tags || []).join(","))}"
+                    data-allergens="${escapeAttr((item.allergens || []).join(","))}">
+              Chi tiết
+            </button>
+          </div>
         </div>
       </article>
     `;
@@ -87,6 +312,9 @@
     const countEl = $(".menu-count b");
 
     if (!catTabs || !tagChips || !sectionsWrap) return;
+
+    // modal bindings (open/close)
+    ensureDishModalBindings();
 
     const params = new URLSearchParams(location.search);
     const state = {

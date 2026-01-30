@@ -1,299 +1,273 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>DINIO - Add Dish</title>
 
-  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
-  <link rel="stylesheet" th:href="@{/assets/css/admin/menu-newdish.css}" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <script th:src="@{/assets/js/header-dropdown.js}"></script>
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}"/>
+  <link rel="stylesheet" th:href="@{/assets/css/admin/menu-newdish.css}"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
+  <script th:src="@{/assets/js/sidebar.js}" defer></script>
+  <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
 </head>
 
 <body>
-  <div th:replace="~{fragments/header :: header}"></div>
+<div class="app-shell">
+  <div th:replace="~{fragments/admin-sidebar :: adminSidebar('admin_menu_newdish')}"></div>
 
-  <main>
-
-    <!-- HEAD -->
-    <section id="adddish-head" class="section">
-      <div class="menu-container">
-        <div class="menu-head-card">
-          <p class="section-eyebrow">ADD DISH</p>
-          <h2 class="section-title">Thêm món ăn</h2>
-          <p class="section-subtitle">
-            Nhập đầy đủ thông tin món ăn bao gồm tên gọi, mô tả, danh mục, giá bán, nguyên liệu chính và các cảnh báo dị ứng nhằm đảm bảo trải nghiệm minh bạch, an toàn và nhất quán cho khách hàng
-          </p>
+  <main class="app-main">
+    <div class="adddish-page">
+      <section id="adddish-head" class="section">
+        <div class="menu-container">
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- LAYOUT -->
-    <section id="adddish-layout" class="section">
-      <div class="menu-container">
-
-        <div class="adddish-shell">
-
-          <!-- PREVIEW (LEFT) -->
-          <aside class="adddish-preview" aria-label="Dish preview">
-            <div class="preview-card">
-
-              <div class="preview-actions">
-                <button class="icon-btn" type="button" id="btnPreviewPopup" aria-label="Open preview popup" title="Xem preview lớn">
-                  <i class="fa-regular fa-eye"></i>
-                </button>
-                <button class="icon-btn" type="button" id="btnResetForm" aria-label="Reset form" title="Reset form">
-                  <i class="fa-solid fa-rotate-left"></i>
-                </button>
-                <button class="icon-btn" type="button" id="btnCopySummary" aria-label="Copy dish summary" title="Copy tóm tắt">
-                  <i class="fa-regular fa-copy"></i>
-                </button>
-              </div>
-
-              <div class="preview-hero">
-                <img id="pvImage" src="/assets/pic/preview.jpeg" alt="Dish preview" />
-                <span id="pvBadge" class="preview-badge is-hidden">New</span>
-              </div>
-
-              <div class="preview-body">
-                <div class="preview-top">
-                  <div>
-                    <h3 id="pvName" class="preview-name">Tên món…</h3>
-                    <p id="pvDesc" class="preview-desc">Mô tả ngắn sẽ hiển thị ở đây…</p>
-                  </div>
-                  <div class="preview-price" id="pvPrice">0đ</div>
+      <section id="adddish-layout" class="section">
+        <div class="menu-container">
+          <div class="adddish-shell">
+            <aside class="adddish-preview" aria-label="Dish preview">
+              <div class="preview-card">
+                <div class="preview-actions">
+                  <button class="icon-btn" type="button" id="btnPreviewPopup" aria-label="Open preview popup" title="Xem preview lớn">
+                    <i class="fa-regular fa-eye"></i>
+                  </button>
+                  <button class="icon-btn" type="button" id="btnResetForm" aria-label="Reset form" title="Reset form">
+                    <i class="fa-solid fa-rotate-left"></i>
+                  </button>
+                  <button class="icon-btn" type="button" id="btnCopySummary" aria-label="Copy dish summary" title="Copy tóm tắt">
+                    <i class="fa-regular fa-copy"></i>
+                  </button>
                 </div>
 
-                <div class="preview-meta">
-                  <span class="pill" id="pvCategory">danh mục</span>
-                  <span class="pill is-muted" id="pvImagePath">preview.jpeg</span>
+                <div class="preview-hero">
+                  <img id="pvImage" src="/assets/pic/preview.jpeg" alt="Dish preview"/>
+                  <span id="pvBadge" class="preview-badge is-hidden">New</span>
                 </div>
 
-                <div class="preview-tags" id="pvTags"></div>
-                <div class="preview-split"></div>
-
-                <div class="preview-cols">
-                  <div class="pv-col">
-                    <p class="pv-title">Nguyên liệu chính</p>
-                    <ul id="pvIngredients" class="pv-list">
-                      <li class="is-muted">Chưa có nguyên liệu</li>
-                    </ul>
-                  </div>
-                  <div class="pv-col">
-                    <p class="pv-title">Cảnh báo dị ứng</p>
-                    <ul id="pvAllergens" class="pv-list">
-                      <li class="is-muted">Chưa có cảnh báo</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div class="preview-note">
-                  <i class="fa-solid fa-circle-info"></i>
-                  <span>Preview cập nhật theo dữ liệu bạn nhập.</span>
-                </div>
-              </div>
-
-            </div>
-
-            <div class="preview-panel">
-              <div class="panel-card">
-                <p class="panel-title">Quick summary</p>
-                <ul class="panel-list">
-                  <li><span>Name</span><b id="pvSumName">—</b></li>
-                  <li><span>Category</span><b id="pvSumCategory">—</b></li>
-                  <li><span>Price</span><b id="pvSumPrice">—</b></li>
-                  <li><span>Status</span><b id="pvSumStatus">—</b></li>
-                </ul>
-              </div>
-
-              <div class="panel-card">
-                <p class="panel-title">Checklist</p>
-                <ul class="checklist" id="pvChecklist">
-                  <li data-key="name"><i class="fa-regular fa-circle"></i><span>Tên món</span></li>
-                  <li data-key="price"><i class="fa-regular fa-circle"></i><span>Giá</span></li>
-                  <li data-key="category"><i class="fa-regular fa-circle"></i><span>Danh mục</span></li>
-                  <li data-key="ingredients"><i class="fa-regular fa-circle"></i><span>Nguyên liệu</span></li>
-                  <li data-key="image"><i class="fa-regular fa-circle"></i><span>Ảnh</span></li>
-                </ul>
-              </div>
-            </div>
-          </aside>
-
-          <!-- FORM (RIGHT) -->
-          <div class="adddish-form">
-            <form id="dishForm"
-                  th:action="@{/menu-items/newdish}"
-                  method="post"
-                  class="dish-form"
-                  enctype="multipart/form-data">
-
-              <div class="form-stack">
-
-                <!-- BASIC CARD -->
-                <div class="form-card">
-                  <section id="sec-basic" class="form-section">
-                    <div class="form-section-head">
-                      <h3>Thông tin cơ bản</h3>
-                      <p>Tên món, mô tả, danh mục, giá.</p>
+                <div class="preview-body">
+                  <div class="preview-top">
+                    <div>
+                      <h3 id="pvName" class="preview-name">Tên món…</h3>
+                      <p id="pvDesc" class="preview-desc">Mô tả ngắn sẽ hiển thị ở đây…</p>
                     </div>
+                    <div class="preview-price" id="pvPrice">0đ</div>
+                  </div>
 
-                    <div class="field">
-                      <label for="name">Tên món ăn *</label>
-                      <input id="name" name="name" type="text" placeholder="VD: Cá hồi áp chảo" required />
+                  <div class="preview-meta">
+                    <span class="pill" id="pvCategory">danh mục</span>
+                    <span class="pill is-muted" id="pvImagePath">preview.jpeg</span>
+                  </div>
+
+                  <div class="preview-tags" id="pvTags"></div>
+                  <div class="preview-split"></div>
+
+                  <div class="preview-cols">
+                    <div class="pv-col">
+                      <p class="pv-title">Nguyên liệu chính</p>
+                      <ul id="pvIngredients" class="pv-list">
+                        <li class="is-muted">Chưa có nguyên liệu</li>
+                      </ul>
                     </div>
-
-                    <div class="field">
-                      <label for="description">Mô tả</label>
-                      <textarea id="description" name="description" rows="3"
-                        placeholder="VD: Cá hồi áp chảo, sốt bơ chanh, rau củ theo mùa."></textarea>
+                    <div class="pv-col">
+                      <p class="pv-title">Cảnh báo dị ứng</p>
+                      <ul id="pvAllergens" class="pv-list">
+                        <li class="is-muted">Chưa có cảnh báo</li>
+                      </ul>
                     </div>
+                  </div>
 
-                    <div class="field-row">
-                      <div th:replace="~{
-                        fragments/form-controls :: selectField(
-                          'category','category','Danh mục món',
-                          ${categoryOptions},${selectedCategory},true
-                        )
-                      }"></div>
+                  <div class="preview-note">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Preview cập nhật theo dữ liệu bạn nhập.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="preview-panel">
+                <div class="panel-card">
+                  <p class="panel-title">Quick summary</p>
+                  <ul class="panel-list">
+                    <li><span>Name</span><b id="pvSumName">—</b></li>
+                    <li><span>Category</span><b id="pvSumCategory">—</b></li>
+                    <li><span>Price</span><b id="pvSumPrice">—</b></li>
+                    <li><span>Status</span><b id="pvSumStatus">—</b></li>
+                  </ul>
+                </div>
+
+                <div class="panel-card">
+                  <p class="panel-title">Checklist</p>
+                  <ul class="checklist" id="pvChecklist">
+                    <li data-key="name"><i class="fa-regular fa-circle"></i><span>Tên món</span></li>
+                    <li data-key="price"><i class="fa-regular fa-circle"></i><span>Giá</span></li>
+                    <li data-key="category"><i class="fa-regular fa-circle"></i><span>Danh mục</span></li>
+                    <li data-key="ingredients"><i class="fa-regular fa-circle"></i><span>Nguyên liệu</span></li>
+                    <li data-key="image"><i class="fa-regular fa-circle"></i><span>Ảnh</span></li>
+                  </ul>
+                </div>
+              </div>
+            </aside>
+
+            <div class="adddish-form">
+              <form id="dishForm"
+                    th:action="@{/menu-items/newdish}"
+                    method="post"
+                    class="dish-form"
+                    enctype="multipart/form-data">
+
+                <div class="form-stack">
+                  <div class="form-card">
+                    <section id="sec-basic" class="form-section">
+                      <div class="form-section-head">
+                        <h3>Thông tin cơ bản</h3>
+                        <p>Tên món, mô tả, danh mục, giá.</p>
+                      </div>
 
                       <div class="field">
-                        <label for="price">Giá (VND) *</label>
-                        <input id="price" name="price" type="number" min="0" step="1000" placeholder="VD: 129000" required />
-                        <p class="hint">Nhập số (VD: 129000). Preview sẽ tự format ra 129.000đ.</p>
+                        <label for="name">Tên món ăn *</label>
+                        <input id="name" name="name" type="text" placeholder="VD: Cá hồi áp chảo" required/>
                       </div>
-                    </div>
-                  </section>
-                </div>
 
-                <!-- INGREDIENTS CARD -->
-                <div class="form-card">
-                  <section id="sec-ingredients" class="form-section">
-                    <div class="form-section-head">
-                      <h3>Nguyên liệu chính</h3>
-                      <p>Nhập nguyên liệu để minh bạch và hỗ trợ tư vấn khách dị ứng.</p>
-                    </div>
-
-                    <div class="field">
-                      <label for="ingredients">Nguyên liệu *</label>
-                      <textarea id="ingredients" name="ingredients" rows="3"
-                        placeholder="VD: tôm, bơ, tỏi, chanh" required></textarea>
-                      <p class="hint">Nhập danh sách cách nhau bằng dấu phẩy.</p>
-                    </div>
-
-                    <div class="field-row">
                       <div class="field">
-                        <label for="calories">Calories (tuỳ chọn)</label>
-                        <input id="calories" name="calories" type="number" min="0" placeholder="VD: 520" />
+                        <label for="description">Mô tả</label>
+                        <textarea id="description" name="description" rows="3"
+                                  placeholder="VD: Cá hồi áp chảo, sốt bơ chanh, rau củ theo mùa."></textarea>
                       </div>
 
-                      <div th:replace="~{
-                        fragments/form-controls :: selectField(
-                          'spiceLevel','spiceLevel','Độ cay',
-                          ${spiceLevelOptions},${selectedSpiceLevel},false
-                        )
-                      }"></div>
-                    </div>
-                  </section>
-                </div>
+                      <div class="field-row">
+                        <div th:replace="~{
+                          fragments/form-controls :: selectField(
+                            'category','category','Danh mục món',
+                            ${categoryOptions},${selectedCategory},true
+                          )
+                        }"></div>
 
-                <!-- ALLERGENS CARD -->
-                <div class="form-card">
-                  <section id="sec-allergens" class="form-section">
-                    <div class="form-section-head">
-                      <h3>Cảnh báo dị ứng</h3>
-                      <p>Chọn các chất dễ gây dị ứng để hiển thị cảnh báo.</p>
-                    </div>
-
-                    <div class="chips chips-grid" aria-label="Allergens">
-                      <label class="chip-check" th:each="a : ${allergenEnums}">
-                        <input type="checkbox"
-                              name="allergens"
-                              th:value="${#strings.toLowerCase(a.name())}" />
-                        <span th:text="${#strings.capitalize(#strings.replace(#strings.toLowerCase(a.name()), '_', ' '))}">Allergen</span>
-                      </label>
-                    </div>
-
-                  </section>
-                </div>
-
-                <!-- MEDIA CARD -->
-                <div class="form-card">
-                  <section id="sec-media" class="form-section">
-                    <div class="form-section-head">
-                      <h3>Ảnh & tag</h3>
-                      <p>Ảnh hiển thị trên menu và tag để lọc.</p>
-                    </div>
-
-                    <div class="field">
-                      <label for="imageFile">Ảnh món ăn *</label>
-                      <input id="imageFile" name="imageFile" type="file" accept="image/*" />
-                      <p class="hint">Chọn ảnh từ máy để preview (chưa lưu vào hệ thống).</p>
-                    </div>
-
-                    <div class="field">
-                      <label>Tag</label>
-                      <div class="chips chips-grid">
-                        <label class="chip-check" th:each="t : ${tagEnums}">
-                          <input type="checkbox"
-                                name="tags"
-                                th:value="${#strings.toLowerCase(t.name())}" />
-                          <span th:text="${#strings.capitalize(#strings.replace(#strings.toLowerCase(t.name()), '_', ' '))}">Tag</span>                        </label>
+                        <div class="field">
+                          <label for="price">Giá (VND) *</label>
+                          <input id="price" name="price" type="number" min="0" step="1000" placeholder="VD: 129000" required/>
+                          <p class="hint">Nhập số (VD: 129000). Preview sẽ tự format ra 129.000đ.</p>
+                        </div>
                       </div>
+                    </section>
+                  </div>
+
+                  <div class="form-card">
+                    <section id="sec-ingredients" class="form-section">
+                      <div class="form-section-head">
+                        <h3>Nguyên liệu chính</h3>
+                        <p>Nhập nguyên liệu để minh bạch và hỗ trợ tư vấn khách dị ứng.</p>
+                      </div>
+
+                      <div class="field">
+                        <label for="ingredients">Nguyên liệu *</label>
+                        <textarea id="ingredients" name="ingredients" rows="3"
+                                  placeholder="VD: tôm, bơ, tỏi, chanh" required></textarea>
+                        <p class="hint">Nhập danh sách cách nhau bằng dấu phẩy.</p>
+                      </div>
+
+                      <div class="field-row">
+                        <div class="field">
+                          <label for="calories">Calories (tuỳ chọn)</label>
+                          <input id="calories" name="calories" type="number" min="0" placeholder="VD: 520"/>
+                        </div>
+
+                        <div th:replace="~{
+                          fragments/form-controls :: selectField(
+                            'spiceLevel','spiceLevel','Độ cay',
+                            ${spiceLevelOptions},${selectedSpiceLevel},false
+                          )
+                        }"></div>
+                      </div>
+                    </section>
+                  </div>
+
+                  <div class="form-card">
+                    <section id="sec-allergens" class="form-section">
+                      <div class="form-section-head">
+                        <h3>Cảnh báo dị ứng</h3>
+                        <p>Chọn các chất dễ gây dị ứng để hiển thị cảnh báo.</p>
+                      </div>
+
+                      <div class="chips chips-grid" aria-label="Allergens">
+                        <label class="chip-check" th:each="a : ${allergenEnums}">
+                          <input type="checkbox" name="allergens" th:value="${#strings.toLowerCase(a.name())}"/>
+                          <span th:text="${#strings.capitalize(#strings.replace(#strings.toLowerCase(a.name()), '_', ' '))}">Allergen</span>
+                        </label>
+                      </div>
+                    </section>
+                  </div>
+
+                  <div class="form-card">
+                    <section id="sec-media" class="form-section">
+                      <div class="form-section-head">
+                        <h3>Ảnh & tag</h3>
+                        <p>Ảnh hiển thị trên menu và tag để lọc.</p>
+                      </div>
+
+                      <div class="field">
+                        <label for="imageFile">Ảnh món ăn *</label>
+                        <input id="imageFile" name="imageFile" type="file" accept="image/*"/>
+                        <p class="hint">Chọn ảnh từ máy để preview (chưa lưu vào hệ thống).</p>
+                      </div>
+
+                      <div class="field">
+                        <label>Tag</label>
+                        <div class="chips chips-grid">
+                          <label class="chip-check" th:each="t : ${tagEnums}">
+                            <input type="checkbox" name="tags" th:value="${#strings.toLowerCase(t.name())}"/>
+                            <span th:text="${#strings.capitalize(#strings.replace(#strings.toLowerCase(t.name()), '_', ' '))}">Tag</span>
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="field-row">
+                        <div th:replace="~{
+                          fragments/form-controls :: selectField(
+                            'status','status','Trạng thái',
+                            ${statusOptions},${selectedStatus},true
+                          )
+                        }"></div>
+                      </div>
+                    </section>
+                  </div>
+
+                  <div class="form-card form-actions-card">
+                    <div class="form-actions">
+                      <a class="btn btn-cancel" th:href="@{/menu}">Hủy</a>
+                      <button class="btn btn-save" type="submit">Lưu món</button>
                     </div>
-
-                    <div class="field-row">
-                      <div th:replace="~{
-                        fragments/form-controls :: selectField(
-                          'status','status','Trạng thái',
-                          ${statusOptions},${selectedStatus},true
-                        )
-                      }"></div>
-
-                    </div>
-                  </section>
-                </div>
-
-                <!-- ACTIONS CARD -->
-                <div class="form-card form-actions-card">
-                  <div class="form-actions">
-                    <a class="btn btn-cancel" th:href="@{/menu}">Hủy</a>
-                    <button class="btn btn-save" type="submit">Lưu món</button>
                   </div>
                 </div>
 
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
-
         </div>
-
-      </div>
-    </section>
-
+      </section>
+    </div>
   </main>
+</div>
 
-  <div th:replace="~{fragments/footer :: footer}"></div>
+<div class="modal is-hidden" id="previewModal" aria-hidden="true">
+  <div class="modal-backdrop" data-close="true"></div>
 
-  <!-- PREVIEW MODAL -->
-  <div class="modal is-hidden" id="previewModal" aria-hidden="true">
-    <div class="modal-backdrop" data-close="true"></div>
+  <div class="modal-dialog" role="dialog" aria-modal="true" aria-label="Dish preview">
+    <div class="modal-head">
+      <p class="modal-title">Preview</p>
+      <button class="icon-btn" type="button" id="closePreviewModal" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
 
-    <div class="modal-dialog" role="dialog" aria-modal="true" aria-label="Dish preview">
-      <div class="modal-head">
-        <p class="modal-title">Preview</p>
-        <button class="icon-btn" type="button" id="closePreviewModal" aria-label="Close">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <div class="modal-body">
-        <div id="modalPreviewSlot"></div>
-      </div>
+    <div class="modal-body">
+      <div id="modalPreviewSlot"></div>
     </div>
   </div>
+</div>
 
-  <script th:src="@{/assets/js/admin/menu-newdish.js}"></script>
+<script th:src="@{/assets/js/admin/menu-newdish.js}"></script>
 </body>
 </html>

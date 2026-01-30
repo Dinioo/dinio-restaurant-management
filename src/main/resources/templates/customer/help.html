@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <title>DINIO - Trợ giúp</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/customer/help.css}" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
+  <script th:src="@{/assets/js/customer/help.js}" defer></script>
+</head>
+
+<body>
+  <div th:replace="fragments/header :: header"></div>
+
+  <main class="help">
+    <section class="help-hero">
+      <div class="help-hero-bg" aria-hidden="true"></div>
+
+      <div class="help-wrap">
+        <div class="help-hero-grid">
+          <div class="help-hero-left">
+            <p class="help-eyebrow">DINIO SUPPORT</p>
+
+            <div class="help-actions">
+              <a class="btn btn-cta" href="#support">Gửi yêu cầu</a>
+              <a class="btn btn-cta is-ghost" href="#faq">Xem FAQ</a>
+              <button class="help-quick-btn" type="button" data-scroll="#faq" data-open="faq-reserve">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Đổi giờ / huỷ đặt bàn</span>
+              </button>
+              <button class="help-quick-btn" type="button" data-scroll="#faq" data-open="faq-allergy">
+                <i class="fa-solid fa-shield-heart"></i>
+                <span>Dị ứng & ghi chú</span>
+            </div>
+
+          <aside class="help-hero-right" aria-label="Contact card">
+            <div class="help-card help-card-glass">
+              <p class="help-card-title">Liên hệ nhanh</p>
+              <p class="help-card-sub">Khi bạn cần xác nhận gấp.</p>
+
+              <div class="help-contact">
+                <a class="help-contact-item" href="tel:0900000000">
+                  <span class="hc-ic"><i class="fa-solid fa-phone"></i></span>
+                  <span class="hc-txt">
+                    <span class="hc-title">Hotline</span>
+                    <span class="hc-desc">0900 000 000</span>
+                  </span>
+                </a>
+
+                <a class="help-contact-item" href="mailto:hello@dinio.com">
+                  <span class="hc-ic"><i class="fa-solid fa-envelope"></i></span>
+                  <span class="hc-txt">
+                    <span class="hc-title">Email</span>
+                    <span class="hc-desc">hello@dinio.com</span>
+                  </span>
+                </a>
+
+                <div class="help-contact-item is-static">
+                  <span class="hc-ic"><i class="fa-solid fa-hourglass-half"></i></span>
+                  <span class="hc-txt">
+                    <span class="hc-title">Giờ hỗ trợ</span>
+                    <span class="hc-desc">10:00 – 22:00</span>
+                  </span>
+                </div>
+              </div>
+
+              <div class="help-note">
+                Tip: 19:00–20:30 thường đông — đổi giờ sát khung này sẽ ưu tiên theo thứ tự xác nhận.
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="help-sec">
+      <div class="help-wrap">
+        <div class="help-sec-head">
+          <div>
+            <p class="help-eyebrow">FAQ</p>
+            <h2 class="help-h2">Câu hỏi thường gặp</h2>
+            <p class="help-sub2">Tìm nhanh — bấm vào câu hỏi để mở.</p>
+          </div>
+
+          <div class="help-search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="faqSearch" type="text" placeholder="Tìm… (vd: đổi giờ, dị ứng, hoá đơn)" />
+          </div>
+        </div>
+
+        <div class="faq-list" id="faqList">
+          <div class="faq-item" id="faq-reserve" data-tags="dat ban doi gio huy reservation thay doi thoi gian">
+            <button class="faq-q" type="button">
+              <span>Đổi giờ / huỷ đặt bàn như thế nào?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="faq-a">
+              <p>
+                Bạn có thể gọi hotline hoặc gửi yêu cầu tại mục “Gửi yêu cầu”.
+                Vui lòng cung cấp SĐT + thời gian hiện tại + thời gian muốn đổi.
+              </p>
+              <div class="faq-steps">
+                <span>1) Nhập SĐT</span>
+                <span>2) Ghi thời gian mới</span>
+                <span>3) Chờ xác nhận</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item" id="faq-allergy" data-tags="di ung allergy ghi chu note kieng">
+            <button class="faq-q" type="button">
+              <span>Mình có dị ứng/kiêng món, ghi chú ở đâu?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="faq-a">
+              <p>
+                Ghi trong form đặt bàn hoặc gửi yêu cầu hỗ trợ. Dinio ưu tiên an toàn:
+                nêu rõ thành phần cần tránh và mức độ dị ứng.
+              </p>
+              <div class="faq-pill">Gợi ý: “Dị ứng hạt điều (nặng) — tránh dùng dầu/hạt liên quan.”</div>
+            </div>
+          </div>
+
+          <div class="faq-item" id="faq-peak" data-tags="gio cao diem peak hour dong cho doi">
+            <button class="faq-q" type="button">
+              <span>Giờ cao điểm thường đông khi nào?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="faq-a">
+              <p>
+                19:00–20:30 thường đông. Nếu muốn trải nghiệm “mượt”, chọn 18:00–18:30 hoặc 20:45+.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item" data-tags="hoa don vat invoice thanh toan">
+            <button class="faq-q" type="button">
+              <span>Có xuất hoá đơn / VAT không?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="faq-a">
+              <p>
+                Có. Bạn vui lòng cung cấp thông tin xuất hoá đơn trước khi thanh toán để Dinio hỗ trợ nhanh nhất.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item" data-tags="walk in den truc tiep dat ban">
+            <button class="faq-q" type="button">
+              <span>Có nhận khách đến trực tiếp (walk-in) không?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="faq-a">
+              <p>
+                Có, tuỳ tình trạng bàn. Giờ cao điểm nên đặt trước để đảm bảo trải nghiệm.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="help-divider"></div>
+      </div>
+    </section>
+
+    <section id="support" class="help-sec">
+      <div class="help-wrap">
+        <div class="help-sec-head">
+          <div>
+            <p class="help-eyebrow">Support</p>
+            <h2 class="help-h2">Gửi yêu cầu</h2>
+            <p class="help-sub2">UI demo — bấm gửi sẽ hiện toast giả lập.</p>
+          </div>
+        </div>
+
+        <div class="support-grid">
+          <div class="support-card">
+            <form class="support-form" id="supportForm">
+              <div class="srow">
+                <label>Họ tên</label>
+                <input type="text" name="name" placeholder="Tên của bạn" required>
+              </div>
+
+              <div class="srow">
+                <label>Số điện thoại</label>
+                <input type="tel" name="phone" placeholder="0900..." required>
+              </div>
+
+              <div class="ssplit">
+                <div class="srow">
+                  <label>Loại yêu cầu</label>
+                  <select name="type" required>
+                    <option value="" selected disabled>Chọn</option>
+                    <option>Đổi giờ đặt bàn</option>
+                    <option>Huỷ đặt bàn</option>
+                    <option>Dị ứng / ghi chú</option>
+                    <option>Góp ý dịch vụ</option>
+                    <option>Khác</option>
+                  </select>
+                </div>
+
+                <div class="srow">
+                  <label>Mức độ</label>
+                  <select name="priority" required>
+                    <option>Thường</option>
+                    <option>Gấp</option>
+                    <option>Rất gấp</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="srow">
+                <label>Nội dung</label>
+                <textarea name="message" placeholder="Viết ngắn gọn — thời gian, số khách, ghi chú..." required></textarea>
+              </div>
+
+              <div class="sactions">
+                <button class="btn btn-save" type="submit">Gửi</button>
+                <button class="btn btn-cta is-ghost" type="button" id="btnFillDemo">Điền mẫu</button>
+              </div>
+
+              <p class="support-hint">
+                Bằng cách gửi yêu cầu, bạn đồng ý để Dinio liên hệ xác nhận qua điện thoại.
+              </p>
+            </form>
+          </div>
+
+          <div class="support-side">
+            <div class="side-card">
+              <p class="side-kicker">Gợi ý</p>
+              <p class="side-title">Để xử lý nhanh</p>
+              <ul class="side-ul">
+                <li>Ghi rõ thời gian hiện tại và thời gian muốn đổi.</li>
+                <li>Nếu có dị ứng, nêu thành phần + mức độ.</li>
+                <li>Giờ cao điểm: Dinio ưu tiên theo thứ tự xác nhận.</li>
+              </ul>
+              <a class="btn btn-cta is-ghost" href="#contact">Xem liên hệ</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="help-sec">
+      <div class="help-wrap">
+        <div class="help-sec-head">
+          <div>
+            <p class="help-eyebrow">Contact</p>
+            <h2 class="help-h2">Liên hệ & địa chỉ</h2>
+            <p class="help-sub2">Dinio • City Center</p>
+          </div>
+        </div>
+
+        <div class="contact-grid">
+          <div class="contact-card">
+            <p class="c-label">Hotline</p>
+            <p class="c-value">0900 000 000</p>
+            <a class="c-link" href="tel:0900000000">Gọi ngay →</a>
+          </div>
+
+          <div class="contact-card">
+            <p class="c-label">Email</p>
+            <p class="c-value">hello@dinio.com</p>
+            <a class="c-link" href="mailto:hello@dinio.com">Gửi email →</a>
+          </div>
+
+          <div class="contact-card">
+            <p class="c-label">Giờ mở cửa</p>
+            <div class="hours">
+              <div class="hrow"><span>Mon – Fri</span><span>10:00 – 22:00</span></div>
+              <div class="hrow"><span>Sat</span><span>09:00 – 23:00</span></div>
+              <div class="hrow"><span>Sun</span><span>09:00 – 22:00</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="map-box" aria-label="Dinio map">
+          <iframe title="Dinio location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=Ho%20Chi%20Minh%20City&output=embed">
+          </iframe>
+          <div class="map-badge">
+            <p class="mb-title">DINIO</p>
+            <p class="mb-sub">Modern dining • Premium taste</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div th:replace="fragments/footer :: footer"></div>
+  </main>
+
+  <div class="help-toast" id="helpToast" aria-live="polite" aria-atomic="true">
+    <div class="toast-dot"></div>
+    <p class="toast-text" id="toastText">Đã gửi yêu cầu. Dinio sẽ liên hệ sớm.</p>
+  </div>
+</body>
+</html>

@@ -1,10 +1,11 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="_csrf" th:content="${_csrf.token}"/>
-  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
   <title>DINIO - Menu</title>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
@@ -22,18 +23,6 @@
   <div th:replace="~{fragments/header :: header}"></div>
 
   <main>
-    <section id="menu-head" class="section">
-      <div class="menu-container">
-        <div class="menu-head-card">
-          <p class="section-eyebrow">OUR MENU</p>
-          <h2 class="section-title">Explore Menu</h2>
-          <p class="section-subtitle">
-            Tối giản, tinh tế — chọn nhanh theo category, tag hoặc tìm kiếm.
-          </p>
-        </div>
-      </div>
-    </section>
-
     <section id="menu-tools" class="section">
       <div class="menu-container">
         <div class="menu-toolbar">
@@ -45,10 +34,11 @@
 
           <div class="menu-toolbar-right">
             <select class="menu-sort" aria-label="Sort menu">
-              <option value="recommended">Recommended</option>
-              <option value="low">Price: Low → High</option>
-              <option value="high">Price: High → Low</option>
-              <option value="newest">Newest</option>
+              <option value="recommended">Gợi ý hôm nay</option>
+              <option value="low">Giá tăng dần</option>
+              <option value="high">Giá giảm dần</option>
+              <option value="newest">Mới ra mắt</option>
+
             </select>
           </div>
         </div>
@@ -76,7 +66,10 @@
           <div class="menu-main">
             <div class="menu-main-head">
               <p class="menu-count">Showing <b>0</b> items</p>
-              <a class="ghost-link" th:href="@{/menu}">Reset</a>
+              <a class="ghost-link icon-only" th:href="@{/menu}" aria-label="Đặt lại">
+                <i class="fa-solid fa-rotate-right"></i>
+              </a>
+
             </div>
 
             <div class="menu-sections" id="menuSections"></div>
@@ -86,7 +79,7 @@
       </div>
     </section>
   </main>
-  
+
   <div th:replace="~{fragments/dish-detail-modal :: dishDetailModal}"></div>
 
   <div th:replace="~{fragments/footer :: footer}"></div>
@@ -94,4 +87,5 @@
   <script th:src="@{/assets/js/menu-common.js}" defer></script>
   <script th:src="@{/assets/js/customer/menu.js}" defer></script>
 </body>
+
 </html>

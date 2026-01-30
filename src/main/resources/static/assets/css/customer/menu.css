@@ -1,4 +1,3 @@
-
 #menu-head.section,
 #menu-tools.section,
 #menu-layout.section{
@@ -8,7 +7,6 @@
 #menu-head{ margin-top: 40px; }
 #menu-tools{ margin-top: 16px; }
 #menu-layout{ margin-top: 18px; }
-
 
 .menu-container{
   padding: 0 133px;
@@ -43,7 +41,6 @@
   justify-content: space-between;
   align-items: center;
   gap: 14px;
-
   padding: 14px;
   border-radius: 20px;
   background: var(--surface-1);
@@ -112,7 +109,6 @@
   color: var(--text-strong);
 }
 
-
 @media (max-width: 820px){
   .menu-toolbar{
     flex-direction: column;
@@ -138,6 +134,7 @@
   position: sticky;
   top: 96px;
 }
+
 @media (max-width: 1100px){
   .menu-side{ position: static; }
 }
@@ -282,3 +279,25 @@
   justify-content: center;
 }
 
+html, body{
+  overscroll-behavior: none;
+}
+
+.menu-main{
+  max-height: calc(100vh - 280px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.menu-sections{
+  min-height: 1px;
+}
+.ghost-link.icon-only{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-bottom: none;
+  border-radius: 10px;
+}

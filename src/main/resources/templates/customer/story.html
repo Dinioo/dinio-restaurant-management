@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DINIO - Câu chuyện</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/customer/story.css}" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
+  <script th:src="@{/assets/js/customer/story.js}" defer></script>
+</head>
+
+<body>
+  <div th:replace="~{fragments/header :: header}"></div>
+
+  <main class="story">
+    <section class="story-hero">
+      <div class="story-wrap">
+        <div class="story-hero-card">
+          <p class="story-eyebrow">CÂU CHUYỆN</p>
+          <h1 class="story-h1">Nhật ký bếp & cảm hứng Dinio</h1>
+          <p class="story-sub">
+            Những mẩu chuyện nhỏ về món ăn, nguyên liệu theo mùa và hậu trường phục vụ — ngắn gọn, dễ đọc.
+          </p>
+
+          <div class="story-hero-actions">
+            <div class="story-search">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <input id="storySearch" type="text" placeholder="Tìm bài viết..." autocomplete="off" />
+              <button class="story-clear" type="button" aria-label="Clear">✕</button>
+            </div>
+
+            <select id="storySort" class="story-sort" aria-label="Sort">
+              <option value="newest" selected>Mới nhất</option>
+              <option value="popular">Nổi bật</option>
+              <option value="readtime">Đọc nhanh</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-body">
+      <div class="story-wrap">
+        <div class="story-grid">
+
+          <section class="story-feed" aria-label="Bài viết">
+            <div class="story-feed-head">
+              <p class="story-count">Đang hiển thị <b id="storyCount">0</b> bài</p>
+              <button class="story-ghost" type="button" id="storyReset">Reset</button>
+            </div>
+
+            <div class="story-list" id="storyList"></div>
+
+            <div class="story-empty is-hidden" id="storyEmpty">
+              Không tìm thấy bài viết phù hợp.
+            </div>
+          </section>
+
+          <aside class="story-side" aria-label="Nổi bật">
+            <div class="side-card">
+              <div class="side-head">
+                <p class="side-title">Bài nổi bật</p>
+                <span class="side-pill" id="featuredCount">0</span>
+              </div>
+
+              <div class="side-list" id="featuredList"></div>
+            </div>
+
+            <div class="side-card">
+              <p class="side-title">Chủ đề</p>
+              <div class="side-tags" id="topicTags"></div>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="story-modal is-hidden" id="storyModal" aria-hidden="true">
+      <div class="story-backdrop" data-close="true"></div>
+
+      <div class="story-dialog" role="dialog" aria-modal="true" aria-label="Bài viết">
+        <div class="story-dialog-head">
+          <p class="story-dialog-title" id="modalTitle">—</p>
+          <button class="icon-btn" type="button" id="modalClose" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="story-dialog-body">
+          <div class="story-heroimg" id="modalHero" aria-hidden="true"></div>
+
+          <div class="story-meta">
+            <span class="meta-pill" id="modalTopic">—</span>
+            <span class="meta-dot">•</span>
+            <span class="meta-text" id="modalDate">—</span>
+            <span class="meta-dot">•</span>
+            <span class="meta-text" id="modalRead">—</span>
+          </div>
+
+          <div class="story-content" id="modalContent"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

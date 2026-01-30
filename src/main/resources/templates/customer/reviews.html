@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DINIO - Đánh giá</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/customer/reviews.css}" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
+  <script th:src="@{/assets/js/customer/reviews.js}" defer></script>
+</head>
+
+<body>
+  <div th:replace="~{fragments/header :: header}"></div>
+
+  <main class="rv">
+    <section class="rv-hero">
+      <div class="rv-wrap">
+        <div class="rv-hero-card">
+          <p class="rv-eyebrow">ĐÁNH GIÁ</p>
+          <h1 class="rv-h1">Chia sẻ trải nghiệm của bạn</h1>
+          <p class="rv-sub">
+            Trang demo fake để bạn test UI: chọn sao, viết nhận xét, thêm ảnh. Bấm gửi chỉ hiển thị toast + append vào list.
+          </p>
+
+          <div class="rv-stats">
+            <div class="rv-stat">
+              <p class="k">Điểm trung bình</p>
+              <p class="v"><span id="avgScore">4.6</span> / 5</p>
+            </div>
+            <div class="rv-stat">
+              <p class="k">Tổng đánh giá</p>
+              <p class="v"><span id="totalReviews">24</span></p>
+            </div>
+            <div class="rv-stat">
+              <p class="k">Ảnh khách gửi</p>
+              <p class="v"><span id="totalPhotos">38</span></p>
+            </div>
+          </div>
+
+          <div class="rv-quick">
+            <a class="rv-quick-item" href="#rvForm">
+              <i class="fa-regular fa-pen-to-square"></i><span>Viết đánh giá</span>
+            </a>
+            <a class="rv-quick-item" href="#rvList">
+              <i class="fa-regular fa-star"></i><span>Xem review</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rv-body">
+      <div class="rv-wrap">
+        <div class="rv-grid">
+
+          <section class="rv-main" id="rvForm" aria-label="Form đánh giá">
+            <div class="rv-card">
+              <div class="rv-card-head">
+                <p class="t">Gửi đánh giá</p>
+                <span class="rv-pill" id="rvMode">Fake mode</span>
+              </div>
+
+              <form class="rv-form" id="reviewForm" novalidate>
+                <div class="rv-row">
+                  <div class="rv-field">
+                    <label for="rvName">Họ tên *</label>
+                    <input id="rvName" type="text" placeholder="VD: Minh Trần" required />
+                  </div>
+
+                  <div class="rv-field">
+                    <label for="rvDish">Món bạn thích (tuỳ chọn)</label>
+                    <input id="rvDish" type="text" placeholder="VD: Bruschetta / Steak..." />
+                  </div>
+                </div>
+
+                <div class="rv-row">
+                  <div class="rv-field">
+                    <label>Chấm sao *</label>
+                    <div class="rv-stars" id="starPicker" role="radiogroup" aria-label="Chọn số sao">
+                      <button type="button" class="rv-star" data-star="1" aria-label="1 sao"><i class="fa-solid fa-star"></i></button>
+                      <button type="button" class="rv-star" data-star="2" aria-label="2 sao"><i class="fa-solid fa-star"></i></button>
+                      <button type="button" class="rv-star" data-star="3" aria-label="3 sao"><i class="fa-solid fa-star"></i></button>
+                      <button type="button" class="rv-star" data-star="4" aria-label="4 sao"><i class="fa-solid fa-star"></i></button>
+                      <button type="button" class="rv-star" data-star="5" aria-label="5 sao"><i class="fa-solid fa-star"></i></button>
+                      <span class="rv-star-label" id="starLabel">Chưa chọn</span>
+                    </div>
+                    <input type="hidden" id="rvRating" value="0" />
+                  </div>
+
+                  <div class="rv-field">
+                    <label for="rvVisit">Lần ghé (tuỳ chọn)</label>
+                    <select id="rvVisit">
+                      <option value="first" selected>Lần đầu</option>
+                      <option value="repeat">Khách quen</option>
+                      <option value="occasion">Dịp đặc biệt</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="rv-field">
+                  <label for="rvMsg">Nhận xét *</label>
+                  <textarea id="rvMsg" rows="5" placeholder="Bạn thấy đồ ăn / phục vụ / không gian thế nào?" required></textarea>
+                </div>
+
+                <div class="rv-upload">
+                  <div class="rv-up-head">
+                    <p class="a">Ảnh đính kèm</p>
+                    <button class="rv-ghost" type="button" id="btnAddPhotos">
+                      <i class="fa-regular fa-image"></i> Thêm ảnh
+                    </button>
+                    <input id="rvPhotos" type="file" accept="image/*" multiple hidden />
+                  </div>
+
+                  <div class="rv-up-sub">Chọn tối đa 6 ảnh. Demo chỉ preview, không upload.</div>
+
+                  <div class="rv-photos" id="photoGrid" aria-label="Ảnh preview"></div>
+                </div>
+
+                <div class="rv-actions">
+                  <button class="rv-ghost" type="button" id="btnFillDemo">Điền demo</button>
+                  <button class="rv-btn" type="submit">
+                    Gửi đánh giá <i class="fa-solid fa-arrow-right"></i>
+                  </button>
+                </div>
+
+                <div class="rv-note" id="rvNote">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span>Demo fake: submit sẽ thêm 1 review mới vào danh sách bên dưới.</span>
+                </div>
+              </form>
+            </div>
+
+            <div class="rv-card" id="rvList">
+              <div class="rv-card-head">
+                <p class="t">Đánh giá gần đây</p>
+                <div class="rv-head-right">
+                  <select class="rv-select" id="filterStars" aria-label="Lọc sao">
+                    <option value="all" selected>Tất cả</option>
+                    <option value="5">5 sao</option>
+                    <option value="4">4 sao</option>
+                    <option value="3">3 sao</option>
+                    <option value="2">2 sao</option>
+                    <option value="1">1 sao</option>
+                  </select>
+                  <button class="rv-ghost" type="button" id="btnResetFilter">Reset</button>
+                </div>
+              </div>
+
+              <div class="rv-list" id="reviewList"></div>
+            </div>
+          </section>
+
+          <aside class="rv-side" aria-label="Gợi ý & ảnh nổi bật">
+            <div class="rv-card">
+              <div class="rv-card-head">
+                <p class="t">Gợi ý nhanh</p>
+                <span class="rv-badge">Customer</span>
+              </div>
+
+              <div class="rv-tips">
+                <div class="rv-tip">
+                  <p class="h">Viết ngắn gọn nhưng rõ</p>
+                  <p class="p">Nêu món bạn gọi + điểm bạn thích/không thích để người khác dễ tham khảo.</p>
+                </div>
+                <div class="rv-tip">
+                  <p class="h">Ảnh càng thật càng tốt</p>
+                  <p class="p">Chụp ánh sáng tự nhiên giúp món trông đúng nhất.</p>
+                </div>
+                <div class="rv-tip">
+                  <p class="h">Góp ý lịch sự</p>
+                  <p class="p">Feedback rõ ràng giúp Dinio cải thiện nhanh hơn.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="rv-card">
+              <div class="rv-card-head">
+                <p class="t">Ảnh nổi bật</p>
+                <button class="rv-ghost" type="button" id="btnShuffle">Đổi ảnh</button>
+              </div>
+
+              <div class="rv-gallery" id="featuredGallery"></div>
+
+              <p class="rv-foot">
+                Ảnh là placeholder (random gradient). Khi có API, bạn chỉ cần map sang URL ảnh.
+              </p>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="rv-toast is-hidden" id="rvToast" role="status" aria-live="polite">
+      <div class="rv-toast-card">
+        <i class="fa-solid fa-circle-check"></i>
+        <div class="rv-toast-text">
+          <p class="a" id="toastTitle">Đã gửi</p>
+          <p class="b" id="toastSub">Cảm ơn bạn đã đánh giá (demo).</p>
+        </div>
+        <button class="rv-toast-x" type="button" id="toastClose" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

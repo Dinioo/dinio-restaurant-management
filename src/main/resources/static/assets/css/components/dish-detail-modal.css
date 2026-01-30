@@ -284,3 +284,18 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+.wt-bill-panel{
+  width: min(860px, calc(100% - 32px));
+  max-height: min(84vh, 760px);
+  display: flex;
+  flex-direction: column;
+}
+
+.wt-bill-scroll{
+  flex: 1;
+  overflow: auto;
+  border-radius: 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  padding: 10px;
+}

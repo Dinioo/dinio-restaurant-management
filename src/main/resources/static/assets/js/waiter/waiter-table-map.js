@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const queryInp = document.getElementById("wtQuery");
   const btnRefresh = document.getElementById("btnRefresh");
   const btnClearPick = document.getElementById("btnClearPick");
+  const wtBillModal = document.getElementById("wtBillModal");
 
   const pick = {
     table: document.getElementById("pickTable"),
@@ -25,42 +26,69 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const wtCloseModal = document.getElementById("wtCloseSessionModal");
   const openCloseModal = () => {
-  if (!wtCloseModal) return;
-  wtCloseModal.setAttribute("aria-hidden", "false");
-  wtCloseModal.classList.remove("is-hidden");
-  document.body.classList.add("is-modal-open");
-};
+    if (!wtCloseModal) return;
+    wtCloseModal.setAttribute("aria-hidden", "false");
+    wtCloseModal.classList.remove("is-hidden");
+    document.body.classList.add("is-modal-open");
 
-const closeCloseModal = () => {
-  if (!wtCloseModal) return;
-  wtCloseModal.setAttribute("aria-hidden", "true");
-  wtCloseModal.classList.add("is-hidden");  
-  document.body.classList.remove("is-modal-open");
-};
 
-if (wtCloseModal) {
-  wtCloseModal.addEventListener("click", (e) => {
-    if (e.target.closest(".fp-backdrop[data-close='1']")) {
-      closeCloseModal();
-      return;
+    if (wtBillModal) {
+      wtBillModal.addEventListener("click", (e) => {
+        if (e.target.closest(".fp-backdrop[data-close='1']")) return closeBillModal();
+        if (e.target.closest("[data-close='1']")) return closeBillModal();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && wtBillModal.getAttribute("aria-hidden") === "false") {
+          closeBillModal();
+        }
+      });
     }
+  };
+  const openBillModal = () => {
+    if (!wtBillModal) return;
+    wtBillModal.setAttribute("aria-hidden", "false");
+    wtBillModal.classList.remove("is-hidden");
+    document.body.classList.add("is-modal-open");
+  };
 
-    if (e.target.closest("[data-close='1']")) {
-      closeCloseModal();
-      return;
-    }
+  const closeBillModal = () => {
+    if (!wtBillModal) return;
+    wtBillModal.setAttribute("aria-hidden", "true");
+    wtBillModal.classList.add("is-hidden");
+    document.body.classList.remove("is-modal-open");
+  };
 
-    if (e.target.closest(".fp-close, .fp-x, .wt-modal-close, #wtCloseCancelBtn")) {
-      closeCloseModal();
-    }
-  });
+  const closeCloseModal = () => {
+    if (!wtCloseModal) return;
+    wtCloseModal.setAttribute("aria-hidden", "true");
+    wtCloseModal.classList.add("is-hidden");
+    document.body.classList.remove("is-modal-open");
+  };
 
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && wtCloseModal.getAttribute("aria-hidden") === "false") {
-      closeCloseModal();
-    }
-  });
-}
+  if (wtCloseModal) {
+    wtCloseModal.addEventListener("click", (e) => {
+      if (e.target.closest(".fp-backdrop[data-close='1']")) {
+        closeCloseModal();
+        return;
+      }
+
+      if (e.target.closest("[data-close='1']")) {
+        closeCloseModal();
+        return;
+      }
+
+      if (e.target.closest(".fp-close, .fp-x, .wt-modal-close, #wtCloseCancelBtn")) {
+        closeCloseModal();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && wtCloseModal.getAttribute("aria-hidden") === "false") {
+        closeCloseModal();
+      }
+    });
+  }
 
   const wtCloseConfirmBtn = document.getElementById("wtCloseConfirmBtn");
 
@@ -79,6 +107,102 @@ if (wtCloseModal) {
     }
     return headers;
   };
+
+  const fmtMoney = (n) => (Number(n || 0)).toLocaleString("vi-VN") + "đ";
+
+  const billEls = {
+    title: document.getElementById("wtBillTitle"),
+    table: document.getElementById("wtBillTable"),
+    area: document.getElementById("wtBillArea"),
+    seats: document.getElementById("wtBillSeats"),
+    session: document.getElementById("wtBillSession"),
+    openedAt: document.getElementById("wtBillOpenedAt"),
+
+    loading: document.getElementById("wtBillLoading"),
+    empty: document.getElementById("wtBillEmpty"),
+    tableLines: document.getElementById("wtBillTableLines"),
+    tbody: document.getElementById("wtBillTbody"),
+
+    sumWrap: document.getElementById("wtBillSum"),
+    subtotal: document.getElementById("wtBillSubtotal"),
+    tax: document.getElementById("wtBillTax"),
+    svc: document.getElementById("wtBillSvc"),
+    disc: document.getElementById("wtBillDisc"),
+    total: document.getElementById("wtBillTotal"),
+  };
+
+  const resetBillUI = () => {
+    if (!billEls.loading) return;
+    billEls.loading.style.display = "";
+    billEls.empty.style.display = "none";
+    billEls.tableLines.style.display = "none";
+    billEls.sumWrap.style.display = "none";
+    billEls.tbody.innerHTML = "";
+  };
+
+  const renderBill = (data) => {
+    const t = data?.table;
+    const s = data?.session;
+    const inv = data?.invoice;
+
+    // meta
+    if (billEls.title) billEls.title.textContent = t?.code ? `Hóa đơn • Bàn ${t.code}` : "Hóa đơn";
+    if (billEls.table) billEls.table.textContent = t?.code || "—";
+    if (billEls.area) billEls.area.textContent = t?.areaName || "—";
+    if (billEls.seats) billEls.seats.textContent = (t?.seats ?? "—");
+    if (billEls.session) billEls.session.textContent = s?.id ? `#${s.id}` : "—";
+    if (billEls.openedAt) billEls.openedAt.textContent = s?.openedAt || "—";
+
+    // no invoice
+    if (!inv || !Array.isArray(inv.lines) || inv.lines.length === 0) {
+      billEls.loading.style.display = "none";
+      billEls.empty.style.display = "";
+      billEls.tableLines.style.display = "none";
+      billEls.sumWrap.style.display = "none";
+      return;
+    }
+
+    // lines
+    billEls.tbody.innerHTML = inv.lines.map((ln) => {
+      const name = ln.name || "—";
+      const qty = Number(ln.qty || 0);
+      const unit = Number(ln.unitPrice || ln.price || 0);
+      const lineTotal = Number(ln.lineTotal || (unit * qty) || 0);
+      const noteHtml = ln.note ? `<div class="wt-line-note">Ghi chú: ${escapeHtml(ln.note)}</div>` : "";
+      return `
+      <tr>
+        <td>
+          <div class="wt-line-name">${escapeHtml(name)}</div>
+          ${noteHtml}
+        </td>
+        <td class="num">${qty}</td>
+        <td class="num">${fmtMoney(unit)}</td>
+        <td class="num">${fmtMoney(lineTotal)}</td>
+      </tr>
+    `;
+    }).join("");
+
+    // totals
+    billEls.subtotal.textContent = fmtMoney(inv.subtotal);
+    billEls.tax.textContent = fmtMoney(inv.tax);
+    billEls.svc.textContent = fmtMoney(inv.serviceCharge);
+    billEls.disc.textContent = fmtMoney(inv.discountTotal);
+    billEls.total.textContent = fmtMoney(inv.total);
+
+    billEls.loading.style.display = "none";
+    billEls.empty.style.display = "none";
+    billEls.tableLines.style.display = "";
+    billEls.sumWrap.style.display = "";
+  };
+
+  function escapeHtml(str) {
+    return String(str ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
 
   const getLocalDateString = () => {
     const now = new Date();
@@ -104,6 +228,16 @@ if (wtCloseModal) {
       errorToast("Lỗi đồng bộ dữ liệu. Vui lòng kiểm tra kết nối mạng!");
     }
     return "Khách đặt";
+  };
+
+  const fetchBillPreview = async (tableId) => {
+    const res = await fetch(`${CONTEXT_PATH}/waiter/api/bill-preview?tableId=${encodeURIComponent(tableId)}`, {
+      method: "GET",
+      headers: getHeaders()
+    });
+
+    if (!res.ok) throw new Error("Fetch bill preview failed");
+    return await res.json();
   };
 
   const syncData = async () => {
@@ -150,7 +284,7 @@ if (wtCloseModal) {
 
       grouped[key].forEach(table => {
         const res = (table.status === "AVAILABLE") ? null : occupiedReservations.find(r => r.tableId == table.id);
-        
+
         const btn = document.createElement("button");
         btn.type = "button";
         let statusClass = "is-available";
@@ -187,19 +321,19 @@ if (wtCloseModal) {
       const res = occupiedReservations.find(r => r.tableId == t.id);
       const name = res ? (res.guestName || "Khách đặt") : "Walk-in";
       const party = res ? (res.seats || res.partySize || t.seats) : t.seats;
-      
+
       let badgeClass = "badge";
       let statusText = ""; // Biến tạm để giữ chữ hiển thị
 
       if (t.status === "IN_SERVICE") {
-          badgeClass += " is-seated";
-          statusText = "SEATED";
+        badgeClass += " is-seated";
+        statusText = "SEATED";
       } else if (t.status === "CLEANING" || t.status === "NEED_PAYMENT") {
-          badgeClass += " is-clean";
-          statusText = "CLEAN"; // Chốt hiển thị là CLEAN cho cả 2 trạng thái
+        badgeClass += " is-clean";
+        statusText = "CLEAN"; // Chốt hiển thị là CLEAN cho cả 2 trạng thái
       } else if (res) {
-          badgeClass += " is-res";
-          statusText = "RESERVED";
+        badgeClass += " is-res";
+        statusText = "RESERVED";
       }
 
       const item = document.createElement("div");
@@ -224,14 +358,19 @@ if (wtCloseModal) {
     let res = (t.status === "AVAILABLE") ? null : occupiedReservations.find(r => r.tableId == t.id);
 
     if (t.status === "AVAILABLE" && res && !isFutureReservation(res)) res = null;
-    // Nếu đang dọn hoặc chờ thanh toán, coi như không còn khách ngồi (ẩn info đặt chỗ cũ)
     if (t.status === "CLEANING" || t.status === "NEED_PAYMENT") res = null;
 
     pick.table.textContent = t.code;
     pick.area.textContent = t.areaName || areaLabel(t.areaKey);
-    
-    // HIỂN THỊ: Nếu là NEED_PAYMENT thì vẫn ghi là CLEAN trên màn hình
-    pick.status.textContent = (t.status === "NEED_PAYMENT" || t.status === "CLEANING") ? "CLEAN" : t.status;
+
+    const STATUS_LABEL = {
+      AVAILABLE: "TRỐNG",
+      IN_SERVICE: "ĐANG PHỤC VỤ",
+      NEED_PAYMENT: "CHỜ THANH TOÁN",
+      CLEANING: "CHỜ DỌN"
+    };
+
+    pick.status.textContent = STATUS_LABEL[t.status] || t.status;
 
     if (res) {
       pick.seats.textContent = res.guestName || "Đang tải...";
@@ -246,9 +385,7 @@ if (wtCloseModal) {
     actions.start.disabled = !(t.status === "AVAILABLE" || (res && t.status !== "IN_SERVICE"));
     actions.order.disabled = (t.status !== "IN_SERVICE");
     actions.checkout.disabled = (t.status !== "IN_SERVICE");
-    
-    // Nút "Đã dọn xong" sẽ sáng khi trạng thái là CLEANING hoặc NEED_PAYMENT
-    actions.cleaned.disabled = !(t.status === "CLEANING" || t.status === "NEED_PAYMENT");
+    actions.cleaned.disabled = !(t.status === "CLEANING");
   };
 
   const clearSelectedInfo = () => {
@@ -281,39 +418,54 @@ if (wtCloseModal) {
     if (success) window.location.href = `${CONTEXT_PATH}/waiter/order?tableId=${selectedTableId}`;
   };
 
-  actions.order.onclick = () => window.location.href = `${CONTEXT_PATH}/waiter/bill/review?tableId=${selectedTableId}`;
+  actions.order.onclick = () => window.location.href = `${CONTEXT_PATH}/waiter/order-detail?tableId=${selectedTableId}&from=tables`;
 
   actions.checkout.onclick = () => openCloseModal();
 
 
   wtCloseConfirmBtn.onclick = async () => {
-      const tableIdToRedirect = selectedTableId; 
-      const success = await callStatusAPI("status", "NEED_PAYMENT", "Bàn cần dọn");
-      
-      if (success) { // Chỉ chuyển trang nếu API thành công
-          successToast("Đã kết thúc phiên phục vụ. Đang chuyển đến màn hình hóa đơn...");
-          closeCloseModal();
-          clearSelectedInfo(); 
-          
-          setTimeout(() => {
-              window.location.href = `${CONTEXT_PATH}/waiter/bill/review?tableId=${tableIdToRedirect}`;
-          }, 800);
-      }
+    if (!selectedTableId) return;
+    const ok = await callStatusAPI("status", "NEED_PAYMENT", "Đã kết thúc phiên. Đang tải hóa đơn...");
+    if (!ok) return;
+
+    wtCloseConfirmBtn.blur();
+
+    closeCloseModal();
+    resetBillUI();
+    openBillModal();
+    setTimeout(() => {
+      const closeBtn = wtBillModal?.querySelector("[data-close='1']");
+      closeBtn?.focus();
+    }, 0);
+
+    try {
+      const data = await fetchBillPreview(selectedTableId);
+      renderBill(data);
+    } catch (e) {
+      console.error(e);
+      errorToast("Không tải được hóa đơn. Vui lòng thử lại!");
+
+      if (billEls.loading) billEls.loading.style.display = "none";
+      if (billEls.empty) billEls.empty.style.display = "";
+      if (billEls.tableLines) billEls.tableLines.style.display = "none";
+      if (billEls.sumWrap) billEls.sumWrap.style.display = "none";
+    }
   };
   actions.cleaned.onclick = async () => {
-    const resClose = await fetch(`${CONTEXT_PATH}/api/tables/${selectedTableId}/close-session`, {
-        method: "POST", headers: getHeaders()
-    });
-
-    if (resClose.ok) {
-        const success = await callStatusAPI("status", "AVAILABLE", "Bàn đã dọn xong, sẵn sàng đón khách.");
-        if (success) {
-            occupiedReservations = occupiedReservations.filter(r => r.tableId != selectedTableId);
-            selectedTableId = null; 
-            clearSelectedInfo();
-        }
+    if (!selectedTableId) return;
+    const t = tables.find(x => String(x.id) === String(selectedTableId));
+    if (!t || t.status !== "CLEANING") {
+      errorToast("Bàn chưa ở trạng thái DỌN BÀN. Vui lòng thanh toán trước rồi mới dọn xong.");
+      return;
     }
-};
+
+    const success = await callStatusAPI("status", "AVAILABLE", "Bàn đã dọn xong, sẵn sàng đón khách.");
+    if (success) {
+      occupiedReservations = occupiedReservations.filter(r => r.tableId != selectedTableId);
+      selectedTableId = null;
+      clearSelectedInfo();
+    }
+  };
 
   const applyFilters = () => {
     const f = floorSel.value;

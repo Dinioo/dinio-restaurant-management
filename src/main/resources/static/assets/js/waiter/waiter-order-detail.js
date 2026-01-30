@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const tableId = params.get("tableId");
   const btnCreateOrder = document.getElementById("btnCreateOrder");
   if (btnCreateOrder && tableId) {
-    btnCreateOrder.href = `/dinio/waiter/order?tableId=${encodeURIComponent(tableId)}`;
+    btnCreateOrder.href = `/dinio/waiter/order?tableId=${encodeURIComponent(tableId)}&from=orderDetail`;
   }
 
   let state = {

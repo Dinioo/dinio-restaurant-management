@@ -141,7 +141,7 @@
                   </button>
 
                   <button class="tm-table" type="button"
-                    data-area="floor1" data-id="T06" data-code="T06" data-seats="2" data-status="NEED_CLEAN">
+                    data-area="floor1" data-id="T06" data-code="T06" data-seats="2" data-status="CLEANING">
                     <span class="t-code">T06</span><span class="t-meta">2 chỗ</span>
                     <span class="t-badge" data-badge>—</span>
                   </button>
@@ -395,6 +395,8 @@
 
   <!-- IMPORTANT: modal fragment -->
   <div th:replace="~{fragments/waiter-close-session-modal :: waiterCloseSessionModal}"></div>
+
+  <div th:replace="~{fragments/waiter-bill-modal :: waiterBillModal}"></div>
 
   <div th:replace="~{fragments/footer :: footer}"></div>
 </body>

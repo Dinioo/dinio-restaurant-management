@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.servlet.http.HttpServletRequest;
 import ut.edu.dinio.service.InvoiceService;
 import ut.edu.dinio.service.ReservationService;
+import ut.edu.dinio.service.VNPayService;
 
 @Controller
 public class CashierController {
@@ -27,6 +29,9 @@ public class CashierController {
 
     @Autowired
     private ReservationService reservationService;
+
+    @Autowired
+    private VNPayService vnPayService;
 
     @GetMapping("/cashier/tables")
     public String cashierTableMap() {
@@ -102,6 +107,36 @@ public class CashierController {
                 "message", e.getMessage()
             ));
         }
+    }
+
+    @PostMapping("/api/cashier/create-vnpay-payment")
+    @ResponseBody
+    public ResponseEntity<?> createVNPayPayment(@RequestBody Map<String, Object> payload, HttpServletRequest request) {
+        try {
+            Integer tableId = Integer.valueOf(payload.get("tableId").toString());
+            BigDecimal amount = new BigDecimal(payload.get("amount").toString());
+            
+            String ipAddress = getClientIP(request);
+            String paymentUrl = vnPayService.createPaymentUrl(tableId, amount.longValue(), ipAddress);
+            
+            return ResponseEntity.ok(Map.of(
+                "status", "success",
+                "paymentUrl", paymentUrl
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of(
+                "error", "Không thể tạo link thanh toán VNPay",
+                "message", e.getMessage()
+            ));
+        }
+    }
+
+    private String getClientIP(HttpServletRequest request) {
+        String xfHeader = request.getHeader("X-Forwarded-For");
+        if (xfHeader == null) {
+            return request.getRemoteAddr();
+        }
+        return xfHeader.split(",")[0];
     }
 
     @GetMapping("/api/cashier/reservations")

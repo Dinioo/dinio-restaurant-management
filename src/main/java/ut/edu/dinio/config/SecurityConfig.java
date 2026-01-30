@@ -36,10 +36,14 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain staffSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-            .securityMatcher("/waiter/**", "/admin/**", "/kitchen/**", "/cashier/**", "/staff/**", "/api/tables/**", "/api/reservations/**", "/assets/**", "/favicon.ico", "/error")
+            .securityMatcher("/waiter/**", "/admin/**", "/kitchen/**", "/cashier/**", "/staff/**", "/api/**", "/vnpay/**", "/assets/**", "/favicon.ico", "/error")
             .securityContext(context -> context.securityContextRepository(securityContextRepository()))
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers("/api/**", "/vnpay/**")
+            )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/staff/login", "/assets/**", "/favicon.ico").permitAll()
+                .requestMatchers("/staff/login", "/assets/**", "/favicon.ico", "/vnpay/**").permitAll()
+                .requestMatchers("/api/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/waiter/**").hasAnyRole("WAITER", "ADMIN")
                 .requestMatchers("/kitchen/**").hasAnyRole("KITCHEN", "ADMIN")

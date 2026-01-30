@@ -2,6 +2,7 @@ package ut.edu.dinio.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,14 +10,17 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import ut.edu.dinio.pojo.Customer;
 import ut.edu.dinio.pojo.MenuItem;
 import ut.edu.dinio.pojo.Reservation;
 import ut.edu.dinio.pojo.ReservationItem;
 import ut.edu.dinio.pojo.enums.ReservationStatus;
 import ut.edu.dinio.repositories.MenuItemRepository;
+import ut.edu.dinio.repositories.ReservationItemRepository;
 import ut.edu.dinio.repositories.ReservationRepository;
 
 @Service
@@ -26,6 +30,9 @@ public class ReservationService {
     private ReservationRepository reservationRepository;
     @Autowired
     private MenuItemRepository menuItemRepository;
+
+    @Autowired
+    private ReservationItemRepository reservationItemRepository;
 
     public List<Reservation> getReservationsByCustomer(Integer customerId) {
         return reservationRepository.findByCustomerIdOrderByReservedAtDesc(customerId);
@@ -106,5 +113,87 @@ public class ReservationService {
         reservationRepository.save(r);
     }
 
-    
+    public List<Map<String, Object>> getAllReservationsByDate(LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.atTime(LocalTime.MAX);
+        List<Reservation> reservations = reservationRepository.findAllWithDetailsByDate(start, end);
+
+        return reservations.stream().map(this::convertToMap).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void confirmReservation(Integer id) {
+        Reservation res = reservationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy mã đặt bàn"));
+        res.setStatus(ReservationStatus.CONFIRMED);
+        reservationRepository.save(res);
+    }
+
+    @Transactional
+    public void cancelReservation(Integer id) {
+        Reservation res = reservationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy mã đặt bàn"));
+
+        res.setStatus(ReservationStatus.CANCELLED);
+        reservationRepository.save(res);
+
+        reservationItemRepository.deleteByReservationId(id);
+    }
+
+    private Map<String, Object> convertToMap(Reservation res) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", res.getId());
+        map.put("reservedAt", res.getReservedAt().toString());
+        map.put("slot", res.getReservedAt().getHour() < 15 ? "MORNING" : "EVENING");
+        map.put("status", res.getStatus().toString());
+        map.put("partySize", res.getPartySize());
+        map.put("note", res.getNote() != null ? res.getNote() : "");
+
+        Map<String, String> customerMap = new HashMap<>();
+        if (res.getCustomer() != null) {
+            customerMap.put("fullName", res.getCustomer().getFullName());
+            customerMap.put("phone", res.getCustomer().getPhone());
+        }
+        map.put("customer", customerMap);
+
+        Map<String, String> tableMap = new HashMap<>();
+        if (res.getTable() != null) {
+            tableMap.put("code", res.getTable().getCode());
+        } else {
+            tableMap.put("code", "Chưa gán");
+        }
+        map.put("table", tableMap);
+
+        Map<String, String> areaMap = new HashMap<>();
+        if (res.getArea() != null) {
+            areaMap.put("name", res.getArea().getName());
+        } else {
+            areaMap.put("name", "—");
+        }
+        map.put("area", areaMap);
+
+        return map;
+    }
+
+    @Scheduled(fixedRate = 900000)
+    @Transactional
+    public void autoCancelExpiredReservations() {
+        LocalDateTime now = LocalDateTime.now();
+
+        List<Reservation> expiredReservations = reservationRepository
+                .findByReservedAtBeforeAndStatus(now, ReservationStatus.PENDING);
+
+        if (!expiredReservations.isEmpty()) {
+            for (Reservation res : expiredReservations) {
+                res.setStatus(ReservationStatus.CANCELLED);
+                res.setNote(res.getNote() + " (Hệ thống tự động hủy do quá giờ xác nhận)");
+
+                reservationRepository.save(res);
+
+                reservationItemRepository.deleteByReservationId(res.getId());
+            }
+            System.out.println("Đã tự động hủy " + expiredReservations.size() + " đơn đặt bàn hết hạn");
+        }
+    }
+
 }

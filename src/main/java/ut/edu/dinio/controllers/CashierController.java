@@ -1,25 +1,32 @@
 package ut.edu.dinio.controllers;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import ut.edu.dinio.service.InvoiceService;
+import ut.edu.dinio.service.ReservationService;
 
 @Controller
 public class CashierController {
 
     @Autowired
     private InvoiceService invoiceService;
+
+    @Autowired
+    private ReservationService reservationService;
 
     @GetMapping("/cashier/tables")
     public String cashierTableMap() {
@@ -51,12 +58,6 @@ public class CashierController {
         return "cashier/cashier-payment";
     }
 
-    // ========== API ENDPOINTS ==========
-
-    /**
-     * API: Lấy danh sách bàn với thông tin bill
-     * GET /api/cashier/tables-with-bills
-     */
     @GetMapping("/api/cashier/tables-with-bills")
     @ResponseBody
     public ResponseEntity<?> getTablesWithBills() {
@@ -71,10 +72,6 @@ public class CashierController {
         }
     }
 
-    /**
-     * API: Lấy chi tiết hóa đơn để thanh toán
-     * GET /api/cashier/payment-detail?tableId=1
-     */
     @GetMapping("/api/cashier/payment-detail")
     @ResponseBody
     public ResponseEntity<?> getPaymentDetail(@RequestParam Integer tableId) {
@@ -89,11 +86,6 @@ public class CashierController {
         }
     }
 
-    /**
-     * API: Xử lý thanh toán
-     * POST /api/cashier/process-payment
-     * Body: { "tableId": 1, "paymentMethod": "CASH", "amount": 250000 }
-     */
     @PostMapping("/api/cashier/process-payment")
     @ResponseBody
     public ResponseEntity<?> processPayment(@RequestBody Map<String, Object> payload) {
@@ -111,4 +103,34 @@ public class CashierController {
             ));
         }
     }
+
+    @GetMapping("/api/cashier/reservations")
+    @ResponseBody
+    public ResponseEntity<List<Map<String, Object>>> getReservations(
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return ResponseEntity.ok(reservationService.getAllReservationsByDate(date));
+    }
+    
+    @PostMapping("/api/cashier/reservations/{id}/confirm")
+    @ResponseBody
+    public ResponseEntity<?> confirm(@PathVariable Integer id) {
+        try {
+            reservationService.confirmReservation(id);
+            return ResponseEntity.ok(Map.of("message", "Xác nhận thành công"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/api/cashier/reservations/{id}/reject")
+    @ResponseBody
+    public ResponseEntity<?> reject(@PathVariable Integer id) {
+        try {
+            reservationService.cancelReservation(id);
+            return ResponseEntity.ok(Map.of("message", "Đã từ chối và hủy các món đặt trước"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

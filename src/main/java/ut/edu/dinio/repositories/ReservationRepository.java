@@ -23,4 +23,18 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     Optional<Reservation> findActiveReservationByTable(@Param("tableId") Integer tableId);
 
     long countByStatusAndCreatedAtAfter(ReservationStatus status, LocalDateTime startOfDay);
+
+    List<Reservation> findByReservedAtBetweenAndStatusOrderByReservedAtAsc(
+            LocalDateTime start, LocalDateTime end, ReservationStatus status);
+
+    @Query("SELECT r FROM Reservation r " +
+       "LEFT JOIN FETCH r.customer " +
+       "LEFT JOIN FETCH r.table " +
+       "LEFT JOIN FETCH r.area " +
+       "WHERE r.reservedAt >= :start AND r.reservedAt <= :end " +
+       "ORDER BY r.reservedAt ASC")
+    List<Reservation> findAllWithDetailsByDate(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    List<Reservation> findByReservedAtBeforeAndStatus(LocalDateTime dateTime, ReservationStatus status);
+
 }

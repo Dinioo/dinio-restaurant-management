@@ -1,5 +1,6 @@
 package ut.edu.dinio.controllers;
 
+import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
 import ut.edu.dinio.pojo.DiningTable;
+import ut.edu.dinio.pojo.Invoice;
+import ut.edu.dinio.pojo.InvoiceLine;
 import ut.edu.dinio.pojo.KitchenTicket;
 import ut.edu.dinio.pojo.MenuCategory;
 import ut.edu.dinio.pojo.MenuItem;
@@ -34,6 +38,7 @@ import ut.edu.dinio.repositories.MenuItemRepository;
 import ut.edu.dinio.repositories.OrderItemRepository;
 import ut.edu.dinio.repositories.OrderRepository;
 import ut.edu.dinio.repositories.TableSessionRepository;
+import ut.edu.dinio.service.InvoiceService;
 import ut.edu.dinio.service.OrderService;
 import ut.edu.dinio.service.TableMapService;
 
@@ -47,6 +52,7 @@ public class WaiterController {
   private final MenuCategoryRepository menuCategoryRepository;
   private final MenuItemRepository menuItemRepository;
   private final OrderService orderService;
+  private final InvoiceService invoiceService;
 
   public WaiterController(
       DiningTableRepository diningTableRepository,
@@ -55,7 +61,8 @@ public class WaiterController {
       OrderItemRepository orderItemRepository,
       MenuCategoryRepository menuCategoryRepository,
       MenuItemRepository menuItemRepository,
-      OrderService orderService) {
+      OrderService orderService,
+      InvoiceService invoiceService) {
     this.diningTableRepository = diningTableRepository;
     this.tableSessionRepository = tableSessionRepository;
     this.orderRepository = orderRepository;
@@ -63,6 +70,7 @@ public class WaiterController {
     this.menuCategoryRepository = menuCategoryRepository;
     this.menuItemRepository = menuItemRepository;
     this.orderService = orderService;
+    this.invoiceService = invoiceService;
   }
 
   @Autowired
@@ -120,9 +128,9 @@ public class WaiterController {
 
     Map<String, Object> sessionJson = new HashMap<>();
     sessionJson.put("id", session.getId());
-    sessionJson.put("openedAt", session.getOpenedAt() != null ? session.getOpenedAt().format(fmt) : null);
-    sessionJson.put("covers", session.getCovers());
-    sessionJson.put("status", session.getStatus().name());
+    sessionJson.put("covers", session.getCovers() == null ? 0 : session.getCovers());
+    sessionJson.put("status", session.getStatus() == null ? "" : session.getStatus().name());
+    sessionJson.put("openedAt", session.getOpenedAt() != null ? session.getOpenedAt().format(fmt) : "");
     res.put("session", sessionJson);
 
     List<Order> orders = orderRepository.findBySessionIdOrderByCreatedAtDesc(session.getId());
@@ -255,15 +263,26 @@ public class WaiterController {
 
   @PostMapping("/api/tables/{id}/status")
   @ResponseBody
-  public ResponseEntity<?> updateStatus(@PathVariable Integer id, @RequestParam TableStatus status,
+  public ResponseEntity<?> updateStatus(
+      @PathVariable Integer id,
+      @RequestParam TableStatus status,
       HttpSession session) {
-    try {
-      StaffUser currentStaff = (StaffUser) session.getAttribute("currentStaff");
-      tableMapService.updateTableStatus(id, status, currentStaff);
-      return ResponseEntity.ok(Map.of("status", "success"));
-    } catch (Exception e) {
-      return ResponseEntity.status(500).body(e.getMessage());
-    }
+    StaffUser currentStaff = (StaffUser) session.getAttribute("currentStaff");
+
+     try {
+       tableMapService.updateTableStatus(id, status, currentStaff);
+       return ResponseEntity.ok(Map.of("status", "success"));
+
+     } catch (RuntimeException ex) {
+       return ResponseEntity.status(409).body(Map.of(
+           "status", "error",
+           "message", ex.getMessage()));
+     } catch (Exception ex) {
+       ex.printStackTrace();
+       return ResponseEntity.status(500).body(Map.of(
+           "status", "error",
+           "message", "Server error: " + ex.getMessage()));
+     }
   }
 
   @PostMapping("/api/tables/{id}/close-session")
@@ -283,4 +302,104 @@ public class WaiterController {
     }
     return ResponseEntity.notFound().build();
   }
+
+  @GetMapping("/waiter/api/bill-preview")
+  @ResponseBody
+  @Transactional(readOnly = true)
+  public ResponseEntity<?> getBillPreview(@RequestParam Integer tableId) {
+
+    DiningTable table = diningTableRepository.findById(tableId).orElse(null);
+    if (table == null)
+      return ResponseEntity.notFound().build();
+
+    // response root
+    Map<String, Object> root = new HashMap<>();
+
+    // table json (area có thể null)
+    Map<String, Object> tableJson = new HashMap<>();
+    tableJson.put("id", table.getId());
+    tableJson.put("code", table.getCode());
+    tableJson.put("seats", table.getSeats());
+    tableJson.put("status", table.getStatus() != null ? table.getStatus().name() : "");
+    tableJson.put("areaName",
+        (table.getArea() != null && table.getArea().getName() != null) ? table.getArea().getName() : "");
+    root.put("table", tableJson);
+
+    TableSession session = tableSessionRepository
+        .findTopByTableIdAndStatusInOrderByOpenedAtDesc(
+            tableId,
+            java.util.List.of(SessionStatus.OPEN, SessionStatus.CHECK_REQUESTED))
+        .orElse(null);
+
+    if (session == null) {
+      root.put("session", null); // HashMap cho phép null value
+      root.put("invoice", null);
+      return ResponseEntity.ok(root);
+    }
+
+    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+    Map<String, Object> sessionJson = new HashMap<>();
+    sessionJson.put("id", session.getId());
+    sessionJson.put("covers", session.getCovers() == null ? 0 : session.getCovers());
+    sessionJson.put("status", session.getStatus() != null ? session.getStatus().name() : "");
+    sessionJson.put("openedAt", session.getOpenedAt() != null ? session.getOpenedAt().format(fmt) : "");
+    root.put("session", sessionJson);
+
+    Invoice inv = session.getInvoice();
+    if (inv == null) {
+      root.put("invoice", null);
+      return ResponseEntity.ok(root);
+    }
+
+    List<Map<String, Object>> lines = new ArrayList<>();
+    if (inv.getLines() != null) {
+      for (InvoiceLine ln : inv.getLines()) {
+        OrderItem oi = ln.getOrderItem();
+
+        String name = "—";
+        String note = null;
+
+        BigDecimal unitPrice = ln.getPrice();
+
+        int qty = (ln.getQty() == null) ? 0 : ln.getQty();
+
+        if (oi != null) {
+          note = oi.getNote();
+          if (oi.getUnitPrice() != null)
+            unitPrice = oi.getUnitPrice();
+          if (oi.getMenuItem() != null && oi.getMenuItem().getName() != null) {
+            name = oi.getMenuItem().getName();
+          }
+        }
+
+        BigDecimal up = (unitPrice == null) ? BigDecimal.ZERO : unitPrice;
+        BigDecimal lineTotal = up.multiply(BigDecimal.valueOf(qty));
+
+        Map<String, Object> line = new HashMap<>();
+        line.put("id", ln.getId());
+        line.put("name", name);
+        line.put("qty", qty);
+        line.put("unitPrice", up);
+        line.put("lineTotal", lineTotal);
+        line.put("note", note); // có thể null OK
+        lines.add(line);
+      }
+    }
+
+    Map<String, Object> invJson = new HashMap<>();
+    invJson.put("id", inv.getId());
+    invJson.put("status", inv.getStatus() != null ? inv.getStatus().name() : "");
+    invJson.put("subtotal", inv.getSubtotal() == null ? BigDecimal.ZERO : inv.getSubtotal());
+    invJson.put("tax", inv.getTax() == null ? BigDecimal.ZERO : inv.getTax());
+    invJson.put("serviceCharge", inv.getServiceCharge() == null ? BigDecimal.ZERO : inv.getServiceCharge());
+    invJson.put("discountTotal", inv.getDiscountTotal() == null ? BigDecimal.ZERO : inv.getDiscountTotal());
+    invJson.put("total", inv.getTotal() == null ? BigDecimal.ZERO : inv.getTotal());
+    invJson.put("lines", lines);
+
+    root.put("invoice", invJson);
+
+    return ResponseEntity.ok(root);
+  }
+
 }

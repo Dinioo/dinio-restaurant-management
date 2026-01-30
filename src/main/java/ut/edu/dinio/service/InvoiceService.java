@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import ut.edu.dinio.pojo.Customer;
@@ -91,6 +92,85 @@ public class InvoiceService {
         }
 
         return result;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public Invoice generateInvoiceForCloseSession(Integer tableId, StaffUser staff) {
+
+        TableSession session = sessionRepository
+                .findTopByTableIdAndStatusInOrderByOpenedAtDesc(
+                        tableId,
+                        java.util.List.of(SessionStatus.OPEN, SessionStatus.CHECK_REQUESTED))
+                .orElseThrow(() -> new RuntimeException("Bàn chưa có phiên phục vụ (không có session active)"));
+
+        List<Invoice> existing = invoiceRepository.findAllBySessionIdOrderByIdDesc(session.getId());
+
+        Invoice invoice;
+        if (!existing.isEmpty()) {
+            invoice = existing.get(0);
+
+            if (existing.size() > 1) {
+                for (int i = 1; i < existing.size(); i++) {
+                    invoiceRepository.delete(existing.get(i));
+                }
+            }
+
+            if (invoice.getSession() == null) {
+                invoice.setSession(session);
+            }
+
+        } else {
+            invoice = new Invoice();
+            invoice.setSession(session); 
+            invoice.setStatus(InvoiceStatus.OPEN);
+
+        }
+
+        invoice.getLines().clear();
+
+        List<Order> orders = orderRepository.findBySessionIdOrderByCreatedAtDesc(session.getId());
+        BigDecimal subtotal = BigDecimal.ZERO;
+
+        for (Order order : orders) {
+            List<OrderItem> items = orderItemRepository.findByOrderIdOrderByIdAsc(order.getId());
+            for (OrderItem oi : items) {
+                int qty = oi.getQty() == null ? 0 : oi.getQty();
+                BigDecimal unit = oi.getUnitPrice() == null ? BigDecimal.ZERO : oi.getUnitPrice();
+
+                InvoiceLine line = new InvoiceLine(invoice, oi, qty, unit);
+                invoice.getLines().add(line);
+
+                subtotal = subtotal.add(unit.multiply(BigDecimal.valueOf(qty)));
+            }
+        }
+
+        BigDecimal tax = subtotal.multiply(new BigDecimal("0.08"));
+        BigDecimal serviceCharge = subtotal.multiply(new BigDecimal("0.05"));
+
+        invoice.setSubtotal(subtotal);
+        invoice.setTax(tax);
+        invoice.setServiceCharge(serviceCharge);
+
+        if (invoice.getDiscountTotal() == null)
+            invoice.setDiscountTotal(BigDecimal.ZERO);
+
+        BigDecimal total = subtotal.add(tax).add(serviceCharge).subtract(invoice.getDiscountTotal());
+        invoice.setTotal(total);
+
+        Invoice saved = invoiceRepository.save(invoice);
+        session.setInvoice(saved);
+        sessionRepository.save(session);
+
+        if (staff != null) {
+            auditLogService.log(
+                    staff,
+                    "GENERATE_INVOICE_ON_CLOSE_SESSION",
+                    "Invoice",
+                    saved.getId(),
+                    Map.of("tableId", tableId, "sessionId", session.getId(), "total", total));
+        }
+
+        return saved;
     }
 
     /**
@@ -305,21 +385,21 @@ public class InvoiceService {
     @Transactional
     public Map<String, Object> processPayment(Integer tableId, String paymentMethod, BigDecimal amount) {
         DiningTable table = tableRepository.findById(tableId)
-            .orElseThrow(() -> new RuntimeException("Không tìm thấy bàn"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy bàn"));
 
         TableSession session = sessionRepository
-            .findByTableIdAndStatus(tableId, SessionStatus.OPEN)
-            .orElseThrow(() -> new RuntimeException("Bàn chưa có phiên phục vụ"));
+                .findByTableIdAndStatus(tableId, SessionStatus.OPEN)
+                .orElseThrow(() -> new RuntimeException("Bàn chưa có phiên phục vụ"));
 
         Invoice invoice = getOrCreateInvoice(session.getId());
-        
+
         Payment payment = new Payment();
         payment.setInvoice(invoice);
         payment.setMethod(ut.edu.dinio.pojo.enums.PaymentMethod.valueOf(paymentMethod));
         payment.setAmount(amount);
         payment.setPaidAt(LocalDateTime.now());
         payment.setRefNo("TXN-" + System.currentTimeMillis());
-        
+
         invoice.getPayments().add(payment);
         invoice.setStatus(InvoiceStatus.PAID);
         invoiceRepository.save(invoice);
@@ -339,6 +419,5 @@ public class InvoiceService {
 
         return result;
     }
-
 
 }

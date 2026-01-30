@@ -1,6 +1,7 @@
 package ut.edu.dinio.repositories;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,13 +15,17 @@ import ut.edu.dinio.pojo.enums.SessionStatus;
 
 @Repository
 public interface TableSessionRepository extends JpaRepository<TableSession, Integer> {
-    
+
     Optional<TableSession> findTopByTableIdAndStatusOrderByOpenedAtDesc(Integer tableId, SessionStatus status);
-    
+
+    Optional<TableSession> findTopByTableIdAndStatusInOrderByOpenedAtDesc(
+            Integer tableId,
+            Collection<SessionStatus> statuses);
+
     // THÊM Query rõ ràng
     @Query("SELECT ts FROM TableSession ts WHERE ts.table.id = :tableId AND ts.status = :status")
-    Optional<TableSession> findByTableIdAndStatus(@Param("tableId") Integer tableId, 
-                                                   @Param("status") SessionStatus status);
-    
+    Optional<TableSession> findByTableIdAndStatus(@Param("tableId") Integer tableId,
+            @Param("status") SessionStatus status);
+
     List<TableSession> findByStatusAndOpenedAtAfter(SessionStatus status, LocalDateTime startOfDay);
 }

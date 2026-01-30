@@ -11,7 +11,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import ut.edu.dinio.pojo.Area;
 import ut.edu.dinio.pojo.Customer;
 import ut.edu.dinio.pojo.DiningTable;
@@ -40,8 +40,11 @@ public class TableMapService {
     @Autowired
     private TableSessionRepository sessionRepository;
 
-        @Autowired
+    @Autowired
     private AuditLogService auditLogService;
+
+    @Autowired
+    private InvoiceService invoiceService;
 
     public List<Map<String, Object>> getAllAreas() {
         List<Area> areas = areaRepository.findAllByOrderByIdAsc();
@@ -129,12 +132,20 @@ public class TableMapService {
     @Transactional
     public void updateTableStatus(Integer tableId, TableStatus newStatus, StaffUser staff) {
         DiningTable table = tableRepository.findById(tableId).orElse(null);
-        if (table == null)
-            return;
-                TableStatus oldStatus = table.getStatus();
-        table.setStatus(newStatus);
+        if (table == null) return;
+
+        TableStatus oldStatus = table.getStatus();
 
         Integer openedSessionId = null;
+        Integer activeSessionId = null;
+
+        TableSession active = sessionRepository
+                .findTopByTableIdAndStatusInOrderByOpenedAtDesc(
+                        tableId,
+                        List.of(SessionStatus.OPEN, SessionStatus.CHECK_REQUESTED))
+                .orElse(null);
+        if (active != null) activeSessionId = active.getId();
+
         if (newStatus == TableStatus.IN_SERVICE) {
             if (sessionRepository.findByTableIdAndStatus(tableId, SessionStatus.OPEN).isEmpty()) {
                 TableSession session = new TableSession(table, table.getSeats(), staff);
@@ -142,39 +153,45 @@ public class TableMapService {
                 openedSessionId = session.getId();
             }
         }
-        if (newStatus == TableStatus.CLEANING) {
-            sessionRepository.findByTableIdAndStatus(tableId, SessionStatus.OPEN).ifPresent(s -> {
-                s.setStatus(SessionStatus.CLOSED);
-                s.setClosedAt(LocalDateTime.now());
-                sessionRepository.save(s);
-            });
-        }
-        tableRepository.save(table);
-                Map<String, Object> details = new HashMap<>();
-                details.put("from", oldStatus != null ? oldStatus.name() : null);
-                details.put("to", newStatus != null ? newStatus.name() : null);
-                details.put("openedSessionId", openedSessionId); 
 
-                auditLogService.log(
-                    staff,
-                    "TABLE_STATUS_CHANGE",
-                    "DiningTable",
-                    tableId,
-                    details
-                );
+        if (newStatus == TableStatus.NEED_PAYMENT) {
+            if (active == null || active.getStatus() != SessionStatus.OPEN) {
+                throw new RuntimeException("Bàn chưa có session đang mở");
+            }
+
+            invoiceService.generateInvoiceForCloseSession(tableId, staff);
+
+            active.setStatus(SessionStatus.CHECK_REQUESTED);
+            sessionRepository.save(active);
+        }
+
+
+        table.setStatus(newStatus);
+        tableRepository.save(table);
+
+        Map<String, Object> details = new HashMap<>();
+        details.put("from", oldStatus != null ? oldStatus.name() : null);
+        details.put("to", newStatus != null ? newStatus.name() : null);
+        details.put("openedSessionId", openedSessionId);
+        details.put("activeSessionId", activeSessionId);
+
+        auditLogService.log(
+                staff,
+                "TABLE_STATUS_CHANGE",
+                "DiningTable",
+                tableId,
+                details);
 
         if (openedSessionId != null) {
             auditLogService.log(
-                staff,
-                "OPEN_SESSION",
-                "TableSession",
-                openedSessionId,
-                Map.of(
-                    "tableId", tableId,
-                    "covers", table.getSeats()
-                )
-            );
-        }
+                    staff,
+                    "OPEN_SESSION",
+                    "TableSession",
+                    openedSessionId,
+                    Map.of(
+                            "tableId", tableId,
+                            "covers", table.getSeats()));
+        }        
     }
 
     @Transactional

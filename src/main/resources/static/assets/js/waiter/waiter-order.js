@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const btnSendKitchen = document.getElementById("btnSendKitchen");
   const btnCancel = document.getElementById("btnCancel");
+  const btnBack = document.getElementById("btnBack");
 
   const woTable = document.getElementById("woTable");
   const woArea = document.getElementById("woArea");
@@ -16,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const params = new URLSearchParams(location.search);
   const tableId = params.get("tableId");
+  const from = params.get("from");
 
   function showToast(message, type = "info", duration = 3000) {
     Toastify({
@@ -55,6 +57,20 @@ document.addEventListener("DOMContentLoaded", () => {
   btnCancel?.addEventListener("click", () => {
     window.location.href = `/dinio/waiter/order-detail?tableId=${encodeURIComponent(tableId)}`;
   });
+
+  btnBack?.addEventListener("click", () => {
+  if (!tableId) {
+    window.location.href = "/dinio/waiter/tables";
+    return;
+  }
+
+  if (from === "orderDetail") {
+    window.location.href =
+      `/dinio/waiter/order-detail?tableId=${tableId}`;
+  } else {
+    window.location.href = "/dinio/waiter/tables";
+  }
+});
 
   init();
 

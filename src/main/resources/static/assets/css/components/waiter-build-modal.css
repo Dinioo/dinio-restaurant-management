@@ -1,0 +1,171 @@
+/* ===============================
+   WAITer BILL MODAL (wtBillModal)
+   Fix: modal bị bể layout vì CSS đang chỉ scope cho #dishModal
+   =============================== */
+
+#wtBillModal.fp-modal{
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+#wtBillModal .fp-backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+}
+
+#wtBillModal .fp-panel{
+  position: relative;
+  z-index: 1;
+
+  width: min(860px, calc(100% - 32px));
+  max-height: min(84vh, 760px);
+
+  padding: 18px 18px 16px;
+  border-radius: 18px;
+
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
+
+  display: flex;
+  flex-direction: column;
+}
+
+#wtBillModal .fp-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+#wtBillModal .fp-title{
+  margin:0;
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--text);
+}
+
+/* meta chips */
+#wtBillModal .wt-bill-meta{
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin: 4px 0 12px;
+}
+
+#wtBillModal .wt-chip{
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  min-width: 0;
+}
+
+#wtBillModal .wt-chip small{
+  display:block;
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .7;
+  margin-bottom: 6px;
+}
+
+#wtBillModal .wt-chip b{
+  display:block;
+  font-size: 13px;
+  font-weight: 900;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* scroll area */
+#wtBillModal .wt-bill-scroll{
+  flex: 1;
+  overflow: auto;
+  border-radius: 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  padding: 10px;
+}
+
+/* table */
+#wtBillModal .wt-bill-table{
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#wtBillModal .wt-bill-table th,
+#wtBillModal .wt-bill-table td{
+  padding: 10px 10px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  vertical-align: top;
+}
+
+#wtBillModal .wt-bill-table th{
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  opacity: .8;
+}
+
+#wtBillModal .wt-bill-table .num{
+  text-align: right;
+  white-space: nowrap;
+}
+
+#wtBillModal .wt-line-name{
+  font-weight: 900;
+}
+
+#wtBillModal .wt-line-note{
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: .75;
+}
+
+/* summary */
+#wtBillModal .wt-bill-sum{
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(255,255,255,.12);
+}
+
+#wtBillModal .wt-bill-sum .row{
+  display:flex;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 6px 0;
+  opacity: .92;
+}
+
+#wtBillModal .wt-bill-sum .row.total{
+  padding-top: 10px;
+  margin-top: 6px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  font-size: 16px;
+  font-weight: 900;
+  opacity: 1;
+}
+
+/* actions */
+#wtBillModal .wt-bill-actions{
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* responsive */
+@media (max-width: 920px){
+  #wtBillModal .wt-bill-meta{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

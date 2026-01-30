@@ -1,537 +1,550 @@
 html,
 body {
-    height: 100%;
-    overflow: hidden
+  height: 100%;
+  overflow: hidden;
 }
 
 .app-shell {
-    height: 100vh;
-    display: flex;
-    overflow: hidden
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
 }
 
-.app-shell>aside {
-    flex: 0 0 auto;
-    overflow: hidden
+.app-shell > aside {
+  flex: 0 0 auto;
+  overflow: hidden;
 }
 
 .csp {
-    flex: 1 1 auto;
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden
+  flex: 1 1 auto;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .csp-wrap {
-    width: min(1360px, calc(100% - 48px));
-    margin: 0 auto;
-    padding: 22px 0 76px
+  width: min(1360px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 22px 0 76px;
 }
 
 .csp-top {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-bottom: 14px
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
 }
 
 .csp-eyebrow {
-    font-size: 12px;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 6px
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
 }
 
 .csp-h1 {
-    font-size: 30px;
-    letter-spacing: -.02em;
-    margin: 0
+  font-size: 30px;
+  letter-spacing: -0.02em;
+  margin: 0;
 }
 
 .csp-sub {
-    margin: 8px 0 0;
-    opacity: .78;
-    max-width: 860px
+  margin: 8px 0 0;
+  opacity: 0.78;
+  max-width: 860px;
 }
 
 .csp-top-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .csp-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 14px
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .csp-card {
-    background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .02));
-    border: 1px solid var(--border-soft);
-    border-radius: 20px;
-    box-shadow: 0 18px 40px rgba(0, 0, 0, .28);
-    overflow: hidden
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0.02)
+  );
+  border: 1px solid var(--border-soft);
+  border-radius: 20px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+  overflow: hidden;
 }
 
 .csp-card-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 14px 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, .06)
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .csp-card-head .t {
-    font-weight: 900;
-    letter-spacing: -.01em
+  font-weight: 900;
+  letter-spacing: -0.01em;
 }
 
 .csp-card-head .r {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .csp-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 10px;
-    border-radius: 999px;
-    background: var(--surface-2);
-    border: 1px solid var(--border-soft);
-    font-size: 12px;
-    opacity: .9
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  font-size: 12px;
+  opacity: 0.9;
 }
 
 .csp-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 10px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, .03);
-    border: 1px solid rgba(255, 255, 255, .06);
-    font-size: 12px;
-    opacity: .9
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 12px;
+  opacity: 0.9;
 }
 
 .csp-paybar {
-    width: 100%
+  width: 100%;
 }
 
 .csp-paygrid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-    padding: 14px 16px 16px
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px 16px 16px;
 }
 
 .csp-payopt {
-    height: 78px;
-    border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, .08);
-    background: rgba(255, 255, 255, .02);
-    color: var(--text-strong);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    transition: transform .12s ease, opacity .12s ease, border-color .12s ease, background .12s ease;
-    outline: none
+  height: 78px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-strong);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition:
+    transform 0.12s ease,
+    opacity 0.12s ease,
+    border-color 0.12s ease,
+    background 0.12s ease;
+  outline: none;
 }
 
 .csp-payopt:hover {
-    transform: translateY(-1px);
-    border-color: rgba(202, 165, 106, .28)
+  transform: translateY(-1px);
+  border-color: rgba(202, 165, 106, 0.28);
 }
 
 .csp-payopt:active {
-    transform: translateY(0)
+  transform: translateY(0);
 }
 
 .csp-payopt.is-active {
-    border-color: rgba(202, 165, 106, .45);
-    background: rgba(202, 165, 106, .10)
+  border-color: rgba(202, 165, 106, 0.45);
+  background: rgba(202, 165, 106, 0.1);
 }
 
 .csp-payicon {
-    width: 42px;
-    height: 42px;
-    border-radius: 14px;
-    display: grid;
-    place-items: center;
-    background: rgba(255, 255, 255, .04);
-    border: 1px solid rgba(255, 255, 255, .06)
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .csp-payopt.is-active .csp-payicon {
-    background: rgba(255, 255, 255, .06);
-    border-color: rgba(255, 255, 255, .10)
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .csp-payname {
-    font-weight: 950;
-    letter-spacing: -.01em
+  font-weight: 950;
+  letter-spacing: -0.01em;
 }
 
 .csp-sec {
-    padding: 14px 16px 16px
+  padding: 14px 16px 16px;
 }
 
 .csp-sec-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 10px
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .csp-sec-head .t {
-    font-weight: 900;
-    letter-spacing: -.01em
+  font-weight: 900;
+  letter-spacing: -0.01em;
 }
 
 .csp-sec-head .r {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .csp-divider {
-    height: 1px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .10), rgba(255, 255, 255, 0));
-    margin: 0 16px
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0)
+  );
+  margin: 0 16px;
 }
 
 .csp-kv {
-    display: flex;
-    flex-direction: column;
-    gap: 10px
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .csp-kv .row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: 14px;
-    background: rgba(255, 255, 255, .02);
-    border: 1px solid rgba(255, 255, 255, .06)
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .csp-kv .k {
-    font-size: 13px;
-    opacity: .78
+  font-size: 13px;
+  opacity: 0.78;
 }
 
 .csp-kv .v {
-    font-weight: 900;
-    letter-spacing: -.01em;
-    text-align: right;
-    max-width: 65%
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  text-align: right;
+  max-width: 65%;
 }
 
 .csp-link {
-    height: 34px;
-    padding: 0 10px;
-    border-radius: 12px;
-    border: 1px solid var(--border-soft);
-    background: var(--surface-2);
-    color: var(--text-strong);
-    cursor: pointer;
-    font-size: 13px
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-2);
+  color: var(--text-strong);
+  cursor: pointer;
+  font-size: 13px;
 }
 
 .csp-link:hover {
-    transform: translateY(-1px)
+  transform: translateY(-1px);
 }
 
 .csp-link:active {
-    transform: translateY(0)
+  transform: translateY(0);
 }
 
 .csp-table {
-    max-height: 340px;
-    overflow: auto;
-    border-radius: 16px
+  max-height: 340px;
+  overflow: auto;
+  border-radius: 16px;
 }
 
 .csp-table table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .csp-table thead th {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background: rgba(255, 255, 255, .07);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, .12);
-    padding: 12px 14px;
-    text-align: center;
-    font-size: 12px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    opacity: .95;
-    white-space: nowrap
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 12px 14px;
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.95;
+  white-space: nowrap;
 }
 
 .csp-table thead th:not(:last-child),
 .csp-table tbody td:not(:last-child) {
-    border-right: 1px solid rgba(255, 255, 255, .06)
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .csp-table tbody td {
-    padding: 12px 14px;
-    border-bottom: 1px solid rgba(255, 255, 255, .06);
-    white-space: nowrap;
-    font-size: 14px;
-    text-align: center;
-    vertical-align: middle
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .csp-table tbody tr {
-    background: rgba(255, 255, 255, .01)
+  background: rgba(255, 255, 255, 0.01);
 }
 
 .csp-table tbody tr:hover {
-    background: rgba(255, 255, 255, .035)
+  background: rgba(255, 255, 255, 0.035);
 }
 
 .csp-table tbody td:nth-child(2) {
-    text-align: left
+  text-align: left;
 }
 
 .csp-note {
-    margin-top: 10px;
-    padding: 10px 12px;
-    border-radius: 14px;
-    background: rgba(255, 255, 255, .02);
-    border: 1px solid rgba(255, 255, 255, .06);
-    font-size: 12px;
-    color: var(--text-muted)
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 12px;
+  color: var(--text-muted);
 }
 
 .csp-totalbox {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .csp-total-left,
 .csp-total-right {
-    flex: 1 1 280px;
-    padding: 12px 14px;
-    border-radius: 16px;
-    background: rgba(255, 255, 255, .03);
-    border: 1px solid rgba(255, 255, 255, .07)
+  flex: 1 1 280px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .csp-total-left .k,
 .csp-total-right .k {
-    font-size: 12px;
-    color: var(--text-muted)
+  font-size: 12px;
+  color: var(--text-muted);
 }
 
 .csp-total-left .v {
-    font-size: 22px;
-    font-weight: 1000;
-    letter-spacing: -.02em;
-    margin-top: 4px
+  font-size: 22px;
+  font-weight: 1000;
+  letter-spacing: -0.02em;
+  margin-top: 4px;
 }
 
 .csp-total-right .v {
-    font-weight: 900;
-    margin-top: 6px
+  font-weight: 900;
+  margin-top: 6px;
 }
 
 .csp-qrbox {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-    padding: 2px 0 0
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  padding: 2px 0 0;
 }
 
 .csp-qr {
-    width: 180px;
-    height: 180px;
-    border-radius: 18px;
-    border: 1px dashed rgba(255, 255, 255, .18);
-    background: rgba(255, 255, 255, .03);
-    display: grid;
-    place-items: center;
-    font-weight: 900;
-    letter-spacing: .12em;
-    opacity: .9;
-    user-select: none
+  width: 300px;
+  height: 300px;
+  border-radius: 18px;
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.03);
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  opacity: 0.9;
+  user-select: none;
 }
 
 .csp-qrsub {
-    font-size: 12px;
-    color: var(--text-muted);
-    text-align: center
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
 }
 
 .csp-thanks {
-    display: flex;
-    flex-direction: column;
-    gap: 10px
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .csp-thanks-title {
-    font-size: 16px;
-    font-weight: 950;
-    letter-spacing: -.02em
+  font-size: 16px;
+  font-weight: 950;
+  letter-spacing: -0.02em;
 }
 
 .csp-thanks-sub {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: -4px
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: -4px;
 }
 
 .csp-cta {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .csp-cta .btn-order,
 .csp-cta .btn-light {
-    flex: 1 1 220px
+  flex: 1 1 220px;
 }
 
 .ta-c {
-    text-align: center !important
+  text-align: center !important;
 }
 
 .ta-r {
-    text-align: right !important
+  text-align: right !important;
 }
 
 .fp-modal {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
 }
 
 .fp-modal.is-hidden {
-    display: none !important
+  display: none !important;
 }
 
 .fp-backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, .55)
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
 }
 
 .fp-panel {
-    position: relative;
-    z-index: 1;
-    width: min(560px, calc(100% - 32px));
-    padding: 18px 18px 16px;
-    border-radius: 18px;
-    background: var(--surface-1);
-    border: 1px solid var(--border-soft);
-    box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(10px)
+  position: relative;
+  z-index: 1;
+  width: min(560px, calc(100% - 32px));
+  padding: 18px 18px 16px;
+  border-radius: 18px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
 }
 
 .fp-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 8px
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
 }
 
 .fp-title {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--text)
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
 }
 
 .fp-sub {
-    margin: 0 0 14px;
-    font-size: 13px;
-    opacity: .85;
-    color: var(--text)
+  margin: 0 0 14px;
+  font-size: 13px;
+  opacity: 0.85;
+  color: var(--text);
 }
 
 .fp-x {
-    width: 36px;
-    height: 36px;
-    border: 0;
-    border-radius: 12px;
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
-    opacity: .85;
-    display: grid;
-    place-items: center
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.85;
+  display: grid;
+  place-items: center;
 }
 
 .fp-x:hover {
-    background: var(--surface-2);
-    opacity: 1
+  background: var(--surface-2);
+  opacity: 1;
 }
 
 .csp-modal-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    align-items: center
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .csp-table::-webkit-scrollbar {
-    width: 10px;
-    height: 10px
+  width: 10px;
+  height: 10px;
 }
 
 .csp-table::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, .10);
-    border-radius: 999px;
-    border: 2px solid rgba(0, 0, 0, .25)
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  border: 2px solid rgba(0, 0, 0, 0.25);
 }
 
 .csp-table::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, .16)
+  background: rgba(255, 255, 255, 0.16);
 }
 
-@media (max-width:980px) {
-    .csp-paygrid {
-        grid-template-columns: 1fr;
-        gap: 10px
-    }
+@media (max-width: 980px) {
+  .csp-paygrid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
 
-    .csp-payopt {
-        height: 64px;
-        justify-content: flex-start;
-        padding: 0 14px
-    }
+  .csp-payopt {
+    height: 64px;
+    justify-content: flex-start;
+    padding: 0 14px;
+  }
 }
 
-@media (max-width:720px) {
-    .csp-wrap {
-        width: calc(100% - 32px)
-    }
+@media (max-width: 720px) {
+  .csp-wrap {
+    width: calc(100% - 32px);
+  }
 }

@@ -243,14 +243,43 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!validateBeforePay()) return;
 
     try {
-      toast.info("Đang xử lý thanh toán...");
-
       const { total } = calc();
       const payload = {
         tableId: parseInt(state.tableId),
         paymentMethod: state.payMethod,
         amount: total,
       };
+
+      // Nếu chọn BANK (Chuyển khoản) → redirect sang VNPay
+      if (state.payMethod === "BANK") {
+        toast.info("Đang chuyển đến VNPay...");
+
+        const response = await fetch(
+          "/dinio/api/cashier/create-vnpay-payment",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          },
+        );
+
+        if (!response.ok) throw new Error("Không thể tạo link VNPay");
+
+        const result = await response.json();
+
+        if (result.paymentUrl) {
+          // Redirect sang VNPay
+          window.location.href = result.paymentUrl;
+        } else {
+          throw new Error("Không nhận được payment URL");
+        }
+        return;
+      }
+
+      // CASH hoặc VISA → thanh toán trực tiếp
+      toast.info("Đang xử lý thanh toán...");
 
       const response = await fetch("/dinio/api/cashier/process-payment", {
         method: "POST",

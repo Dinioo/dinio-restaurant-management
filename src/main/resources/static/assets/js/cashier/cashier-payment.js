@@ -2,9 +2,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const el = (id) => document.getElementById(id);
 
   const toast = {
-    success: (m) => (window.successToast ? window.successToast(m) : console.log(m)),
+    success: (m) =>
+      window.successToast ? window.successToast(m) : console.log(m),
     error: (m) => (window.errorToast ? window.errorToast(m) : console.error(m)),
-    warning: (m) => (window.warningToast ? window.warningToast(m) : console.warn(m)),
+    warning: (m) =>
+      window.warningToast ? window.warningToast(m) : console.warn(m),
     info: (m) => (window.infoToast ? window.infoToast(m) : console.log(m)),
   };
 
@@ -54,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
     data: null,
   };
 
-  const fmtMoney = (n) => (Number(n || 0)).toLocaleString("vi-VN") + "đ";
+  const fmtMoney = (n) => Number(n || 0).toLocaleString("vi-VN") + "đ";
 
   const parseQuery = () => {
     const sp = new URLSearchParams(window.location.search);
@@ -103,15 +105,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateBillUrl() {
     const billId = state.data?.billId || "";
-    state.billUrl = billId ? `${window.location.origin}/dinio/cashier/bills?billId=${encodeURIComponent(billId)}` : "";
+    state.billUrl = billId
+      ? `${window.location.origin}/dinio/cashier/bills?billId=${encodeURIComponent(billId)}`
+      : "";
   }
 
   function renderPayMeta() {
-    ui.payMeta.textContent = state.payMethod === "CASH" ? "Cash" : state.payMethod === "BANK" ? "Bank" : "Visa";
+    ui.payMeta.textContent =
+      state.payMethod === "CASH"
+        ? "Cash"
+        : state.payMethod === "BANK"
+          ? "Bank"
+          : "Visa";
   }
 
   function renderPayActive() {
-    const btns = ui.payGrid ? Array.from(ui.payGrid.querySelectorAll(".csp-payopt")) : [];
+    const btns = ui.payGrid
+      ? Array.from(ui.payGrid.querySelectorAll(".csp-payopt"))
+      : [];
     btns.forEach((b) => {
       const isOn = (b.dataset.pay || "") === state.payMethod;
       b.classList.toggle("is-active", isOn);
@@ -146,7 +157,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderTotals() {
     const { subtotal, discount, vat, total } = calc();
     ui.sumSub.textContent = fmtMoney(subtotal);
-    ui.sumDiscount.textContent = discount > 0 ? `- ${fmtMoney(discount)}` : fmtMoney(0);
+    ui.sumDiscount.textContent =
+      discount > 0 ? `- ${fmtMoney(discount)}` : fmtMoney(0);
     ui.sumVat.textContent = `${Math.round((state.vatRate || 0) * 100)}% • ${fmtMoney(vat)}`;
     ui.sumTotal.textContent = fmtMoney(total);
     ui.bottomTotal.textContent = fmtMoney(total);
@@ -166,7 +178,9 @@ document.addEventListener("DOMContentLoaded", () => {
     ui.billNote.textContent = state.data?.note || "—";
 
     ui.qrBox.textContent = "QR";
-    ui.qrHint.textContent = state.billUrl ? "Quét để mở hoá đơn" : "Chưa có link hoá đơn";
+    ui.qrHint.textContent = state.billUrl
+      ? "Quét để mở hoá đơn"
+      : "Chưa có link hoá đơn";
   }
 
   function renderAll() {
@@ -179,21 +193,37 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function fetchPaymentData(tableId) {
-    return {
-      tableId,
-      status: "Đang phục vụ",
-      areaLabel: "Tầng 1",
-      customer: { name: "Chị Vy", phone: "0912 888 999", tier: "VIP", tierLabel: "VIP" },
-      items: [
-        { name: "Bò Wagyu áp chảo • sốt rượu vang đỏ", qty: 1, lineTotal: 890000 },
-        { name: "Sò điệp Hokkaido • bơ chanh vàng", qty: 2, lineTotal: 520000 },
-        { name: "Cá tuyết nướng miso • măng tây", qty: 1, lineTotal: 460000 },
-        { name: "Súp nấm truffle • kem tươi", qty: 2, lineTotal: 320000 },
-        { name: "Tráng miệng tiramisu • cacao nguyên chất", qty: 1, lineTotal: 145000 },
-      ],
-      note: "Ưu tiên bàn yên tĩnh, phục vụ tráng miệng sau món chính.",
-      billId: "B100012",
-    };
+    try {
+      const response = await fetch(
+        `/dinio/api/cashier/payment-detail?tableId=${tableId}`,
+      );
+      if (!response.ok) throw new Error("API error");
+
+      const data = await response.json();
+
+      // Transform data để khớp với format hiện tại
+      return {
+        tableId: data.tableId,
+        status: data.status,
+        areaLabel: data.areaLabel,
+        customer: {
+          name: data.customer.name,
+          phone: data.customer.phone,
+          tier: data.customer.tier,
+          tierLabel: data.customer.tierLabel,
+        },
+        items: data.items.map((item) => ({
+          name: item.name,
+          qty: item.qty,
+          lineTotal: Number(item.lineTotal),
+        })),
+        note: data.note,
+        billId: data.billId,
+      };
+    } catch (error) {
+      console.error("❌ Lỗi tải dữ liệu thanh toán:", error);
+      throw error;
+    }
   }
 
   function validateBeforePay() {
@@ -214,11 +244,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       toast.info("Đang xử lý thanh toán...");
-      await new Promise((r) => setTimeout(r, 350));
-      toast.success("Thanh toán thành công");
+
+      const { total } = calc();
+      const payload = {
+        tableId: parseInt(state.tableId),
+        paymentMethod: state.payMethod,
+        amount: total,
+      };
+
+      const response = await fetch("/dinio/api/cashier/process-payment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) throw new Error("Payment failed");
+
+      const result = await response.json();
+
+      toast.success("Thanh toán thành công!");
       closeModal(ui.payModal);
+
+      // Chờ 1s rồi quay về trang tables
+      setTimeout(() => {
+        window.location.href = "/dinio/cashier/tables";
+      }, 1000);
     } catch (e) {
-      toast.error("Thanh toán thất bại");
+      toast.error("Thanh toán thất bại: " + e.message);
       console.error(e);
     }
   }
@@ -301,3 +355,72 @@ document.addEventListener("DOMContentLoaded", () => {
   bind();
   init();
 });
+
+// Lấy tableId từ URL
+const urlParams = new URLSearchParams(window.location.search);
+const tableId = urlParams.get("tableId");
+
+// Tải chi tiết thanh toán
+async function loadPaymentDetail() {
+  try {
+    const response = await fetch(
+      `/dinio/api/cashier/payment-detail?tableId=${tableId}`,
+    );
+    const data = await response.json();
+
+    // Hiển thị thông tin
+    document.getElementById("tableName").textContent = data.tableName;
+    document.getElementById("custName").textContent = data.customer.name;
+    document.getElementById("custPhone").textContent = data.customer.phone;
+
+    // Render items
+    const tbody = document.getElementById("tbody");
+    tbody.innerHTML = data.items
+      .map(
+        (item, idx) => `
+            <tr>
+                <td>${idx + 1}</td>
+                <td>${item.name}</td>
+                <td>${item.qty}</td>
+                <td>${item.lineTotal.toLocaleString()}đ</td>
+            </tr>
+        `,
+      )
+      .join("");
+
+    // Hiển thị tổng tiền
+    document.getElementById("sumTotal").textContent =
+      data.total.toLocaleString() + "đ";
+  } catch (error) {
+    console.error("Lỗi tải dữ liệu:", error);
+  }
+}
+
+// Xử lý thanh toán
+async function handlePayment() {
+  const paymentMethod = document.querySelector(".csp-payopt.is-active").dataset
+    .pay;
+  const amount = parseFloat(
+    document.getElementById("sumTotal").textContent.replace(/\D/g, ""),
+  );
+
+  try {
+    const response = await fetch("/api/cashier/process-payment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tableId: parseInt(tableId),
+        paymentMethod: paymentMethod,
+        amount: amount,
+      }),
+    });
+
+    const result = await response.json();
+    alert("Thanh toán thành công!");
+    window.location.href = "/cashier/tables";
+  } catch (error) {
+    alert("Thanh toán thất bại: " + error.message);
+  }
+}
+
+loadPaymentDetail();

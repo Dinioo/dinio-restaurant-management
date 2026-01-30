@@ -302,6 +302,68 @@ public class SeedDataRunner implements CommandLineRunner {
         em.persist(oi1);
         em.persist(oi2);
 
+        // ===== SESSION 2: Bàn F1-02 =====
+        DiningTable tableF101 = floor1.getTables().get(0); // F1-01
+        tableF101.setStatus(TableStatus.IN_SERVICE);
+
+        TableSession session2 = new TableSession(tableF101, 2, waiter);
+        session2.setStatus(SessionStatus.OPEN);
+        em.persist(session2);
+
+        Order order2 = new Order(session2, waiter);
+        order2.setStatus(OrderStatus.SENT);
+        em.persist(order2);
+
+        MenuItem pasta = em.createQuery(
+                "select m from MenuItem m where m.name = :n", MenuItem.class)
+                .setParameter("n", "Truffle Cream Pasta")
+                .getSingleResult();
+
+        MenuItem coffee = em.createQuery(
+                "select m from MenuItem m where m.name = :n", MenuItem.class)
+                .setParameter("n", "Espresso")
+                .getSingleResult();
+
+        OrderItem oi3 = new OrderItem(order2, pasta, 1, pasta.getBasePrice(), null);
+        oi3.setStatus(OrderItemStatus.SERVED);
+
+        OrderItem oi4 = new OrderItem(order2, coffee, 2, coffee.getBasePrice(), null);
+        oi4.setStatus(OrderItemStatus.SERVED);
+
+        em.persist(oi3);
+        em.persist(oi4);
+
+        // ===== SESSION 3: Bàn F2-01 =====
+        DiningTable tableF201 = floor2.getTables().get(0); // F2-01
+        tableF201.setStatus(TableStatus.IN_SERVICE);
+
+        TableSession session3 = new TableSession(tableF201, 4, waiter);
+        session3.setStatus(SessionStatus.OPEN);
+        em.persist(session3);
+
+        Order order3 = new Order(session3, waiter);
+        order3.setStatus(OrderStatus.SENT);
+        em.persist(order3);
+
+        MenuItem salmon = em.createQuery(
+                "select m from MenuItem m where m.name = :n", MenuItem.class)
+                .setParameter("n", "Pan-Seared Salmon")
+                .getSingleResult();
+
+        MenuItem tiramisu = em.createQuery(
+                "select m from MenuItem m where m.name = :n", MenuItem.class)
+                .setParameter("n", "Classic Tiramisu")
+                .getSingleResult();
+
+        OrderItem oi5 = new OrderItem(order3, salmon, 2, salmon.getBasePrice(), "Well done");
+        oi5.setStatus(OrderItemStatus.PREPARING);
+
+        OrderItem oi6 = new OrderItem(order3, tiramisu, 1, tiramisu.getBasePrice(), null);
+        oi6.setStatus(OrderItemStatus.QUEUED);
+
+        em.persist(oi5);
+        em.persist(oi6);
+
         // =========================================================
         // 6) KitchenTicket + TicketItem
         // =========================================================

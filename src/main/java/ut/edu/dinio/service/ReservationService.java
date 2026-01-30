@@ -18,6 +18,7 @@ import ut.edu.dinio.pojo.Customer;
 import ut.edu.dinio.pojo.MenuItem;
 import ut.edu.dinio.pojo.Reservation;
 import ut.edu.dinio.pojo.ReservationItem;
+import ut.edu.dinio.pojo.StaffUser;
 import ut.edu.dinio.pojo.enums.ReservationStatus;
 import ut.edu.dinio.repositories.MenuItemRepository;
 import ut.edu.dinio.repositories.ReservationItemRepository;
@@ -33,6 +34,9 @@ public class ReservationService {
 
     @Autowired
     private ReservationItemRepository reservationItemRepository;
+
+    @Autowired
+    private AuditLogService auditLogService;
 
     public List<Reservation> getReservationsByCustomer(Integer customerId) {
         return reservationRepository.findByCustomerIdOrderByReservedAtDesc(customerId);
@@ -122,15 +126,22 @@ public class ReservationService {
     }
 
     @Transactional
-    public void confirmReservation(Integer id) {
+    public void confirmReservation(Integer id, StaffUser staff) {
         Reservation res = reservationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy mã đặt bàn"));
         res.setStatus(ReservationStatus.CONFIRMED);
         reservationRepository.save(res);
+        auditLogService.log(
+            staff,
+            "CONFIRM_RESERVATION",
+            "Reservation",
+            id,
+            Map.of("status", "CONFIRMED")
+        );
     }
 
     @Transactional
-    public void cancelReservation(Integer id) {
+    public void cancelReservation(Integer id, StaffUser staff) {
         Reservation res = reservationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy mã đặt bàn"));
 
@@ -138,6 +149,13 @@ public class ReservationService {
         reservationRepository.save(res);
 
         reservationItemRepository.deleteByReservationId(id);
+         auditLogService.log(
+            staff,
+            "CANCEL_RESERVATION",
+            "Reservation",
+            id,
+            Map.of("status", "CANCELLED", "deletedPreorderItems", true)
+        );
     }
 
     private Map<String, Object> convertToMap(Reservation res) {
@@ -186,7 +204,7 @@ public class ReservationService {
         if (!expiredReservations.isEmpty()) {
             for (Reservation res : expiredReservations) {
                 res.setStatus(ReservationStatus.CANCELLED);
-                res.setNote(res.getNote() + " (Hệ thống tự động hủy do quá giờ xác nhận)");
+                res.setNote(res.getNote()  +" (Hệ thống tự động hủy do quá giờ xác nhận)");
 
                 reservationRepository.save(res);
 

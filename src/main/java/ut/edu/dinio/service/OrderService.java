@@ -3,12 +3,14 @@ package ut.edu.dinio.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ut.edu.dinio.pojo.KitchenTicket;
 import ut.edu.dinio.pojo.MenuItem;
 import ut.edu.dinio.pojo.Order;
 import ut.edu.dinio.pojo.OrderItem;
+import ut.edu.dinio.pojo.StaffUser;
 import ut.edu.dinio.pojo.TableSession;
 import ut.edu.dinio.pojo.enums.OrderItemStatus;
 import ut.edu.dinio.pojo.enums.OrderStatus;
@@ -25,21 +27,27 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
     private final KitchenTicketRepository kitchenTicketRepository;
     private final MenuItemRepository menuItemRepository;
+    @Autowired
+    private final AuditLogService auditLogService;
 
     public OrderService(
             OrderRepository orderRepository,
             OrderItemRepository orderItemRepository,
             KitchenTicketRepository kitchenTicketRepository,
-            MenuItemRepository menuItemRepository) {
+            MenuItemRepository menuItemRepository,
+            AuditLogService auditLogService
+        ) {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.kitchenTicketRepository = kitchenTicketRepository;
         this.menuItemRepository = menuItemRepository;
+        this.auditLogService = auditLogService;
     }
 
     public KitchenTicket sendToKitchen(
             TableSession session,
-            List<Map<String, Object>> items) {
+            List<Map<String, Object>> items,
+            StaffUser staff) {
         if (items == null || items.isEmpty()) {
             throw new IllegalArgumentException("Chưa có món để gửi bếp");
         }
@@ -72,6 +80,21 @@ public class OrderService {
         ticket.setSession(session);
         ticket.setOrder(order);
         ticket.setStatus(TicketStatus.OPEN);
-        return kitchenTicketRepository.save(ticket);
+        ticket = kitchenTicketRepository.save(ticket);
+
+        auditLogService.log(
+            staff,
+            "SEND_TO_KITCHEN",
+            "KitchenTicket",
+            ticket.getId(),
+            Map.of(
+                "sessionId", session.getId(),
+                "tableId", session.getTable() != null ? session.getTable().getId() : null,
+                "orderId", order.getId(),
+                "itemCount", items.size()
+            )
+        );
+
+        return ticket;
     }
 }

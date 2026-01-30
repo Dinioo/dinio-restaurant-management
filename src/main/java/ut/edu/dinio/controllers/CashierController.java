@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.servlet.http.HttpSession;
+import ut.edu.dinio.pojo.StaffUser;
 import ut.edu.dinio.service.InvoiceService;
 import ut.edu.dinio.service.ReservationService;
 
@@ -66,9 +68,8 @@ public class CashierController {
             return ResponseEntity.ok(tables);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of(
-                "error", "Không thể tải danh sách bàn",
-                "message", e.getMessage()
-            ));
+                    "error", "Không thể tải danh sách bàn",
+                    "message", e.getMessage()));
         }
     }
 
@@ -80,27 +81,26 @@ public class CashierController {
             return ResponseEntity.ok(detail);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of(
-                "error", "Không thể tải thông tin thanh toán",
-                "message", e.getMessage()
-            ));
+                    "error", "Không thể tải thông tin thanh toán",
+                    "message", e.getMessage()));
         }
     }
 
     @PostMapping("/api/cashier/process-payment")
     @ResponseBody
-    public ResponseEntity<?> processPayment(@RequestBody Map<String, Object> payload) {
+    public ResponseEntity<?> processPayment(@RequestBody Map<String, Object> payload, HttpSession session) {
         try {
             Integer tableId = Integer.valueOf(payload.get("tableId").toString());
             String paymentMethod = payload.get("paymentMethod").toString();
             BigDecimal amount = new BigDecimal(payload.get("amount").toString());
 
-            Map<String, Object> result = invoiceService.processPayment(tableId, paymentMethod, amount);
+            StaffUser currentStaff = (StaffUser) session.getAttribute("currentStaff");
+            Map<String, Object> result = invoiceService.processPayment(tableId, paymentMethod, amount, currentStaff);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of(
-                "error", "Thanh toán thất bại",
-                "message", e.getMessage()
-            ));
+                    "error", "Thanh toán thất bại",
+                    "message", e.getMessage()));
         }
     }
 
@@ -110,12 +110,13 @@ public class CashierController {
             @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return ResponseEntity.ok(reservationService.getAllReservationsByDate(date));
     }
-    
+
     @PostMapping("/api/cashier/reservations/{id}/confirm")
     @ResponseBody
-    public ResponseEntity<?> confirm(@PathVariable Integer id) {
+    public ResponseEntity<?> confirm(@PathVariable Integer id, HttpSession session) {
         try {
-            reservationService.confirmReservation(id);
+            StaffUser currentStaff = (StaffUser) session.getAttribute("currentStaff");
+            reservationService.confirmReservation(id, currentStaff);
             return ResponseEntity.ok(Map.of("message", "Xác nhận thành công"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -124,9 +125,10 @@ public class CashierController {
 
     @PostMapping("/api/cashier/reservations/{id}/reject")
     @ResponseBody
-    public ResponseEntity<?> reject(@PathVariable Integer id) {
+    public ResponseEntity<?> reject(@PathVariable Integer id, HttpSession session) {
         try {
-            reservationService.cancelReservation(id);
+            StaffUser currentStaff = (StaffUser) session.getAttribute("currentStaff");
+            reservationService.cancelReservation(id, currentStaff);
             return ResponseEntity.ok(Map.of("message", "Đã từ chối và hủy các món đặt trước"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

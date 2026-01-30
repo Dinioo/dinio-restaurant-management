@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.servlet.http.HttpSession;
+import ut.edu.dinio.pojo.StaffUser;
 import ut.edu.dinio.service.KitchenService;
 @Controller
 public class KitchenController {
@@ -35,7 +37,8 @@ public class KitchenController {
 
   @PostMapping("/api/kitchen/items/{id}/next")
   @ResponseBody
-  public Map<String, Object> nextStatus(@PathVariable Integer id) {
-    return kitchenService.updateNextStatus(id);
+  public Map<String, Object> nextStatus(@PathVariable Integer id, HttpSession session) {
+    StaffUser currentStaff = (StaffUser) session.getAttribute("currentStaff");
+    return kitchenService.updateNextStatus(id, currentStaff);
   }
 }

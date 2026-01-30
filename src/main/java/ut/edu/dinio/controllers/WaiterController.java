@@ -222,7 +222,8 @@ public class WaiterController {
   @ResponseBody
   public ResponseEntity<?> sendKitchen(
       @RequestParam Integer tableId,
-      @RequestBody Map<String, Object> body) {
+      @RequestBody Map<String, Object> body,
+      HttpSession httpSession) {
     DiningTable table = diningTableRepository.findById(tableId).orElse(null);
     if (table == null)
       return ResponseEntity.notFound().build();
@@ -237,7 +238,8 @@ public class WaiterController {
 
     List<Map<String, Object>> items = (List<Map<String, Object>>) body.get("items");
 
-    KitchenTicket ticket = orderService.sendToKitchen(session, items);
+    StaffUser currentStaff = (StaffUser) httpSession.getAttribute("currentStaff");
+    KitchenTicket ticket = orderService.sendToKitchen(session, items, currentStaff);
 
     return ResponseEntity.ok(Map.of(
         "status", "success",
@@ -266,8 +268,9 @@ public class WaiterController {
 
   @PostMapping("/api/tables/{id}/close-session")
   @ResponseBody
-  public ResponseEntity<?> closeSession(@PathVariable Integer id) {
-    tableMapService.closeSession(id);
+  public ResponseEntity<?> closeSession(@PathVariable Integer id, HttpSession session) {
+    StaffUser currentStaff = (StaffUser) session.getAttribute("currentStaff");
+    tableMapService.closeSession(id, currentStaff);
     return ResponseEntity.ok(Map.of("status", "success"));
   }
 

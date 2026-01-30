@@ -139,5 +139,88 @@ document.addEventListener("DOMContentLoaded", () => {
         }, { once: true });
     });
 
+    table?.addEventListener("keydown", async (e) => {
+        const input = e.target.closest(".password-input");
+        if (!input || e.key !== "Enter") return;
+
+        const row = input.closest(".staff-row");
+        const id = row.dataset.id;
+        const password = input.value.trim();
+
+        if (!password) {
+            toast("Mật khẩu không được trống", "warn");
+            return;
+        }
+
+        try {
+            const res = await fetch("/dinio/admin/staff/update-password", {
+                method: "POST",
+                headers: getHeaders(),
+                body: JSON.stringify({ id: Number(id), password })
+            });
+
+            const data = await res.json();
+            if (data.status !== "success") {
+                toast(data.message || "Lỗi cập nhật mật khẩu", "error");
+                return;
+            }
+
+            input.value = "";
+            toast("Đã cập nhật mật khẩu", "success");
+        } catch {
+            toast("Lỗi hệ thống", "error");
+        }
+    });
+    document.addEventListener("keydown", async (e) => {
+        const input = e.target.closest(".name-input");
+        if (!input || e.key !== "Enter") return;
+
+        const row = input.closest(".staff-row");
+        const id = row.dataset.id;
+        const name = input.value.trim();
+
+        if (!name) return toast("Name không được trống", "warn");
+
+        try {
+            const res = await fetch("/dinio/admin/staff/update-name", {
+                method: "POST",
+                headers: getHeaders(),
+                body: JSON.stringify({ id: Number(id), name })
+            });
+            const data = await res.json();
+            if (data.status !== "success") return toast(data.message || "Lỗi", "error");
+
+            row.dataset.name = name;
+            row.querySelector(".name-view").textContent = name;
+            toast("Đã cập nhật name", "success");
+        } catch {
+            toast("Lỗi hệ thống", "error");
+        }
+    });
+    document.addEventListener("change", async (e) => {
+        const sel = e.target.closest(".status-input");
+        if (!sel) return;
+
+        const row = sel.closest(".staff-row");
+        const id = row.dataset.id;
+        const status = sel.value;
+
+        try {
+            const res = await fetch("/dinio/admin/staff/update-status", {
+                method: "POST",
+                headers: getHeaders(),
+                body: JSON.stringify({ id: Number(id), status })
+            });
+            const data = await res.json();
+            if (data.status !== "success") return toast(data.message || "Lỗi", "error");
+
+            row.dataset.status = status;
+            row.querySelector(".status-view").textContent = status;
+            toast("Đã cập nhật status", "success");
+        } catch {
+            toast("Lỗi hệ thống", "error");
+        }
+    });
+
     applyFilter();
 });

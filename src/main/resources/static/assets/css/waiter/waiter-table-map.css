@@ -300,3 +300,121 @@ html, body { overflow-x: hidden; }
     border-radius: 16px;
   }
 }
+html,body{height:100%}
+
+body{overflow:hidden}
+
+.app-shell{
+  height:100vh;
+  display:flex;
+  overflow:hidden;
+}
+
+.app-shell>aside{
+  flex:0 0 auto;
+  overflow:hidden;
+}
+
+.app-main{
+  flex:1 1 auto;
+  height:100%;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+
+.app-main .container{
+  width:100%;
+  min-height:100%;
+}
+
+#tablemap-head.section,
+#tablemap-tools.section,
+#tablemap-layout.section{
+  padding:0;
+}
+
+#tablemap-head{margin-top:24px}
+#tablemap-tools{margin-top:14px}
+#tablemap-layout{margin-top:14px;padding-bottom:60px}
+
+#tablemap-head .menu-container,
+#tablemap-tools .menu-container,
+#tablemap-layout .menu-container{
+  width:min(1360px,calc(100% - 48px));
+  margin:0 auto;
+  padding:0;
+}
+
+@media (max-width:1100px){
+  #tablemap-head .menu-container,
+  #tablemap-tools .menu-container,
+  #tablemap-layout .menu-container{
+    width:calc(100% - 80px);
+  }
+}
+
+@media (max-width:640px){
+  #tablemap-head .menu-container,
+  #tablemap-tools .menu-container,
+  #tablemap-layout .menu-container{
+    width:calc(100% - 32px);
+  }
+}
+
+.menu-head-card{
+  background:var(--surface-1);
+  border:1px solid var(--border-soft);
+  border-radius:22px;
+  padding:0;
+  min-height:96px;
+}
+
+@media (max-width:640px){
+  .menu-head-card{min-height:72px}
+}
+
+.tm-toolbar{
+  background:var(--surface-1);
+  border:1px solid var(--border-soft);
+  border-radius:22px;
+  padding:14px;
+}
+
+.tm-shell{
+  background:transparent;
+}
+
+.tm-shell.wt-shell{
+  display:grid;
+  grid-template-columns:1fr 360px;
+  gap:16px;
+  align-items:start;
+}
+
+@media (max-width:1100px){
+  .tm-shell.wt-shell{grid-template-columns:1fr}
+}
+
+@media (min-width:1101px){
+  :root{
+    --header-offset:24px;
+    --right-bottom-gap:24px;
+  }
+
+  .wtm-right{
+    position:sticky;
+    top:var(--header-offset);
+    max-height:calc(100vh - var(--header-offset) - var(--right-bottom-gap));
+    overflow:auto;
+    padding-right:8px;
+  }
+
+  .wtm-right::-webkit-scrollbar{width:10px}
+  .wtm-right::-webkit-scrollbar-thumb{
+    background:rgba(255,255,255,0.12);
+    border-radius:999px;
+    border:2px solid rgba(0,0,0,0);
+    background-clip:padding-box;
+  }
+  .wtm-right::-webkit-scrollbar-track{background:transparent}
+}

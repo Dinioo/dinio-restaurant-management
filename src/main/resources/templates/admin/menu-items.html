@@ -1,5 +1,7 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,83 +9,86 @@
 
   <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
   <link rel="stylesheet" th:href="@{/assets/css/admin/menu-items.css}" />
-  <script th:src="@{/assets/js/header-dropdown.js}"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script th:src="@{/assets/js/sidebar.js}" defer></script>
+  <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
 </head>
 
 <body>
-  <div th:replace="~{fragments/header :: header}"></div>
+<div class="app-shell">
+  <div th:replace="~{fragments/admin-sidebar :: adminSidebar('admin_menu')}"></div>
 
-  <main>
-    <section id="menu-head" class="section">
-      <div class="menu-container">
-        <div class="menu-head-card">
-          <p class="section-eyebrow">OUR MENU</p>
-          <h2 class="section-title">Explore Menu</h2>
-          <p class="section-subtitle">
-            Tối giản, tinh tế — chọn nhanh theo category, tag hoặc tìm kiếm.
-          </p>
-        </div>
-      </div>
-    </section>
+  <main class="app-main">
 
-    <section id="menu-tools" class="section">
-      <div class="menu-container">
-        <div class="menu-toolbar">
-          <div class="menu-search">
-            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-            <input id="menuSearch" type="text" placeholder="Search dishes, ingredients..." />
-            <button class="search-clear" type="button" aria-label="Clear">✕</button>
-          </div>
-
-          <div class="menu-toolbar-right">
-            <select class="menu-sort" aria-label="Sort menu">
-              <option value="recommended">Recommended</option>
-              <option value="low">Price: Low → High</option>
-              <option value="high">Price: High → Low</option>
-              <option value="newest">Newest</option>
-            </select>
-            <a class="btn btn-cta" th:href="@{/menu/newdish}">Add dish</a>
+    <main class="menu-page">
+      <section id="menu-head" class="section">
+        <div class="menu-container">
+          <div class="menu-head-card">
+            <p class="section-eyebrow">OUR MENU</p>
+            <h2 class="section-title">Explore Menu</h2>
+            <p class="section-subtitle">
+              Tối giản, tinh tế — chọn nhanh theo category, tag hoặc tìm kiếm.
+            </p>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section id="menu-layout" class="section">
-      <div class="menu-container">
-        <div class="menu-shell">
-
-          <aside class="menu-side" aria-label="Menu filters">
-            <div class="side-card">
-              <p class="side-title">Categories</p>
-              <nav class="side-tabs" id="menuCatTabs" aria-label="Menu categories"></nav>
-
-              <div class="side-divider"></div>
-
-              <p class="side-title">Tags</p>
-              <div class="side-tags" id="menuTagChips" aria-label="Menu tags"></div>
-            </div>
-          </aside>
-
-          <div class="menu-main">
-            <div class="menu-main-head">
-              <p class="menu-count">Showing <b>0</b> items</p>
-              <a class="ghost-link" th:href="@{/menu-items}">Reset</a>
+      <section id="menu-tools" class="section">
+        <div class="menu-container">
+          <div class="menu-toolbar">
+            <div class="menu-search">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <input id="menuSearch" type="text" placeholder="Search dishes, ingredients..." />
+              <button class="search-clear" type="button" aria-label="Clear">✕</button>
             </div>
 
-            <div class="menu-sections" id="menuSections"></div>
+            <div class="menu-toolbar-right">
+              <select class="menu-sort" aria-label="Sort menu">
+                <option value="recommended">Recommended</option>
+                <option value="low">Price: Low → High</option>
+                <option value="high">Price: High → Low</option>
+                <option value="newest">Newest</option>
+              </select>
+              <a class="btn btn-cta" th:href="@{/menu/newdish}">Add dish</a>
+            </div>
           </div>
-
         </div>
-      </div>
-    </section>
-  </main>
+      </section>
+
+      <section id="menu-layout" class="section">
+        <div class="menu-container">
+          <div class="menu-shell">
+            <aside class="menu-side" aria-label="Menu filters">
+              <div class="side-card">
+                <p class="side-title">Categories</p>
+                <nav class="side-tabs" id="menuCatTabs" aria-label="Menu categories"></nav>
+
+                <div class="side-divider"></div>
+
+                <p class="side-title">Tags</p>
+                <div class="side-tags" id="menuTagChips" aria-label="Menu tags"></div>
+              </div>
+            </aside>
+
+            <div class="menu-main">
+              <div class="menu-main-head">
+                <p class="menu-count">Showing <b>0</b> items</p>
+                <a class="ghost-link" th:href="@{/menu-items}">Reset</a>
+              </div>
+
+              <div class="menu-sections" id="menuSections"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
 
     <div th:replace="~{fragments/dish-detail-modal :: dishDetailModal}"></div>
 
-  <div th:replace="~{fragments/footer :: footer}"></div>
-
-  <script th:src="@{/assets/js/menu-common.js}" defer></script>
-  <script th:src="@{/assets/js/admin/menu-items.js}" defer></script>
+    <script th:src="@{/assets/js/menu-common.js}" defer></script>
+    <script th:src="@{/assets/js/admin/menu-items.js}" defer></script>
+  </main>
+</div>
 </body>
 </html>

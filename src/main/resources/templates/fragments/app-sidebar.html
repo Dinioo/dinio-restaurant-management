@@ -17,6 +17,10 @@
     <nav class="app-side-nav">
 
       <div class="app-side-group" sec:authorize="hasRole('WAITER')">
+        <a class="app-side-item" href="/dinio/waiter/dashboard">
+          <i class="fa-solid fa-house"></i>
+          <span>Trang chủ</span>
+        </a>
         <a class="app-side-item" th:classappend="${active}=='waiter_tables' ? ' is-active' : ''"
            href="/dinio/waiter/tables">
           <i class="fa-solid fa-chair"></i>
@@ -86,7 +90,7 @@
       </div>
 
       <div class="app-side-group" sec:authorize="hasRole('KITCHEN')">
-        <a class="app-side-item" href="/dinio/kitchen">
+        <a class="app-side-item" href="/dinio/kitchen/dashboard">
           <i class="fa-solid fa-fire-burner"></i>
           <span>KDS</span>
         </a>

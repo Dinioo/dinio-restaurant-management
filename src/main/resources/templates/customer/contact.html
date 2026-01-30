@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DINIO - Liên hệ</title>
+
+  <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+  <link rel="stylesheet" th:href="@{/assets/css/customer/contact.css}" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script th:src="@{/assets/js/header-dropdown.js}" defer></script>
+  <script th:src="@{/assets/js/customer/contact.js}" defer></script>
+</head>
+
+<body>
+  <div th:replace="~{fragments/header :: header}"></div>
+
+  <main class="ct">
+    <section class="ct-hero">
+      <div class="ct-wrap">
+        <div class="ct-hero-card">
+          <p class="ct-eyebrow">LIÊN HỆ</p>
+          <h1 class="ct-h1">Gửi lời nhắn cho Dinio</h1>
+          <p class="ct-sub">
+            Bạn cần đặt bàn, góp ý món, hay muốn hợp tác? Điền form bên dưới — demo fake, không gửi đi đâu cả.
+          </p>
+
+          <div class="ct-quick">
+            <a class="ct-quick-item" href="#ctForm">
+              <i class="fa-regular fa-pen-to-square"></i>
+              <span>Gửi tin nhắn</span>
+            </a>
+            <a class="ct-quick-item" href="#ctInfo">
+              <i class="fa-solid fa-location-dot"></i>
+              <span>Thông tin</span>
+            </a>
+            <a class="ct-quick-item" href="#ctFaq">
+              <i class="fa-regular fa-circle-question"></i>
+              <span>FAQ</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ct-body">
+      <div class="ct-wrap">
+        <div class="ct-grid">
+
+          <section class="ct-main" id="ctForm" aria-label="Form liên hệ">
+            <div class="ct-card">
+              <div class="ct-card-head">
+                <p class="t">Form liên hệ</p>
+                <span class="ct-pill" id="ctStatus">Fake mode</span>
+              </div>
+
+              <form class="ct-form" id="contactForm" novalidate>
+                <div class="ct-row">
+                  <div class="ct-field">
+                    <label for="ctName">Họ tên *</label>
+                    <input id="ctName" type="text" placeholder="VD: Minh Trần" required />
+                  </div>
+
+                  <div class="ct-field">
+                    <label for="ctPhone">Số điện thoại *</label>
+                    <input id="ctPhone" type="tel" placeholder="VD: 0909 123 456" required />
+                  </div>
+                </div>
+
+                <div class="ct-row">
+                  <div class="ct-field">
+                    <label for="ctEmail">Email</label>
+                    <input id="ctEmail" type="email" placeholder="VD: minh@email.com" />
+                  </div>
+
+                  <div class="ct-field">
+                    <label for="ctTopic">Chủ đề *</label>
+                    <select id="ctTopic" required>
+                      <option value="" selected disabled>Chọn chủ đề</option>
+                      <option value="reservation">Đặt bàn</option>
+                      <option value="feedback">Góp ý món</option>
+                      <option value="event">Sự kiện / tiệc</option>
+                      <option value="partner">Hợp tác</option>
+                      <option value="other">Khác</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="ct-row">
+                  <div class="ct-field">
+                    <label for="ctTime">Thời gian dự kiến (tuỳ chọn)</label>
+                    <input id="ctTime" type="text" placeholder="VD: 19:00, Thứ 6" />
+                  </div>
+
+                  <div class="ct-field">
+                    <label for="ctGuests">Số khách (tuỳ chọn)</label>
+                    <input id="ctGuests" type="number" min="1" placeholder="VD: 4" />
+                  </div>
+                </div>
+
+                <div class="ct-field">
+                  <label for="ctMsg">Nội dung *</label>
+                  <textarea id="ctMsg" rows="5" placeholder="Nhập lời nhắn của bạn..." required></textarea>
+                </div>
+
+                <div class="ct-actions">
+                  <button class="ct-ghost" type="button" id="ctFillDemo">
+                    Điền demo
+                  </button>
+                  <button class="ct-btn" type="submit">
+                    Gửi tin nhắn
+                    <i class="fa-solid fa-arrow-right"></i>
+                  </button>
+                </div>
+
+                <div class="ct-note" id="ctNote">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span>Demo fake: bấm gửi chỉ hiện toast/confirm, không gọi API.</span>
+                </div>
+              </form>
+            </div>
+
+            <div class="ct-card" id="ctFaq">
+              <div class="ct-card-head">
+                <p class="t">FAQ nhanh</p>
+              </div>
+
+              <div class="ct-faq">
+                <button class="ct-faq-q" type="button" data-faq="1">
+                  <span>Đặt bàn trước bao lâu thì hợp lý?</span>
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="ct-faq-a" data-faqa="1">
+                  Cuối tuần nên đặt trước 1–2 ngày. Ngày thường có thể đặt trong ngày nếu còn chỗ.
+                </div>
+
+                <button class="ct-faq-q" type="button" data-faq="2">
+                  <span>Có nhận đặt tiệc/đặt bàn nhóm đông không?</span>
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="ct-faq-a" data-faqa="2">
+                  Có. Với nhóm từ 8 khách, bạn để lại thời gian và số khách, tụi mình sẽ gợi ý set menu phù hợp.
+                </div>
+
+                <button class="ct-faq-q" type="button" data-faq="3">
+                  <span>Có món chay / dị ứng không?</span>
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="ct-faq-a" data-faqa="3">
+                  Có tuỳ ngày. Bạn ghi rõ yêu cầu dị ứng (hải sản, đậu phộng, sữa...) để bếp hỗ trợ.
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <aside class="ct-side" id="ctInfo" aria-label="Thông tin liên hệ">
+            <div class="ct-card">
+              <div class="ct-card-head">
+                <p class="t">Thông tin</p>
+                <span class="ct-badge">Customer</span>
+              </div>
+
+              <div class="ct-kv">
+                <div class="ct-kv-row">
+                  <span class="k"><i class="fa-solid fa-location-dot"></i> Địa chỉ</span>
+                  <span class="v">123 Nguyễn Huệ, Q1, TP.HCM</span>
+                </div>
+                <div class="ct-kv-row">
+                  <span class="k"><i class="fa-solid fa-phone"></i> Hotline</span>
+                  <span class="v">1900 123 456</span>
+                </div>
+                <div class="ct-kv-row">
+                  <span class="k"><i class="fa-regular fa-envelope"></i> Email</span>
+                  <span class="v">hello@dinio.fake</span>
+                </div>
+              </div>
+
+              <div class="ct-divider"></div>
+
+              <div class="ct-hours">
+                <p class="ct-mini">Giờ mở cửa</p>
+                <div class="ct-hours-grid">
+                  <div class="ct-hours-row"><span>Mon–Thu</span><b>10:30 – 22:00</b></div>
+                  <div class="ct-hours-row"><span>Fri</span><b>10:30 – 23:00</b></div>
+                  <div class="ct-hours-row"><span>Sat</span><b>09:30 – 23:30</b></div>
+                  <div class="ct-hours-row"><span>Sun</span><b>09:30 – 22:30</b></div>
+                </div>
+              </div>
+
+              <div class="ct-divider"></div>
+
+              <div class="ct-social">
+                <p class="ct-mini">Kênh</p>
+                <div class="ct-social-row">
+                  <a class="ct-soc" href="#" rel="nofollow noopener"><i class="fa-brands fa-facebook-f"></i></a>
+                  <a class="ct-soc" href="#" rel="nofollow noopener"><i class="fa-brands fa-instagram"></i></a>
+                  <a class="ct-soc" href="#" rel="nofollow noopener"><i class="fa-brands fa-tiktok"></i></a>
+                  <a class="ct-soc" href="#" rel="nofollow noopener"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="ct-card">
+              <div class="ct-card-head">
+                <p class="t">Bản đồ</p>
+                <button class="ct-ghost" type="button" id="ctCopyAddr">Copy địa chỉ</button>
+              </div>
+
+              <div class="ct-map">
+                <div class="ct-map-pin">
+                  <i class="fa-solid fa-location-dot"></i>
+                </div>
+                <div class="ct-map-text">
+                  <p class="m1">Dinio Restaurant</p>
+                  <p class="m2">123 Nguyễn Huệ, Q1</p>
+                </div>
+                <button class="ct-map-btn" type="button" id="ctOpenMap">
+                  Mở map
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </button>
+              </div>
+
+              <p class="ct-foot">
+                Map là placeholder để giữ layout đẹp như trang chủ. Bạn muốn nhúng Google Map iframe thì mình sẽ chỉnh cho.
+              </p>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="ct-toast is-hidden" id="ctToast" role="status" aria-live="polite">
+      <div class="ct-toast-card">
+        <i class="fa-solid fa-circle-check"></i>
+        <div class="ct-toast-text">
+          <p class="a" id="toastTitle">Đã gửi</p>
+          <p class="b" id="toastSub">Tin nhắn đã được ghi nhận (demo).</p>
+        </div>
+        <button class="ct-toast-x" type="button" id="toastClose" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

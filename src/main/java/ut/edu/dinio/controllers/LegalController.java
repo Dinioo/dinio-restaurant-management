@@ -15,4 +15,16 @@ public class LegalController {
   public String privacy() {
     return "customer/privacy";
   }
+  @GetMapping("/story")
+  public String story() {
+    return "customer/story";
+  }
+  @GetMapping("/contact")
+  public String contact() {
+    return "customer/contact";
+  }
+  @GetMapping("/reviews")
+  public String review() {
+    return "customer/reviews";
+  }
 }

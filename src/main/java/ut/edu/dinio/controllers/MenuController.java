@@ -36,6 +36,11 @@ public class MenuController {
     this.menuItemService = menuItemService;
   }
 
+    @GetMapping("/help")
+  public String helpPage() {
+    return "customer/help";
+  }
+
   @GetMapping("/menu-items")
   public String menu_admin() {
     return "admin/menu-items";

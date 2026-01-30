@@ -24,6 +24,44 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const wtCloseModal = document.getElementById("wtCloseSessionModal");
+  const openCloseModal = () => {
+  if (!wtCloseModal) return;
+  wtCloseModal.setAttribute("aria-hidden", "false");
+  wtCloseModal.classList.remove("is-hidden");
+  document.body.classList.add("is-modal-open");
+};
+
+const closeCloseModal = () => {
+  if (!wtCloseModal) return;
+  wtCloseModal.setAttribute("aria-hidden", "true");
+  wtCloseModal.classList.add("is-hidden");  
+  document.body.classList.remove("is-modal-open");
+};
+
+if (wtCloseModal) {
+  wtCloseModal.addEventListener("click", (e) => {
+    if (e.target.closest(".fp-backdrop[data-close='1']")) {
+      closeCloseModal();
+      return;
+    }
+
+    if (e.target.closest("[data-close='1']")) {
+      closeCloseModal();
+      return;
+    }
+
+    if (e.target.closest(".fp-close, .fp-x, .wt-modal-close, #wtCloseCancelBtn")) {
+      closeCloseModal();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && wtCloseModal.getAttribute("aria-hidden") === "false") {
+      closeCloseModal();
+    }
+  });
+}
+
   const wtCloseConfirmBtn = document.getElementById("wtCloseConfirmBtn");
 
   let allTables = [];
@@ -111,17 +149,18 @@ document.addEventListener("DOMContentLoaded", () => {
       const grid = section.querySelector(".tm-grid");
 
       grouped[key].forEach(table => {
-        const res = occupiedReservations.find(r => r.tableId == table.id);
+        const res = (table.status === "AVAILABLE") ? null : occupiedReservations.find(r => r.tableId == table.id);
+        
         const btn = document.createElement("button");
         btn.type = "button";
         let statusClass = "is-available";
         if (table.status === "IN_SERVICE") statusClass = "is-occupied";
-        else if (table.status === "CLEANING") statusClass = "is-clean";
+        else if (table.status === "CLEANING" || table.status === "NEED_PAYMENT") statusClass = "is-clean";
         else if (res && isFutureReservation(res)) statusClass = "is-reserved";
 
         btn.className = `tm-table ${statusClass} ${table.id == selectedTableId ? 'is-selected' : ''}`;
         btn.innerHTML = `<span class="t-code">${table.code}</span><span class="t-meta">${table.seats} chỗ</span>
-                         <span class="t-badge">${res ? res.reservedAt.split('T')[1].substring(0, 5) : '—'}</span>`;
+                      <span class="t-badge">${res ? res.reservedAt.split('T')[1].substring(0, 5) : '—'}</span>`;
 
         btn.onclick = () => { selectedTableId = table.id; updateSelectedInfo(); };
         grid.appendChild(btn);
@@ -148,16 +187,31 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = occupiedReservations.find(r => r.tableId == t.id);
       const name = res ? (res.guestName || "Khách đặt") : "Walk-in";
       const party = res ? (res.seats || res.partySize || t.seats) : t.seats;
+      
       let badgeClass = "badge";
-      if (t.status === "IN_SERVICE") badgeClass += " is-seated";
-      else if (t.status === "CLEANING") badgeClass += " is-clean";
-      else if (res) badgeClass += " is-res";
+      let statusText = ""; // Biến tạm để giữ chữ hiển thị
+
+      if (t.status === "IN_SERVICE") {
+          badgeClass += " is-seated";
+          statusText = "SEATED";
+      } else if (t.status === "CLEANING" || t.status === "NEED_PAYMENT") {
+          badgeClass += " is-clean";
+          statusText = "CLEAN"; // Chốt hiển thị là CLEAN cho cả 2 trạng thái
+      } else if (res) {
+          badgeClass += " is-res";
+          statusText = "RESERVED";
+      }
 
       const item = document.createElement("div");
       item.className = `wtm-item ${t.id == selectedTableId ? "is-active" : ""}`;
       item.innerHTML = `
-        <div class="wtm-item-top"><div class="wtm-item-name">${name}</div>
-        <div style="display:flex; gap:8px; align-items:center;"><span class="${badgeClass}">${t.status === 'IN_SERVICE' ? 'SEATED' : (t.status === 'CLEANING' ? 'CLEAN' : 'RESERVED')}</span><span class="badge">${t.code}</span></div></div>
+        <div class="wtm-item-top">
+          <div class="wtm-item-name">${name}</div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <span class="${badgeClass}">${statusText}</span> 
+            <span class="badge">${t.code}</span>
+          </div>
+        </div>
         <div class="wtm-item-sub"><span>${party} khách</span><span>${res ? res.reservedAt.split('T')[1].substring(0, 5) : ""}</span></div>`;
       item.onclick = () => { selectedTableId = t.id; updateSelectedInfo(); };
       list.appendChild(item);
@@ -167,14 +221,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const updateSelectedInfo = async () => {
     const t = allTables.find(x => x.id == selectedTableId);
     if (!t) return;
-    let res = occupiedReservations.find(r => r.tableId == t.id);
+    let res = (t.status === "AVAILABLE") ? null : occupiedReservations.find(r => r.tableId == t.id);
 
     if (t.status === "AVAILABLE" && res && !isFutureReservation(res)) res = null;
-    if (t.status === "CLEANING") res = null;
+    // Nếu đang dọn hoặc chờ thanh toán, coi như không còn khách ngồi (ẩn info đặt chỗ cũ)
+    if (t.status === "CLEANING" || t.status === "NEED_PAYMENT") res = null;
 
     pick.table.textContent = t.code;
     pick.area.textContent = t.areaName || areaLabel(t.areaKey);
-    pick.status.textContent = t.status;
+    
+    // HIỂN THỊ: Nếu là NEED_PAYMENT thì vẫn ghi là CLEAN trên màn hình
+    pick.status.textContent = (t.status === "NEED_PAYMENT" || t.status === "CLEANING") ? "CLEAN" : t.status;
 
     if (res) {
       pick.seats.textContent = res.guestName || "Đang tải...";
@@ -189,7 +246,9 @@ document.addEventListener("DOMContentLoaded", () => {
     actions.start.disabled = !(t.status === "AVAILABLE" || (res && t.status !== "IN_SERVICE"));
     actions.order.disabled = (t.status !== "IN_SERVICE");
     actions.checkout.disabled = (t.status !== "IN_SERVICE");
-    actions.cleaned.disabled = (t.status !== "CLEANING");
+    
+    // Nút "Đã dọn xong" sẽ sáng khi trạng thái là CLEANING hoặc NEED_PAYMENT
+    actions.cleaned.disabled = !(t.status === "CLEANING" || t.status === "NEED_PAYMENT");
   };
 
   const clearSelectedInfo = () => {
@@ -224,31 +283,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
   actions.order.onclick = () => window.location.href = `${CONTEXT_PATH}/waiter/bill/review?tableId=${selectedTableId}`;
 
-  actions.checkout.onclick = () => wtCloseModal?.classList.remove("is-hidden");
+  actions.checkout.onclick = () => openCloseModal();
+
 
   wtCloseConfirmBtn.onclick = async () => {
-    const response = await fetch(`${CONTEXT_PATH}/api/tables/${selectedTableId}/close-session`, {
-      method: "POST", headers: getHeaders()
-    });
-    if (response.ok) {
-      successToast("Đã kết thúc phiên phục vụ. Đang chuyển đến màn hình hóa đơn...");
-      wtCloseModal.classList.add("is-hidden");
-      clearSelectedInfo();
-      setTimeout(() => {
-        window.location.href = `${CONTEXT_PATH}/waiter/bill/review?tableId=${selectedTableId}`;
-      }, 800);
-    } else {
-      errorToast("Gặp lỗi khi kết thúc phiên phục vụ!");
-    }
+      const tableIdToRedirect = selectedTableId; 
+      const success = await callStatusAPI("status", "NEED_PAYMENT", "Bàn cần dọn");
+      
+      if (success) { // Chỉ chuyển trang nếu API thành công
+          successToast("Đã kết thúc phiên phục vụ. Đang chuyển đến màn hình hóa đơn...");
+          closeCloseModal();
+          clearSelectedInfo(); 
+          
+          setTimeout(() => {
+              window.location.href = `${CONTEXT_PATH}/waiter/bill/review?tableId=${tableIdToRedirect}`;
+          }, 800);
+      }
   };
-
   actions.cleaned.onclick = async () => {
-    const success = await callStatusAPI("status", "AVAILABLE", "Bàn đã dọn xong, sẵn sàng đón khách.");
-    if (success) {
-      selectedTableId = null; 
-      clearSelectedInfo();    
+    const resClose = await fetch(`${CONTEXT_PATH}/api/tables/${selectedTableId}/close-session`, {
+        method: "POST", headers: getHeaders()
+    });
+
+    if (resClose.ok) {
+        const success = await callStatusAPI("status", "AVAILABLE", "Bàn đã dọn xong, sẵn sàng đón khách.");
+        if (success) {
+            occupiedReservations = occupiedReservations.filter(r => r.tableId != selectedTableId);
+            selectedTableId = null; 
+            clearSelectedInfo();
+        }
     }
-  };
+};
 
   const applyFilters = () => {
     const f = floorSel.value;

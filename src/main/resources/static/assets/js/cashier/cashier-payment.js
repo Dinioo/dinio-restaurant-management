@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnEditVat: el("btnEditVat"),
     sumSub: el("sumSub"),
     sumDiscount: el("sumDiscount"),
+    sumServiceFee: el("sumServiceFee"),
     sumVat: el("sumVat"),
     sumTotal: el("sumTotal"),
     bottomTotal: el("bottomTotal"),
@@ -99,8 +100,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const discount = Math.round(subtotal * (state.discountRate || 0));
     const afterDiscount = Math.max(0, subtotal - discount);
     const vat = Math.round(afterDiscount * (state.vatRate || 0));
-    const total = afterDiscount + vat;
-    return { subtotal, discount, vat, total };
+    const service = Number(state.data?.service || 0); 
+    const total = afterDiscount + vat + service;
+    return { subtotal, discount, vat, service, total };
   }
 
   function updateBillUrl() {
@@ -155,13 +157,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderTotals() {
-    const { subtotal, discount, vat, total } = calc();
-    ui.sumSub.textContent = fmtMoney(subtotal);
-    ui.sumDiscount.textContent =
-      discount > 0 ? `- ${fmtMoney(discount)}` : fmtMoney(0);
-    ui.sumVat.textContent = `${Math.round((state.vatRate || 0) * 100)}% • ${fmtMoney(vat)}`;
-    ui.sumTotal.textContent = fmtMoney(total);
-    ui.bottomTotal.textContent = fmtMoney(total);
+    const { subtotal, discount, vat, service, total } = calc();
+    
+    if (ui.sumSub) ui.sumSub.textContent = fmtMoney(subtotal);
+    if (ui.sumDiscount) ui.sumDiscount.textContent = discount > 0 ? `- ${fmtMoney(discount)}` : fmtMoney(0);
+    if (ui.sumVat) ui.sumVat.textContent = `${Math.round((state.vatRate || 0) * 100)}% • ${fmtMoney(vat)}`;
+    
+    if (ui.sumServiceFee) {
+      ui.sumServiceFee.textContent = fmtMoney(service);
+    }
+    
+    if (ui.sumTotal) ui.sumTotal.textContent = fmtMoney(total);
+    if (ui.bottomTotal) ui.bottomTotal.textContent = fmtMoney(total);
   }
 
   function renderMeta() {
@@ -201,7 +208,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = await response.json();
 
-      // Transform data để khớp với format hiện tại
       return {
         tableId: data.tableId,
         status: data.status,
@@ -219,6 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })),
         note: data.note,
         billId: data.billId,
+        service: Number(data.service || 0),
       };
     } catch (error) {
       console.error("❌ Lỗi tải dữ liệu thanh toán:", error);
@@ -250,7 +257,6 @@ document.addEventListener("DOMContentLoaded", () => {
         amount: total,
       };
 
-      // Nếu chọn BANK (Chuyển khoản) → redirect sang VNPay
       if (state.payMethod === "BANK") {
         toast.info("Đang chuyển đến VNPay...");
 
@@ -270,7 +276,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const result = await response.json();
 
         if (result.paymentUrl) {
-          // Redirect sang VNPay
           window.location.href = result.paymentUrl;
         } else {
           throw new Error("Không nhận được payment URL");
@@ -278,7 +283,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // CASH hoặc VISA → thanh toán trực tiếp
       toast.info("Đang xử lý thanh toán...");
 
       const response = await fetch("/dinio/api/cashier/process-payment", {
@@ -296,7 +300,6 @@ document.addEventListener("DOMContentLoaded", () => {
       toast.success("Thanh toán thành công!");
       closeModal(ui.payModal);
 
-      // Chờ 1s rồi quay về trang tables
       setTimeout(() => {
         window.location.href = "/dinio/cashier/tables";
       }, 1000);
@@ -385,11 +388,9 @@ document.addEventListener("DOMContentLoaded", () => {
   init();
 });
 
-// Lấy tableId từ URL
 const urlParams = new URLSearchParams(window.location.search);
 const tableId = urlParams.get("tableId");
 
-// Tải chi tiết thanh toán
 async function loadPaymentDetail() {
   try {
     const response = await fetch(
@@ -397,12 +398,10 @@ async function loadPaymentDetail() {
     );
     const data = await response.json();
 
-    // Hiển thị thông tin
     document.getElementById("tableName").textContent = data.tableName;
     document.getElementById("custName").textContent = data.customer.name;
     document.getElementById("custPhone").textContent = data.customer.phone;
 
-    // Render items
     const tbody = document.getElementById("tbody");
     tbody.innerHTML = data.items
       .map(
@@ -417,7 +416,6 @@ async function loadPaymentDetail() {
       )
       .join("");
 
-    // Hiển thị tổng tiền
     document.getElementById("sumTotal").textContent =
       data.total.toLocaleString() + "đ";
   } catch (error) {
@@ -425,7 +423,6 @@ async function loadPaymentDetail() {
   }
 }
 
-// Xử lý thanh toán
 async function handlePayment() {
   const paymentMethod = document.querySelector(".csp-payopt.is-active").dataset
     .pay;

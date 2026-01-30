@@ -2,18 +2,33 @@ package ut.edu.dinio.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ut.edu.dinio.pojo.*;
+import ut.edu.dinio.pojo.Customer;
+import ut.edu.dinio.pojo.DiningTable;
+import ut.edu.dinio.pojo.Invoice;
+import ut.edu.dinio.pojo.InvoiceLine;
+import ut.edu.dinio.pojo.Order;
+import ut.edu.dinio.pojo.OrderItem;
+import ut.edu.dinio.pojo.Payment;
+import ut.edu.dinio.pojo.Reservation;
+import ut.edu.dinio.pojo.StaffUser;
+import ut.edu.dinio.pojo.TableSession;
 import ut.edu.dinio.pojo.enums.InvoiceStatus;
 import ut.edu.dinio.pojo.enums.SessionStatus;
-import ut.edu.dinio.repositories.*;
+import ut.edu.dinio.repositories.DiningTableRepository;
+import ut.edu.dinio.repositories.InvoiceRepository;
+import ut.edu.dinio.repositories.OrderItemRepository;
+import ut.edu.dinio.repositories.OrderRepository;
+import ut.edu.dinio.repositories.TableSessionRepository;
 
 @Service
 public class InvoiceService {
@@ -286,4 +301,44 @@ public class InvoiceService {
     private String formatMoney(BigDecimal amount) {
         return String.format("%,.0fđ", amount);
     }
+
+    @Transactional
+    public Map<String, Object> processPayment(Integer tableId, String paymentMethod, BigDecimal amount) {
+        DiningTable table = tableRepository.findById(tableId)
+            .orElseThrow(() -> new RuntimeException("Không tìm thấy bàn"));
+
+        TableSession session = sessionRepository
+            .findByTableIdAndStatus(tableId, SessionStatus.OPEN)
+            .orElseThrow(() -> new RuntimeException("Bàn chưa có phiên phục vụ"));
+
+        Invoice invoice = getOrCreateInvoice(session.getId());
+        
+        Payment payment = new Payment();
+        payment.setInvoice(invoice);
+        payment.setMethod(ut.edu.dinio.pojo.enums.PaymentMethod.valueOf(paymentMethod));
+        payment.setAmount(amount);
+        payment.setPaidAt(LocalDateTime.now());
+        payment.setRefNo("TXN-" + System.currentTimeMillis());
+        
+        invoice.getPayments().add(payment);
+        invoice.setStatus(InvoiceStatus.PAID);
+        invoiceRepository.save(invoice);
+
+        session.setStatus(SessionStatus.CLOSED);
+        session.setClosedAt(LocalDateTime.now());
+        sessionRepository.save(session);
+
+        table.setStatus(ut.edu.dinio.pojo.enums.TableStatus.CLEANING);
+        tableRepository.save(table);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("status", "success");
+        result.put("invoiceId", invoice.getId());
+        result.put("paymentId", payment.getId());
+        result.put("message", "Thanh toán thành công");
+
+        return result;
+    }
+
+
 }

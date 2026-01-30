@@ -33,16 +33,17 @@
           Đăng nhập
         </a>
 
-        <form th:if="${session.currentUser != null or session.currentStaff != null}" th:action="@{/logout}"
-          method="post" style="margin:0;">
-          <button type="submit" class="dropdown-logout" role="menuitem"
-            style="all:unset; cursor:pointer; display:block; width:100%; padding:10px 12px;">
-            Đăng xuất
-          </button>
+        <form th:if="${session.currentStaff != null}" th:action="@{/staff/logout}" method="post" style="margin:0;">
+            <button type="submit" class="dropdown-logout" role="menuitem" style="all:unset; cursor:pointer; display:block; width:100%; padding:10px 12px;">
+                Đăng xuất 
+            </button>
         </form>
 
-
-
+        <form th:if="${session.currentUser != null}" th:action="@{/logout}" method="post" style="margin:0;">
+            <button type="submit" class="dropdown-logout" role="menuitem" style="all:unset; cursor:pointer; display:block; width:100%; padding:10px 12px;">
+                Đăng xuất
+            </button>
+        </form>
 
       </div>
     </div>

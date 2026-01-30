@@ -58,6 +58,16 @@
   outline:none;
 }
 
+.ad-form select{
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--border-soft);
+  background: var(--surface-2);
+  color: var(--text-strong);
+  outline:none;
+  min-width: 200px;
+}
+
 .ad-table{ width:100%; border-collapse: collapse; }
 .ad-table th,.ad-table td{
   padding:12px 14px;
@@ -97,6 +107,27 @@
 .staff-row.is-editing .btn-edit{ display:none; }
 .staff-row.is-editing .btn-save,
 .staff-row.is-editing .btn-cancel{ display:inline-flex; }
+
+.staff-row .password-input{ display:none; }
+.staff-row.is-editing .password-input{ display:inline-flex; }
+.staff-row.is-editing .password-view{ display:none; }
+
+.staff-row .status-input{
+  display:none;
+  width:100%;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--border-soft);
+  background: var(--surface-2);
+  color: var(--text-strong);
+  outline:none;
+}
+
+.staff-row.is-editing .status-input{ display:inline-flex; }
+.staff-row.is-editing .status-view{ display:none; }
+
+.staff-row.is-editing .name-view{ display:none; }
+.staff-row.is-editing .name-input{ display:inline-flex; }
 
 .ad-empty{
   padding:14px;

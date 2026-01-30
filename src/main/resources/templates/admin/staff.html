@@ -42,9 +42,19 @@
       </div>
     </div>
 
-    <form class="card ad-form" method="post" th:action="@{/dinio/admin/staff/create}">
+    <form class="card ad-form" method="post" th:action="@{/admin/staff/create}">
+      <input name="name" placeholder="Họ tên" required/>
       <input name="username" placeholder="Username" required/>
-      <input name="role" placeholder="Role (ADMIN, WAITER,...)" required/>
+      <input name="password" type="password" placeholder="Password" required/>
+
+      <select name="roleId" class="ad-select" required>
+        <option value="" disabled selected>Chọn role</option>
+        <option th:each="r : ${roles}"
+                th:value="${r.id}"
+                th:text="${r.name}">
+        </option>
+      </select>
+
       <button class="btn-order" type="submit">Thêm</button>
     </form>
 
@@ -53,42 +63,66 @@
         <thead>
         <tr>
           <th style="width:80px;">ID</th>
+          <th>Name</th>
           <th>Username</th>
+          <th style="width:220px;">Password</th>
           <th style="width:200px;">Role</th>
+          <th style="width:160px;">Status</th>
           <th style="width:180px;"></th>
         </tr>
         </thead>
 
         <tbody>
-        <tr th:each="s : ${staffs}"
-            class="staff-row"
-            th:attr="data-id=${s.id},
-                     data-username=${s.username},
-                     data-role=${s.role != null ? s.role.name : 'NONE'}">
-          <td th:text="${s.id}"></td>
+          <tr th:each="s : ${staffs}"
+              class="staff-row"
+              th:attr="data-id=${s.id},
+                      data-username=${s.username},
+                      data-name=${s.name},
+                      data-status=${s.status},
+                      data-role=${s.role != null ? s.role.name : 'NONE'}">
+            <td th:text="${s.id}"></td>
 
-          <td>
-            <span class="v username-view" th:text="${s.username}"></span>
-            <input class="i username-input" type="text" th:value="${s.username}"/>
-          </td>
+            <td>
+              <span class="v name-view" th:text="${s.name}"></span>
+              <input class="i name-input" type="text" th:value="${s.name}"/>
+            </td>
 
-          <td>
-            <span class="role-view" th:text="${s.role != null ? s.role.name : '—'}"></span>
-          </td>
+            <td>
+              <span class="v username-view" th:text="${s.username}"></span>
+              <input class="i username-input" type="text" th:value="${s.username}"/>
+            </td>
 
-          <td class="staff-actions">
-            <button class="btn-light btn-edit" type="button">
-              <i class="fa-solid fa-pen"></i> Sửa
-            </button>
+            <td>
+              <span class="v password-view">••••••••</span>
+              <input class="i password-input" type="password" placeholder="Nhập mật khẩu mới"/>
+            </td>
 
-            <form class="del-form" method="post" th:action="@{/dinio/admin/staff/delete}">
-              <input type="hidden" name="id" th:value="${s.id}"/>
-              <button class="btn-danger btn-del" type="submit" title="Xóa">
-                <i class="fa-solid fa-trash"></i>
+            <td>
+              <span class="role-view" th:text="${s.role != null ? s.role.name : '—'}"></span>
+            </td>
+
+            <td>
+              <span class="v status-view" th:text="${s.status}"></span>
+              <select class="i status-input">
+                <option value="ACTIVE" th:selected="${s.status.name() == 'ACTIVE'}">ACTIVE</option>
+                <option value="INACTIVE" th:selected="${s.status.name() == 'INACTIVE'}">INACTIVE</option>
+                <option value="SUSPENDED" th:selected="${s.status.name() == 'SUSPENDED'}">SUSPENDED</option>
+              </select>
+            </td>
+
+            <td class="staff-actions">
+              <button class="btn-light btn-edit" type="button">
+                <i class="fa-solid fa-pen"></i> Sửa
               </button>
-            </form>
-          </td>
-        </tr>
+
+              <form class="del-form" method="post" th:action="@{/admin/staff/delete}">
+                <input type="hidden" name="id" th:value="${s.id}"/>
+                <button class="btn-danger btn-del" type="submit" title="Xóa">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
         </tbody>
       </table>
 

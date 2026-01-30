@@ -150,17 +150,18 @@ public class TableMapService {
             });
         }
         tableRepository.save(table);
+                Map<String, Object> details = new HashMap<>();
+                details.put("from", oldStatus != null ? oldStatus.name() : null);
+                details.put("to", newStatus != null ? newStatus.name() : null);
+                details.put("openedSessionId", openedSessionId); 
+
                 auditLogService.log(
-            staff,
-            "TABLE_STATUS_CHANGE",
-            "DiningTable",
-            tableId,
-            Map.of(
-                "from", oldStatus != null ? oldStatus.name() : null,
-                "to", newStatus != null ? newStatus.name() : null,
-                "openedSessionId", openedSessionId
-            )
-        );
+                    staff,
+                    "TABLE_STATUS_CHANGE",
+                    "DiningTable",
+                    tableId,
+                    details
+                );
 
         if (openedSessionId != null) {
             auditLogService.log(
@@ -198,12 +199,12 @@ public class TableMapService {
         });
 
         auditLogService.log(
-            staff,
-            "CLOSE_SESSION",
-            "DiningTable",
-            tableId,
-            Map.of("closedSessionId", closedSessionId)
-        );
+        staff,
+        "CLOSE_SESSION",
+        "DiningTable",
+        tableId,
+        Map.of("closedSessionId", closedSessionId)
+    );
     }
 
     public DiningTable getTableById(Integer id) {

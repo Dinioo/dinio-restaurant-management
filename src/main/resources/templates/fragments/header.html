@@ -11,14 +11,39 @@
   </nav>
 
   <nav id="action">
+    <a class="item notify" id="notifyBtn" th:href="@{/reservations/my}" title="Thông báo" aria-haspopup="dialog"
+      aria-expanded="false">
+      <i class="fa-regular fa-bell"></i>
+      <span class="notify-badge" id="notifyBadge" aria-hidden="true"></span>
+    </a>
 
-    <a class="item" th:href="@{/cart}">
-      <img th:src="@{/assets/pic/element/cart.png}" alt="Cart">
+
+    <div class="notify-pop" id="notifyPop" role="dialog" aria-label="Thông báo">
+      <div class="notify-head">
+        <div class="notify-title">Thông báo</div>
+        <button class="notify-close" id="notifyClose" type="button" aria-label="Đóng">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="notify-tabs" role="tablist" aria-label="Bộ lọc">
+        <button class="notify-tab is-active" type="button" data-filter="all" role="tab" aria-selected="true">Tất
+          cả</button>
+        <button class="notify-tab" type="button" data-filter="unread" role="tab" aria-selected="false">Chưa đọc</button>
+      </div>
+
+      <div class="notify-list" id="notifyList"></div>
+
+      <a class="notify-footer" th:href="@{/customer/notifications}">Xem tất cả</a>
+    </div>
+
+    <a class="item cart" th:href="@{/cart}" title="Giỏ hàng">
+      <i class="fa-solid fa-cart-shopping"></i>
     </a>
 
     <div class="item user-menu" id="userMenu">
       <button class="user-btn" id="userBtn" type="button" aria-haspopup="menu" aria-expanded="false">
-        <img th:src="@{/assets/pic/element/user.png}" alt="User">
+        <i class="fa-regular fa-user"></i>
       </button>
 
       <div class="user-dropdown" id="userDropdown" role="menu">
@@ -33,17 +58,18 @@
         </a>
 
         <form th:if="${session.currentStaff != null}" th:action="@{/staff/logout}" method="post" style="margin:0;">
-            <button type="submit" class="dropdown-logout" role="menuitem" style="all:unset; cursor:pointer; display:block; width:100%; padding:10px 12px;">
-                Đăng xuất 
-            </button>
+          <button type="submit" class="dropdown-logout" role="menuitem"
+            style="all:unset; cursor:pointer; display:block; width:100%; padding:10px 12px;">
+            Đăng xuất
+          </button>
         </form>
 
         <form th:if="${session.currentUser != null}" th:action="@{/logout}" method="post" style="margin:0;">
-            <button type="submit" class="dropdown-logout" role="menuitem" style="all:unset; cursor:pointer; display:block; width:100%; padding:10px 12px;">
-                Đăng xuất
-            </button>
+          <button type="submit" class="dropdown-logout" role="menuitem"
+            style="all:unset; cursor:pointer; display:block; width:100%; padding:10px 12px;">
+            Đăng xuất
+          </button>
         </form>
-
       </div>
     </div>
   </nav>

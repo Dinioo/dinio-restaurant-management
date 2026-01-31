@@ -6,8 +6,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="_csrf" th:content="${_csrf.token}"/>
-  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
   <title>DINIO - Home</title>
 
   <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
@@ -16,6 +16,9 @@
   <script th:src="@{/assets/js/customer/dish-detail-modal.js}"></script>
   <script th:src="@{/assets/js/customer/check-reservation-modal.js}"></script>
   <script th:src="@{/assets/js/customer/items-pagination.js}"></script>
+  <link rel="stylesheet" th:href="@{/assets/css/notification-popup.css}" />
+  <script th:src="@{/assets/js/header-notify.js}" defer></script>
+
 
 </head>
 
@@ -144,7 +147,7 @@
           </p>
         </div>
 
-<a href="/dinio/reservation/tables" class="btn btn-cta">Đặt bàn</a>
+        <a href="/dinio/reservation/tables" class="btn btn-cta">Đặt bàn</a>
       </div>
 
       <div class="about-grid">
@@ -186,7 +189,7 @@
             <a href="/dinio/reservation/tables" class="btn btn-cta">Book a Table</a>
           </div>
         </div>
-        
+
 
         <div class="about-visual" aria-label="Dinio atmosphere">
           <img src="assets/pic/about_story.jpg" alt="Dinio restaurant atmosphere">
@@ -387,20 +390,20 @@
     </section>
 
     <section id="reviews" class="section">
-  <div class="section-head">
-    <div>
-      <p class="section-eyebrow">Testimonials</p>
-      <h3 class="section-title">Đánh giá</h3>
-      <p class="section-subtitle">
-        Một vài cảm nhận từ khách đã trải nghiệm Dinio — gọn, tinh tế và đúng nhịp.
-      </p>
-    </div>
+      <div class="section-head">
+        <div>
+          <p class="section-eyebrow">Testimonials</p>
+          <h3 class="section-title">Đánh giá</h3>
+          <p class="section-subtitle">
+            Một vài cảm nhận từ khách đã trải nghiệm Dinio — gọn, tinh tế và đúng nhịp.
+          </p>
+        </div>
 
-  </div>
+      </div>
 
-  <div class="review-grid">
+      <div class="review-grid">
 
-    <div th:replace="fragments/review-card :: reviewCard(
+        <div th:replace="fragments/review-card :: reviewCard(
       5,
       'Best Service',
       false,
@@ -411,7 +414,7 @@
       false
     )"></div>
 
-    <div th:replace="fragments/review-card :: reviewCard(
+        <div th:replace="fragments/review-card :: reviewCard(
       5,
       'Signature',
       true,
@@ -422,7 +425,7 @@
       true
     )"></div>
 
-    <div th:replace="fragments/review-card :: reviewCard(
+        <div th:replace="fragments/review-card :: reviewCard(
       4,
       'Cozy Mood',
       false,
@@ -433,17 +436,17 @@
       false
     )"></div>
 
-  </div>
+      </div>
 
-  <div class="review-footer">
-    <div class="review-note">
-      <p class="note-title">Rating</p>
-      <p class="note-text">4.8/5 trung bình — dựa trên trải nghiệm tại Dinio.</p>
-    </div>
+      <div class="review-footer">
+        <div class="review-note">
+          <p class="note-title">Rating</p>
+          <p class="note-text">4.8/5 trung bình — dựa trên trải nghiệm tại Dinio.</p>
+        </div>
 
-    <a href="/dinio/reviews" class="btn btn-cta">Đánh giá</a>
-  </div>
-</section>
+        <a href="/dinio/reviews" class="btn btn-cta">Đánh giá</a>
+      </div>
+    </section>
 
 
     <section id="location" class="section">
@@ -501,7 +504,7 @@
       </div>
     </section>
   </main>
-  <div th:replace="fragments/footer :: footer"></div> 
+  <div th:replace="fragments/footer :: footer"></div>
 </body>
 
 </html>

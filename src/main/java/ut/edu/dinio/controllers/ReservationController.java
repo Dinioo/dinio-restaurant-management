@@ -70,13 +70,13 @@ public class ReservationController {
     }
 
     @GetMapping("/api/reservations/occupied")
-    @ResponseBody
-    public ResponseEntity<?> getOccupiedReservations(@RequestParam String date) {
+    public ResponseEntity<?> getOccupiedReservations(@RequestParam("date") String date) {
         try {
             List<Map<String, Object>> occupied = reservationService.getOccupiedReservationsByDate(date);
             return ResponseEntity.ok(occupied);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Lỗi định dạng ngày: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Lỗi lấy dữ liệu đặt bàn: " + e.getMessage());
         }
     }
 

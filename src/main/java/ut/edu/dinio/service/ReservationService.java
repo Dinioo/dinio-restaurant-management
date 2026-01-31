@@ -69,24 +69,66 @@ public class ReservationService {
         return "success";
     }
 
-    public List<Map<String, Object>> getOccupiedReservationsByDate(String date) {
-        LocalDate localDate = LocalDate.parse(date);
-        LocalDateTime startOfDay = localDate.atStartOfDay();
-        LocalDateTime endOfDay = localDate.atTime(23, 59, 59);
+    // Trong file ReservationService.java
 
-        List<Reservation> reservations = reservationRepository.findByReservedAtBetweenAndStatusNot(
-                startOfDay, endOfDay, ReservationStatus.CANCELLED);
+public List<Map<String, Object>> getOccupiedReservationsByDate(String dateStr) {
+        try {
+            LocalDate date = LocalDate.parse(dateStr); // Parse ngày từ String
 
-        return reservations.stream().map(res -> {
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", res.getId());
-            map.put("tableId", res.getTable().getId());
-            map.put("reservedAt", res.getReservedAt().toString());
-            map.put("seats", res.getTable().getSeats());
-            return map;
-        }).collect(Collectors.toList());
+            // Gọi Repository để lấy danh sách (đã bao gồm JOIN FETCH customer)
+            List<Reservation> list = reservationRepository.findOccupiedReservationsForMap(
+                date.atStartOfDay(), 
+                date.plusDays(1).atStartOfDay()
+            );
+
+            return list.stream().map(r -> {
+                Map<String, Object> map = new HashMap<>();
+                
+                map.put("id", r.getId());
+                map.put("tableId", r.getTable().getId()); 
+                map.put("reservedAt", r.getReservedAt());
+                
+                // --- SỬA LOGIC LẤY TÊN KHÁCH HÀNG ---
+                // 1. Ưu tiên lấy từ trường guestName/guestPhone lưu trên Reservation (do người dùng nhập form)
+                String displayName = r.getGuestName();
+                String displayPhone = r.getGuestPhone();
+
+                // 2. Nếu không có, mới lấy từ tài khoản Customer liên kết (Fallback)
+                if (displayName == null || displayName.isEmpty()) {
+                    if (r.getCustomer() != null) {
+                        displayName = r.getCustomer().getFullName();
+                    } else {
+                        displayName = "Khách vãng lai";
+                    }
+                }
+
+                if (displayPhone == null || displayPhone.isEmpty()) {
+                    if (r.getCustomer() != null) {
+                        displayPhone = r.getCustomer().getPhone();
+                    } else {
+                        displayPhone = "";
+                    }
+                }
+                // -------------------------------------
+
+                // Tạo object customer info để trả về frontend
+                Map<String, String> customerInfo = new HashMap<>();
+                customerInfo.put("name", displayName);
+                customerInfo.put("phone", displayPhone);
+                
+                map.put("customer", customerInfo);
+                
+                // Cập nhật cả trường guestName ở root để tương thích với code JS cũ (nếu có)
+                map.put("guestName", displayName);
+                
+                return map;
+            }).collect(Collectors.toList());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Lỗi xử lý dữ liệu đặt bàn: " + e.getMessage());
+        }
     }
-
     public Reservation getById(Integer id) {
         return reservationRepository.findById(id).orElse(null);
     }
@@ -168,10 +210,20 @@ public class ReservationService {
         map.put("note", res.getNote() != null ? res.getNote() : "");
 
         Map<String, String> customerMap = new HashMap<>();
-        if (res.getCustomer() != null) {
-            customerMap.put("fullName", res.getCustomer().getFullName());
-            customerMap.put("phone", res.getCustomer().getPhone());
+        
+        String name = res.getGuestName();
+        String phone = res.getGuestPhone();
+
+        if (name == null || name.isEmpty()) {
+            name = (res.getCustomer() != null) ? res.getCustomer().getFullName() : "Khách vãng lai";
         }
+        if (phone == null || phone.isEmpty()) {
+            phone = (res.getCustomer() != null) ? res.getCustomer().getPhone() : "";
+        }
+
+        customerMap.put("fullName", name);
+        customerMap.put("phone", phone);
+        
         map.put("customer", customerMap);
 
         Map<String, String> tableMap = new HashMap<>();

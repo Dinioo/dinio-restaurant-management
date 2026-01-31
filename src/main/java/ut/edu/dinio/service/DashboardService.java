@@ -49,7 +49,7 @@ public class DashboardService {
 
         for (Invoice inv : invoicesToday) {
             boolean isPaid = inv.getPayments().stream()
-                .anyMatch(p -> p.getMethod() == PaymentMethod.CASH || p.getMethod() == PaymentMethod.TRANSFER);
+                .anyMatch(p -> p.getMethod() == PaymentMethod.CASH || p.getMethod() == PaymentMethod.TRANSFER || p.getMethod() == PaymentMethod.BANK || p.getMethod() == PaymentMethod.VNPAY);
             
             if (isPaid) {
                 bills++;

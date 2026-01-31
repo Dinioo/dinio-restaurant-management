@@ -37,4 +37,15 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 
     List<Reservation> findByReservedAtBeforeAndStatus(LocalDateTime dateTime, ReservationStatus status);
 
+    @Query("SELECT r FROM Reservation r " +
+       "LEFT JOIN FETCH r.customer " +  
+       "WHERE r.reservedAt >= :todayStart " +
+       "AND r.reservedAt < :tomorrowStart " +
+       "AND r.status = 'CONFIRMED' " + 
+       "ORDER BY r.reservedAt ASC")
+        List<Reservation> findOccupiedReservationsForMap(
+        @Param("todayStart") LocalDateTime todayStart,
+        @Param("tomorrowStart") LocalDateTime tomorrowStart
+        );
+
 }

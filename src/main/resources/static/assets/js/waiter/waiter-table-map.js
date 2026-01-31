@@ -210,11 +210,18 @@ document.addEventListener("DOMContentLoaded", () => {
     return (new Date(now - offset)).toISOString().split('T')[0];
   };
 
-  const isFutureReservation = (res) => {
-    if (!res || !res.reservedAt) return false;
-    return new Date(res.reservedAt).getTime() > new Date().getTime();
-  };
+  const getGuestName = (res) => {
+    if (!res) return "Khách vãng lai";
+    if (res.customer && res.customer.name) return res.customer.name;
+    return res.guestName || "Khách đặt";
+};
 
+  const isFutureReservation = (res) => {
+  if (!res || !res.reservedAt) return false;
+    const resTime = new Date(res.reservedAt).getTime();
+    const now = new Date().getTime();
+    return resTime > (now - 60 * 60 * 1000); 
+  };
   const fetchGuestName = async (resId) => {
     if (!resId) return "Khách vãng lai";
     try {
@@ -283,8 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const grid = section.querySelector(".tm-grid");
 
       grouped[key].forEach(table => {
-        const res = (table.status === "AVAILABLE") ? null : occupiedReservations.find(r => r.tableId == table.id);
-
+      const res = occupiedReservations.find(r => r.tableId == table.id);
         const btn = document.createElement("button");
         btn.type = "button";
         let statusClass = "is-available";
@@ -355,7 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const updateSelectedInfo = async () => {
     const t = allTables.find(x => x.id == selectedTableId);
     if (!t) return;
-    let res = (t.status === "AVAILABLE") ? null : occupiedReservations.find(r => r.tableId == t.id);
+    let res = occupiedReservations.find(r => r.tableId == t.id);
 
     if (t.status === "AVAILABLE" && res && !isFutureReservation(res)) res = null;
     if (t.status === "CLEANING" || t.status === "NEED_PAYMENT") res = null;
@@ -373,7 +379,7 @@ document.addEventListener("DOMContentLoaded", () => {
     pick.status.textContent = STATUS_LABEL[t.status] || t.status;
 
     if (res) {
-      pick.seats.textContent = res.guestName || "Đang tải...";
+      pick.seats.textContent = getGuestName(res);
       pick.time.textContent = res.reservedAt.split('T')[1].substring(0, 5);
       pick.guest.textContent = `${res.seats || res.partySize || t.seats} người`;
     } else {

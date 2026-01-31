@@ -11,7 +11,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Transactional; // Import thêm cái này
 
 import ut.edu.dinio.pojo.Customer;
 import ut.edu.dinio.pojo.DiningTable;
@@ -36,21 +36,21 @@ public class InvoiceService {
 
     @Autowired
     private TableSessionRepository sessionRepository;
-
+    
     @Autowired
     private InvoiceRepository invoiceRepository;
-
+    
     @Autowired
     private OrderRepository orderRepository;
-
+    
     @Autowired
     private OrderItemRepository orderItemRepository;
-
+    
     @Autowired
     private DiningTableRepository tableRepository;
 
     @Autowired
-    private AuditLogService auditLogService;
+    private AuditLogService auditLogService; // <--- THÊM MỚI: Cần thiết để ghi log
 
     /**
      * Lấy danh sách bàn với thông tin tổng bill
@@ -67,16 +67,17 @@ public class InvoiceService {
             tableInfo.put("status", table.getStatus().name());
             tableInfo.put("areaName", table.getArea() != null ? table.getArea().getName() : "");
 
-            // Tìm session đang mở
+            // Tìm session đang mở hoặc đang chờ thanh toán
             Optional<TableSession> sessionOpt = sessionRepository
-                    .findTopByTableIdAndStatusOrderByOpenedAtDesc(table.getId(), SessionStatus.OPEN);
+                .findTopByTableIdAndStatusInOrderByOpenedAtDesc(
+                    table.getId(), 
+                    List.of(SessionStatus.OPEN, SessionStatus.CHECK_REQUESTED)
+                );
 
             if (sessionOpt.isPresent()) {
                 TableSession session = sessionOpt.get();
-
-                // Tính tổng tiền từ các OrderItem
                 BigDecimal totalAmount = calculateSessionTotal(session.getId());
-
+                
                 tableInfo.put("hasSession", true);
                 tableInfo.put("sessionId", session.getId());
                 tableInfo.put("covers", session.getCovers());
@@ -94,113 +95,35 @@ public class InvoiceService {
         return result;
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Invoice generateInvoiceForCloseSession(Integer tableId, StaffUser staff) {
-
-        TableSession session = sessionRepository
-                .findTopByTableIdAndStatusInOrderByOpenedAtDesc(
-                        tableId,
-                        java.util.List.of(SessionStatus.OPEN, SessionStatus.CHECK_REQUESTED))
-                .orElseThrow(() -> new RuntimeException("Bàn chưa có phiên phục vụ (không có session active)"));
-
-        List<Invoice> existing = invoiceRepository.findAllBySessionIdOrderByIdDesc(session.getId());
-
-        Invoice invoice;
-        if (!existing.isEmpty()) {
-            invoice = existing.get(0);
-
-            if (existing.size() > 1) {
-                for (int i = 1; i < existing.size(); i++) {
-                    invoiceRepository.delete(existing.get(i));
-                }
-            }
-
-            if (invoice.getSession() == null) {
-                invoice.setSession(session);
-            }
-
-        } else {
-            invoice = new Invoice();
-            invoice.setSession(session); 
-            invoice.setStatus(InvoiceStatus.OPEN);
-
-        }
-
-        invoice.getLines().clear();
-
-        List<Order> orders = orderRepository.findBySessionIdOrderByCreatedAtDesc(session.getId());
-        BigDecimal subtotal = BigDecimal.ZERO;
-
-        for (Order order : orders) {
-            List<OrderItem> items = orderItemRepository.findByOrderIdOrderByIdAsc(order.getId());
-            for (OrderItem oi : items) {
-                int qty = oi.getQty() == null ? 0 : oi.getQty();
-                BigDecimal unit = oi.getUnitPrice() == null ? BigDecimal.ZERO : oi.getUnitPrice();
-
-                InvoiceLine line = new InvoiceLine(invoice, oi, qty, unit);
-                invoice.getLines().add(line);
-
-                subtotal = subtotal.add(unit.multiply(BigDecimal.valueOf(qty)));
-            }
-        }
-
-        BigDecimal tax = subtotal.multiply(new BigDecimal("0.08"));
-        BigDecimal serviceCharge = subtotal.multiply(new BigDecimal("0.05"));
-
-        invoice.setSubtotal(subtotal);
-        invoice.setTax(tax);
-        invoice.setServiceCharge(serviceCharge);
-
-        if (invoice.getDiscountTotal() == null)
-            invoice.setDiscountTotal(BigDecimal.ZERO);
-
-        BigDecimal total = subtotal.add(tax).add(serviceCharge).subtract(invoice.getDiscountTotal());
-        invoice.setTotal(total);
-
-        Invoice saved = invoiceRepository.save(invoice);
-        session.setInvoice(saved);
-        sessionRepository.save(session);
-
-        if (staff != null) {
-            auditLogService.log(
-                    staff,
-                    "GENERATE_INVOICE_ON_CLOSE_SESSION",
-                    "Invoice",
-                    saved.getId(),
-                    Map.of("tableId", tableId, "sessionId", session.getId(), "total", total));
-        }
-
-        return saved;
-    }
-
     /**
      * Lấy chi tiết hóa đơn cho thanh toán
      */
     public Map<String, Object> getPaymentDetail(Integer tableId) {
         DiningTable table = tableRepository.findById(tableId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy bàn"));
+            .orElseThrow(() -> new RuntimeException("Không tìm thấy bàn"));
 
         TableSession session = sessionRepository
-                .findByTableIdAndStatus(tableId, SessionStatus.OPEN)
-                .orElseThrow(() -> new RuntimeException("Bàn chưa có phiên phục vụ"));
+            .findTopByTableIdAndStatusInOrderByOpenedAtDesc(
+                tableId, 
+                List.of(SessionStatus.OPEN, SessionStatus.CHECK_REQUESTED)
+            )
+            .orElseThrow(() -> new RuntimeException("Bàn chưa có phiên phục vụ"));
 
         Map<String, Object> result = new HashMap<>();
 
-        // Thông tin bàn
-        result.put("tableId", table.getCode());
+        result.put("tableId", table.getId()); // Sửa lại lấy ID thay vì Code cho đúng logic frontend
         result.put("tableName", table.getCode());
         result.put("areaLabel", table.getArea() != null ? table.getArea().getName() : "");
         result.put("seats", table.getSeats());
         result.put("status", "Đang phục vụ");
 
-        // Thông tin khách hàng (nếu có reservation)
         Map<String, Object> customerInfo = new HashMap<>();
         Reservation reservation = session.getReservation();
         if (reservation != null) {
             Customer customer = reservation.getCustomer();
             customerInfo.put("name", customer.getFullName());
             customerInfo.put("phone", customer.getPhone());
-            customerInfo.put("tier", "VIP"); // Có thể mở rộng với tier system
+            customerInfo.put("tier", "VIP"); 
             customerInfo.put("tierLabel", "VIP");
         } else {
             customerInfo.put("name", "Khách lẻ");
@@ -210,13 +133,12 @@ public class InvoiceService {
         }
         result.put("customer", customerInfo);
 
-        // Danh sách món
         List<Map<String, Object>> items = new ArrayList<>();
         List<Order> orders = orderRepository.findBySessionIdOrderByCreatedAtDesc(session.getId());
-
+        
         for (Order order : orders) {
             List<OrderItem> orderItems = orderItemRepository.findByOrderIdOrderByIdAsc(order.getId());
-
+            
             for (OrderItem oi : orderItems) {
                 Map<String, Object> item = new HashMap<>();
                 item.put("id", oi.getId());
@@ -231,21 +153,18 @@ public class InvoiceService {
         }
         result.put("items", items);
 
-        // Tính toán
         BigDecimal subtotal = items.stream()
-                .map(i -> (BigDecimal) i.get("lineTotal"))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            .map(i -> (BigDecimal) i.get("lineTotal"))
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // VAT 8%, Service 5%
         BigDecimal vat = subtotal.multiply(new BigDecimal("0.08"));
         BigDecimal service = subtotal.multiply(new BigDecimal("0.05"));
-
-        // Discount (VIP 10% nếu có)
-        BigDecimal discountRate = customerInfo.get("tier").equals("VIP")
-                ? new BigDecimal("0.10")
-                : BigDecimal.ZERO;
+        
+        BigDecimal discountRate = customerInfo.get("tier").equals("VIP") 
+            ? new BigDecimal("0.10") 
+            : BigDecimal.ZERO;
         BigDecimal discount = subtotal.multiply(discountRate);
-
+        
         BigDecimal total = subtotal.add(vat).add(service).subtract(discount);
 
         result.put("subtotal", subtotal);
@@ -253,11 +172,11 @@ public class InvoiceService {
         result.put("service", service);
         result.put("discount", discount);
         result.put("total", total);
-
-        result.put("note", session.getReservation() != null
-                ? session.getReservation().getNote()
-                : "");
-
+        
+        result.put("note", session.getReservation() != null 
+            ? session.getReservation().getNote() 
+            : "");
+        
         result.put("billId", "B" + String.format("%06d", session.getId()));
 
         return result;
@@ -269,21 +188,18 @@ public class InvoiceService {
     @Transactional
     public Invoice getOrCreateInvoice(Integer sessionId) {
         TableSession session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Session không tồn tại"));
+            .orElseThrow(() -> new RuntimeException("Session không tồn tại"));
 
-        // Kiểm tra đã có invoice chưa
         if (session.getInvoice() != null) {
             return session.getInvoice();
         }
 
-        // Tạo invoice mới
         Invoice invoice = new Invoice(session);
         invoice.setStatus(InvoiceStatus.OPEN);
-
-        // Tạo InvoiceLines từ OrderItems
+        
         List<Order> orders = orderRepository.findBySessionIdOrderByCreatedAtDesc(sessionId);
         BigDecimal subtotal = BigDecimal.ZERO;
-
+        
         for (Order order : orders) {
             List<OrderItem> items = orderItemRepository.findByOrderIdOrderByIdAsc(order.getId());
             for (OrderItem oi : items) {
@@ -293,10 +209,9 @@ public class InvoiceService {
             }
         }
 
-        // Tính toán
         BigDecimal tax = subtotal.multiply(new BigDecimal("0.08"));
         BigDecimal serviceCharge = subtotal.multiply(new BigDecimal("0.05"));
-
+        
         invoice.setSubtotal(subtotal);
         invoice.setTax(tax);
         invoice.setServiceCharge(serviceCharge);
@@ -309,50 +224,36 @@ public class InvoiceService {
      * Xử lý thanh toán
      */
     @Transactional
-    public Map<String, Object> processPayment(Integer tableId, String paymentMethod, BigDecimal amount,
-            StaffUser staff) {
+    public Map<String, Object> processPayment(Integer tableId, String paymentMethod, BigDecimal amount, StaffUser staff) {
         DiningTable table = tableRepository.findById(tableId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy bàn"));
+            .orElseThrow(() -> new RuntimeException("Không tìm thấy bàn"));
 
         TableSession session = sessionRepository
-                .findByTableIdAndStatus(tableId, SessionStatus.OPEN)
-                .orElseThrow(() -> new RuntimeException("Bàn chưa có phiên phục vụ"));
+            .findTopByTableIdAndStatusInOrderByOpenedAtDesc(
+                tableId, 
+                List.of(SessionStatus.OPEN, SessionStatus.CHECK_REQUESTED)
+            )
+            .orElseThrow(() -> new RuntimeException("Bàn chưa có phiên phục vụ"));
 
-        // Lấy hoặc tạo invoice
         Invoice invoice = getOrCreateInvoice(session.getId());
-
-        // Tạo payment
+        
         Payment payment = new Payment();
         payment.setInvoice(invoice);
         payment.setMethod(ut.edu.dinio.pojo.enums.PaymentMethod.valueOf(paymentMethod));
         payment.setAmount(amount);
         payment.setPaidAt(LocalDateTime.now());
         payment.setRefNo("TXN-" + System.currentTimeMillis());
-
+        
         invoice.getPayments().add(payment);
         invoice.setStatus(InvoiceStatus.PAID);
         invoiceRepository.save(invoice);
 
-        // Đóng session
         session.setStatus(SessionStatus.CLOSED);
         session.setClosedAt(LocalDateTime.now());
         sessionRepository.save(session);
 
-        // Cập nhật bàn
         table.setStatus(ut.edu.dinio.pojo.enums.TableStatus.CLEANING);
         tableRepository.save(table);
-
-        auditLogService.log(
-                staff,
-                "PROCESS_PAYMENT",
-                "Invoice",
-                invoice.getId(),
-                Map.of(
-                        "tableId", tableId,
-                        "sessionId", session.getId(),
-                        "paymentId", payment.getId(),
-                        "method", paymentMethod,
-                        "amount", amount));
 
         Map<String, Object> result = new HashMap<>();
         result.put("status", "success");
@@ -374,7 +275,6 @@ public class InvoiceService {
                 total = total.add(item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQty())));
             }
         }
-
         return total;
     }
 
@@ -382,42 +282,82 @@ public class InvoiceService {
         return String.format("%,.0fđ", amount);
     }
 
-    @Transactional
-    public Map<String, Object> processPayment(Integer tableId, String paymentMethod, BigDecimal amount) {
-        DiningTable table = tableRepository.findById(tableId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy bàn"));
-
+    // --- HÀM MỚI THÊM VÀO ĐÂY ---
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public Invoice generateInvoiceForCloseSession(Integer tableId, StaffUser staff) {
         TableSession session = sessionRepository
-                .findByTableIdAndStatus(tableId, SessionStatus.OPEN)
-                .orElseThrow(() -> new RuntimeException("Bàn chưa có phiên phục vụ"));
+                .findTopByTableIdAndStatusInOrderByOpenedAtDesc(
+                        tableId,
+                        List.of(SessionStatus.OPEN, SessionStatus.CHECK_REQUESTED))
+                .orElseThrow(() -> new RuntimeException("Bàn chưa có phiên phục vụ (không có session active)"));
 
-        Invoice invoice = getOrCreateInvoice(session.getId());
+        List<Invoice> existing = invoiceRepository.findAllBySessionIdOrderByIdDesc(session.getId());
 
-        Payment payment = new Payment();
-        payment.setInvoice(invoice);
-        payment.setMethod(ut.edu.dinio.pojo.enums.PaymentMethod.valueOf(paymentMethod));
-        payment.setAmount(amount);
-        payment.setPaidAt(LocalDateTime.now());
-        payment.setRefNo("TXN-" + System.currentTimeMillis());
+        Invoice invoice;
+        if (!existing.isEmpty()) {
+            invoice = existing.get(0);
+            if (existing.size() > 1) {
+                for (int i = 1; i < existing.size(); i++) {
+                    invoiceRepository.delete(existing.get(i));
+                }
+            }
+            if (invoice.getSession() == null) {
+                invoice.setSession(session);
+            }
+        } else {
+            invoice = new Invoice();
+            invoice.setSession(session);
+            invoice.setStatus(InvoiceStatus.OPEN);
+        }
 
-        invoice.getPayments().add(payment);
-        invoice.setStatus(InvoiceStatus.PAID);
-        invoiceRepository.save(invoice);
+        invoice.getLines().clear(); 
 
-        session.setStatus(SessionStatus.CLOSED);
-        session.setClosedAt(LocalDateTime.now());
+        List<Order> orders = orderRepository.findBySessionIdOrderByCreatedAtDesc(session.getId());
+        BigDecimal subtotal = BigDecimal.ZERO;
+
+        for (Order order : orders) {
+            List<OrderItem> items = orderItemRepository.findByOrderIdOrderByIdAsc(order.getId());
+            for (OrderItem oi : items) {
+                int qty = oi.getQty() == null ? 0 : oi.getQty();
+                BigDecimal unit = oi.getUnitPrice() == null ? BigDecimal.ZERO : oi.getUnitPrice();
+
+                InvoiceLine line = new InvoiceLine(invoice, oi, qty, unit);
+                invoice.getLines().add(line);
+
+                subtotal = subtotal.add(unit.multiply(BigDecimal.valueOf(qty)));
+            }
+        }
+
+        BigDecimal tax = subtotal.multiply(new BigDecimal("0.08")); 
+        BigDecimal serviceCharge = subtotal.multiply(new BigDecimal("0.05")); 
+
+        invoice.setSubtotal(subtotal);
+        invoice.setTax(tax);
+        invoice.setServiceCharge(serviceCharge);
+
+        if (invoice.getDiscountTotal() == null)
+            invoice.setDiscountTotal(BigDecimal.ZERO);
+
+        BigDecimal total = subtotal.add(tax).add(serviceCharge).subtract(invoice.getDiscountTotal());
+        invoice.setTotal(total);
+
+        Invoice saved = invoiceRepository.save(invoice);
+        
+        session.setInvoice(saved);
+        if (session.getStatus() == SessionStatus.OPEN) {
+             session.setStatus(SessionStatus.CHECK_REQUESTED);
+        }
         sessionRepository.save(session);
 
-        table.setStatus(ut.edu.dinio.pojo.enums.TableStatus.CLEANING);
-        tableRepository.save(table);
+        if (staff != null) {
+            auditLogService.log(
+                    staff,
+                    "GENERATE_INVOICE",
+                    "Invoice",
+                    saved.getId(),
+                    Map.of("tableId", tableId, "total", total));
+        }
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("status", "success");
-        result.put("invoiceId", invoice.getId());
-        result.put("paymentId", payment.getId());
-        result.put("message", "Thanh toán thành công");
-
-        return result;
+        return saved;
     }
-
 }

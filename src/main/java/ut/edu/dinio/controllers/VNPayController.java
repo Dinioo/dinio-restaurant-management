@@ -53,10 +53,11 @@ public class VNPayController {
                 if (tableId != null) {
                     // Xử lý thanh toán trong database
                     BigDecimal paymentAmount = new BigDecimal(amount).divide(new BigDecimal(100));
-                    Map<String, Object> result = invoiceService.processPayment(
+                    invoiceService.processPayment(
                         tableId, 
                         "BANK", 
-                        paymentAmount
+                        paymentAmount,
+                        null
                     );
                     
                     model.addAttribute("status", "success");

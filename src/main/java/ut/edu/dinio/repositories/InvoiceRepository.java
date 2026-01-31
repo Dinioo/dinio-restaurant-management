@@ -13,7 +13,7 @@ import ut.edu.dinio.pojo.Invoice;
 
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
-    @Query("SELECT i FROM Invoice i JOIN i.session s WHERE s.openedAt >= :startOfDay")
+    @Query("SELECT i FROM Invoice i LEFT JOIN FETCH i.payments JOIN i.session s WHERE s.openedAt >= :startOfDay")
     List<Invoice> findAllInvoicesOfToday(@Param("startOfDay") LocalDateTime startOfDay);
 
     Optional<Invoice> findTopBySessionIdOrderByIdDesc(Integer sessionId);

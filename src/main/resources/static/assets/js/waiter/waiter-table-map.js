@@ -459,7 +459,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   actions.cleaned.onclick = async () => {
     if (!selectedTableId) return;
-    const t = tables.find(x => String(x.id) === String(selectedTableId));
+    const t = allTables.find(x => String(x.id) === String(selectedTableId));
     if (!t || t.status !== "CLEANING") {
       errorToast("Bàn chưa ở trạng thái DỌN BÀN. Vui lòng thanh toán trước rồi mới dọn xong.");
       return;

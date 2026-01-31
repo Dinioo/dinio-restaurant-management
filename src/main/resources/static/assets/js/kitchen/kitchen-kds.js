@@ -21,7 +21,7 @@ const getHeaders = () => {
 
 
 function showToast(message, type = "info", duration = 2200) {
-  if (typeof Toastify !== "function") 
+  if (typeof Toastify !== "function")
     return;
   Toastify({
     text: message,
@@ -44,11 +44,11 @@ const state = {
 };
 
 function fmtStation(st) {
-  if (st === "hot") 
+  if (st === "hot")
     return "Bếp nóng";
-  if (st === "cold") 
+  if (st === "cold")
     return "Bếp nguội";
-  if (st === "bar") 
+  if (st === "bar")
     return "Bar";
   return "—";
 }
@@ -59,40 +59,37 @@ function fmtAge(ms) {
 }
 
 function ageClass(mins) {
-  if (mins >= 20) 
+  if (mins >= 20)
     return "danger";
-  if (mins >= 12) 
+  if (mins >= 12)
     return "warn";
   return "ok";
 }
 
 function stationPill(st) {
-  if (st === "hot") 
+  if (st === "hot")
     return { cls: "hot", label: "HOT" };
-  if (st === "cold") 
+  if (st === "cold")
     return { cls: "cold", label: "COLD" };
   return { cls: "bar", label: "BAR" };
 }
 
 function statusLabel(s) {
-  if (s === "NEW") 
-    return "Mới vào";
-  if (s === "COOKING") 
-    return "Đang làm";
-  if (s === "READY") 
-    return "Sẵn sàng";
+  if (s === "QUEUED") return "Mới vào";
+  if (s === "PREPARING") return "Đang làm";
+  if (s === "READY") return "Sẵn sàng";
+  if (s === "SERVED") return "Đã phục vụ";
+  if (s === "CANCELLED") return "Đã huỷ";
+  if (s === "DRAFT") return "Nháp";
   return s || "—";
 }
 
 function matchesFilters(it) {
-  if (it.status === "SERVED") 
-    return false;
+  if (it.status === "SERVED" || it.status === "CANCELLED" || it.status === "DRAFT") return false;
   const q = state.q.trim().toLowerCase();
   const hay = `${it.name} ${it.note || ""} ${fmtStation(it.station)} ${statusLabel(it.status)}`.toLowerCase();
-  if (q && !hay.includes(q)) 
-    return false;
-  if (state.station !== "all" && it.station !== state.station) 
-    return false;
+  if (q && !hay.includes(q)) return false;
+  if (state.station !== "all" && it.station !== state.station) return false;
   return true;
 }
 
@@ -103,36 +100,54 @@ async function fetchKdsData() {
     const data = await res.json();
 
     state.items = data.filter(it => it.status !== "SERVED")
-      .map(it => { const rule = KDS_RULES[it.categoryName] || { station: "hot", time: 15 };
-      return {
-        ...it,
-        table: it.tableCode,
-        station: rule.station,
-        targetTime: rule.time,
-        createdAt: new Date(it.createdAt).getTime(),
-        status: it.status === "QUEUED" ? "NEW" : (it.status === "PREPARING" ? "COOKING" : "READY")
-      };
-    });
+      .map(it => {
+        const rule = KDS_RULES[it.categoryName] || { station: "hot", time: 15 };
+        return {
+          ...it,
+          table: it.tableCode,
+          station: rule.station,
+          targetTime: rule.time,
+          createdAt: new Date(it.createdAt).getTime(),
+          status: it.status
+        };
+      });
     renderBoard();
   } catch (e) { console.error("Lỗi fetch:", e); }
+}
+
+function colKeyFromEnumStatus(s) {
+  if (s === "QUEUED") return "NEW";
+  if (s === "PREPARING") return "COOKING";
+  if (s === "READY") return "READY";
+  return null;
 }
 
 async function handleNextStatus(it) {
   try {
     const res = await fetch(`/dinio/api/kitchen/items/${it.id}/next`, {
-      method: 'POST',
+      method: "POST",
       headers: getHeaders()
     });
     const result = await res.json();
 
-    if (result.status === "SERVED") {
-      showToast(`Món ${it.name} đã được phục vụ`, "success");
-      closeModal();
-    } else {
-      showToast("Đã chuyển trạng thái", "success");
+    const idx = state.items.findIndex(x => x.id === it.id);
+    if (idx !== -1) {
+      if (result.status === "SERVED") {
+        state.items.splice(idx, 1); 
+        showToast(`Món ${it.name} đã được phục vụ`, "success");
+        closeModal();
+      } else {
+        state.items[idx].status = result.status; 
+        showToast("Đã chuyển trạng thái", "success");
+      }
     }
-    await fetchKdsData();
-  } catch (e) { showToast("Lỗi hệ thống", "error"); }
+
+    renderBoard();              
+    setTimeout(fetchKdsData, 250); 
+  } catch (e) {
+    console.error(e);
+    showToast("Lỗi hệ thống", "error");
+  }
 }
 
 
@@ -179,22 +194,26 @@ function renderBoard() {
   const colNEW = $("#colNEW");
   const colCOOKING = $("#colCOOKING");
   const colREADY = $("#colREADY");
-  if (!colNEW || !colCOOKING || !colREADY) 
+
+  if (!colNEW || !colCOOKING || !colREADY)
     return;
 
-  colNEW.innerHTML = ""; colCOOKING.innerHTML = ""; colREADY.innerHTML = "";
+  colNEW.innerHTML = "";
+  colCOOKING.innerHTML = "";
+  colREADY.innerHTML = "";
 
   state.items
     .filter(matchesFilters)
-    .filter(it => it.status !== "SERVED") 
     .sort((a, b) => a.createdAt - b.createdAt)
     .forEach((it) => {
       const html = renderCard(it);
-      if (it.status === "NEW") 
+      const colKey = colKeyFromEnumStatus(it.status);
+
+      if (colKey === "NEW")
         colNEW.insertAdjacentHTML("beforeend", html);
-      if (it.status === "COOKING") 
+      else if (colKey === "COOKING")
         colCOOKING.insertAdjacentHTML("beforeend", html);
-      if (it.status === "READY") 
+      else if (colKey === "READY")
         colREADY.insertAdjacentHTML("beforeend", html);
     });
 
@@ -202,18 +221,27 @@ function renderBoard() {
 }
 
 function updateCounts() {
-  const cols = ["NEW", "COOKING", "READY"];
-  cols.forEach((c) => {
-    const count = state.items.filter((it) => 
-      it.status === c && 
-      it.status !== "SERVED" && 
-      matchesFilters(it)
+  const map = {
+    NEW: "QUEUED",
+    COOKING: "PREPARING",
+    READY: "READY"
+  };
+
+  ["NEW", "COOKING", "READY"].forEach((c) => {
+    const count = state.items.filter(it =>
+      it.status === map[c] && matchesFilters(it)
     ).length;
 
-    if ($(`#count${c}`)) 
-      $(`#count${c}`).textContent = String(count);
-    if ($(`#empty${c}`))
-      $(`#empty${c}`).style.display = count === 0 ? "grid" : "none";
+    const countEl = document.querySelector(`#count${c}`);
+    const emptyEl = document.querySelector(`#empty${c}`);
+
+    if (countEl) {
+      countEl.textContent = String(count);
+    }
+
+    if (emptyEl) {
+      emptyEl.style.display = count === 0 ? "grid" : "none";
+    }
   });
 }
 
@@ -224,7 +252,7 @@ function getSelectedItem() {
 function openModal(it) {
   state.selectedId = it.id;
   const modal = $("#kdModal");
-  if (!modal) 
+  if (!modal)
     return;
 
   const kdTitle = $("#kdTitle");
@@ -237,26 +265,26 @@ function openModal(it) {
   const kdQty = $("#kdQty");
 
 
-  if (kdTitle) 
+  if (kdTitle)
     kdTitle.textContent = it.name || "Chi tiết món";
-  if (kdSub) 
+  if (kdSub)
     kdSub.textContent = `Bàn: ${it.table || it.tableCode || "—"}`;
 
-  if (kdStation) 
+  if (kdStation)
     kdStation.textContent = fmtStation(it.station);
 
-  if (kdAge) 
+  if (kdAge)
     kdAge.textContent = fmtAge(Date.now() - it.createdAt);
 
-  if (kdStatus) 
+  if (kdStatus)
     kdStatus.textContent = statusLabel(it.status);
 
-  if (kdId) 
+  if (kdId)
     kdId.textContent = it.id;
-  if (kdNote) 
+  if (kdNote)
     kdNote.textContent = it.note || "—";
 
-  if (kdQty) 
+  if (kdQty)
     kdQty.textContent = it.qty || "1";
 
   modal.classList.remove("is-hidden");
@@ -274,19 +302,19 @@ function closeModal() {
 function initBoardEvents() {
   document.addEventListener("click", (e) => {
     const card = e.target.closest(".kcard");
-    if (!card) 
+    if (!card)
       return;
 
     const it = state.items.find((x) => x.id == card.dataset.id);
-    if (!it) 
+    if (!it)
       return;
 
     const actionBtn = e.target.closest("button[data-action]");
     if (actionBtn) {
       const act = actionBtn.dataset.action;
-      if (act === "detail") 
+      if (act === "detail")
         openModal(it);
-      if (act === "next") 
+      if (act === "next")
         handleNextStatus(it);
       return;
     }
@@ -295,14 +323,14 @@ function initBoardEvents() {
 
   $("#kdNext")?.addEventListener("click", () => {
     const it = getSelectedItem();
-    if (it) 
+    if (it)
       handleNextStatus(it);
   });
 
   const modal = $("#kdModal");
   if (modal) {
     modal.addEventListener("click", (e) => {
-      if (e.target.closest("[data-close='1']")) 
+      if (e.target.closest("[data-close='1']"))
         closeModal();
     });
   }
@@ -311,11 +339,11 @@ function initBoardEvents() {
 
 function bindChips(rootId, key) {
   const root = $(`#${rootId}`);
-  if (!root) 
+  if (!root)
     return;
   root.addEventListener("click", (e) => {
     const btn = e.target.closest("button");
-    if (!btn) 
+    if (!btn)
       return;
     $$("#" + rootId + " .chip").forEach((b) => b.classList.remove("is-active"));
     btn.classList.add("is-active");
@@ -326,7 +354,7 @@ function bindChips(rootId, key) {
 
 function initSearch() {
   const input = $("#q");
-  if (!input) 
+  if (!input)
     return;
   input.addEventListener("input", () => {
     state.q = input.value;

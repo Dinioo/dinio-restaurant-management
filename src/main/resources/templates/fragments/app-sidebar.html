@@ -27,23 +27,6 @@
           <span>Bàn</span>
         </a>
 
-        <a class="app-side-item" th:classappend="${active}=='waiter_orders' ? ' is-active' : ''"
-           href="/dinio/waiter/order">
-          <i class="fa-solid fa-receipt"></i>
-          <span>Order</span>
-        </a>
-
-        <a class="app-side-item" th:classappend="${active}=='waiter_reservations' ? ' is-active' : ''"
-           href="/dinio/waiter/reservations">
-          <i class="fa-solid fa-calendar-check"></i>
-          <span>Đặt bàn</span>
-        </a>
-
-        <a class="app-side-item" th:classappend="${active}=='waiter_shift' ? ' is-active' : ''"
-           href="/dinio/waiter/shift-history">
-          <i class="fa-solid fa-clock-rotate-left"></i>
-          <span>History ca</span>
-        </a>
       </div>
 
       <div class="app-side-group" sec:authorize="hasRole('CASHIER_MANAGER')">

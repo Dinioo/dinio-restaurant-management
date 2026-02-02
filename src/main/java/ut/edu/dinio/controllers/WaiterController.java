@@ -96,6 +96,10 @@ public class WaiterController {
   public String waiterOrderDetail() {
     return "waiter/waiter-order-detail";
   }
+  @GetMapping("/waiter/notifications")
+  public String waiterNotifications() {
+    return "waiter/notifications";
+  }
 
   @GetMapping("/waiter/api/order-detail")
   @ResponseBody

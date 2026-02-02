@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,46 +15,42 @@
   <div th:replace="~{fragments/header :: header}"></div>
 
   <main class="error">
-    <section class="error-shell">
+    <section class="error-shell system-style">
 
       <div class="error-card">
-        <div class="error-badge">
-          <span class="dot"></span>
-          <span class="brand">DINIO</span>
-          <span class="sep">•</span>
-          <span class="muted">Not found</span>
+        <div class="error-status">
+          <span class="status-dot"></span>
+          <span>HTTP 404 — Page Not Found</span>
         </div>
 
         <p class="error-code">404</p>
-        <h1 class="error-title">Trang này không có trong menu</h1>
+        <h1 class="error-title">Không tìm thấy trang</h1>
+
         <p class="error-subtitle">
-          Có thể link sai hoặc trang đã được đổi vị trí.
+          Đường dẫn bạn truy cập không tồn tại hoặc đã bị thay đổi.
+          Vui lòng kiểm tra lại URL hoặc quay về trang chính.
         </p>
 
         <div class="error-actions">
           <a class="btn btn-cta" th:href="@{/}">
             <i class="fa-solid fa-house"></i>
-            Về Home
+            Trang chủ
           </a>
-          <a class="btn btn-ghost" th:href="@{/menu}">
-            <i class="fa-solid fa-utensils"></i>
-            Xem Menu
-          </a>
+
+          <button class="btn btn-ghost" type="button" onclick="history.back()">
+            <i class="fa-solid fa-arrow-left"></i>
+            Quay lại
+          </button>
         </div>
       </div>
 
-      <aside class="error-visual" aria-label="Dinio visual">
-        <div class="visual-bg" aria-hidden="true"></div>
-        <div class="visual-card">
-          <p class="visual-kicker">DINIO</p>
-          <h2>Modern dining.</h2>
-          <p>Quay lại menu để chọn món yêu thích.</p>
-          <div class="visual-pills">
-            <span class="pill"><i class="fa-solid fa-star"></i> Best Seller</span>
-            <span class="pill"><i class="fa-solid fa-mug-hot"></i> Drinks</span>
-            <span class="pill"><i class="fa-solid fa-cake-candles"></i> Desserts</span>
-          </div>
+      <aside class="error-visual system-visual" aria-label="System visual">
+        <div class="tech-graphic" aria-hidden="true">
+          <div class="circle"></div>
+          <div class="square"></div>
+          <div class="triangle"></div>
         </div>
+        <p class="visual-caption">System could not locate the requested resource.</p>
       </aside>
 
     </section>

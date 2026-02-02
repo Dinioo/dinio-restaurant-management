@@ -38,6 +38,11 @@
             <i class="fa-solid fa-users-gear"></i>
             <span>Staff</span>
           </a>
+          <a class="app-side-item" th:classappend="${active}=='waiter_tables' ? ' is-active' : ''"
+           href="/dinio/admin/notifications">
+          <i class="fa-regular fa-bell"></i>
+          <span>Thông báo</span>
+        </a>
         </div>
 
       </nav>

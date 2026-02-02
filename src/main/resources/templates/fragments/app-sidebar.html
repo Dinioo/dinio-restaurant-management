@@ -5,6 +5,13 @@
 <body>
 
 <div th:fragment="appSidebar(active)">
+
+  <button class="app-side-fab" id="menuToggleFloating" type="button" aria-label="Menu">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
+  <div class="app-side-backdrop" id="sideBackdrop" aria-hidden="true"></div>
+
   <aside class="app-side" id="appSidebar">
     <div class="app-side-head">
       <div class="app-side-top">
@@ -26,7 +33,11 @@
           <i class="fa-solid fa-chair"></i>
           <span>Bàn</span>
         </a>
-
+        <a class="app-side-item" th:classappend="${active}=='waiter_tables' ? ' is-active' : ''"
+           href="/dinio/waiter/notifications">
+          <i class="fa-regular fa-bell"></i>
+          <span>Thông báo</span>
+        </a>
       </div>
 
       <div class="app-side-group" sec:authorize="hasRole('CASHIER_MANAGER')">
@@ -52,23 +63,15 @@
           <span>Hoá đơn</span>
         </a>
 
+        <a class="app-side-item" th:classappend="${active}=='waiter_tables' ? ' is-active' : ''"
+           href="/dinio/cashier/notifications">
+          <i class="fa-regular fa-bell"></i>
+          <span>Thông báo</span>
+        </a>
+
         <a class="app-side-item" href="/dinio/cashier/shift-summary">
           <i class="fa-solid fa-chart-simple"></i>
           <span>Tổng kết ca</span>
-        </a>
-      </div>
-
-      <div class="app-side-group" sec:authorize="hasRole('MANAGER')">
-        <div class="app-side-label">Quản lý</div>
-
-        <a class="app-side-item" href="/dinio/manager/dashboard">
-          <i class="fa-solid fa-chart-pie"></i>
-          <span>Tổng quan</span>
-        </a>
-
-        <a class="app-side-item" href="/dinio/manager/settings">
-          <i class="fa-solid fa-gear"></i>
-          <span>Cấu hình</span>
         </a>
       </div>
 
@@ -82,7 +85,14 @@
           <i class="fa-solid fa-clock"></i>
           <span>Lịch sử</span>
         </a>
+
+        <a class="app-side-item" th:classappend="${active}=='waiter_tables' ? ' is-active' : ''"
+           href="/dinio/kitchen/notifications">
+          <i class="fa-regular fa-bell"></i>
+          <span>Thông báo</span>
+        </a>
       </div>
+
     </nav>
 
     <div class="app-side-foot">
@@ -94,6 +104,7 @@
       </form>
     </div>
   </aside>
+
 </div>
 
 </body>

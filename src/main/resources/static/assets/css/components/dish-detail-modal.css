@@ -74,6 +74,8 @@
   overflow: hidden;
   border: 1px solid var(--border-soft);
   background: var(--surface-2);
+  aspect-ratio: 4 / 3; 
+  width: 100%;
 
   height: auto;
 }
@@ -164,10 +166,6 @@
 
 #dishModal .dish-modal-media{
   aspect-ratio: 4 / 3;
-}
-#dishModal .dish-modal-media img{
-  width: 100%;
-  height: 100%;
 }
 
 /* meta row: price / calories / spice */

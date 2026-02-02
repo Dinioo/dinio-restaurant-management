@@ -40,6 +40,11 @@ public class CashierController {
         return "cashier/cashier-table-map";
     }
 
+    @GetMapping("/cashier/notifications")
+    public String cashierNotifications() {
+        return "cashier/notifications";
+    }
+
     @GetMapping("/cashier/dashboard")
     public String cashierDashboard() {
         return "cashier/cashier-dashboard";
@@ -115,19 +120,17 @@ public class CashierController {
         try {
             Integer tableId = Integer.valueOf(payload.get("tableId").toString());
             BigDecimal amount = new BigDecimal(payload.get("amount").toString());
-            
+
             String ipAddress = getClientIP(request);
             String paymentUrl = vnPayService.createPaymentUrl(tableId, amount.longValue(), ipAddress);
-            
+
             return ResponseEntity.ok(Map.of(
-                "status", "success",
-                "paymentUrl", paymentUrl
-            ));
+                    "status", "success",
+                    "paymentUrl", paymentUrl));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of(
-                "error", "Không thể tạo link thanh toán VNPay",
-                "message", e.getMessage()
-            ));
+                    "error", "Không thể tạo link thanh toán VNPay",
+                    "message", e.getMessage()));
         }
     }
 

@@ -51,6 +51,10 @@ public class AdminController {
                 auditLogRepository.findTop100ByOrderByTimestampDesc());
         return "admin/dashboard";
     }
+    @GetMapping("/notifications")
+    public String adminNotifications() {
+        return "admin/notifications";
+    }
 
     @GetMapping("/staff")
     public String staff(Model model) {
@@ -171,4 +175,7 @@ public class AdminController {
             return Map.of("status", "error", "message", "Status không hợp lệ");
         }
     }
+
+    
+
 }

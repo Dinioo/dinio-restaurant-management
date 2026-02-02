@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="_csrf" th:content="${_csrf?.token}" />
+    <meta name="_csrf_header" th:content="${_csrf?.headerName}" />
+    <title>DINIO - Thông báo</title>
+
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/cashier/notifications.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <script th:src="@{/assets/js/cashier/notifications.js}" defer></script>
+</head>
+
+<body>
+    <div class="app-shell">
+        <div th:replace="~{fragments/app-sidebar :: appSidebar('notifications')}"></div>
+
+        <main class="ntf">
+            <section class="ntf-wrap">
+                <div class="ntf-head">
+                    <div class="ntf-title">
+                        <p class="ntf-eyebrow">Notifications</p>
+                        <h1 class="ntf-h1">Thông báo</h1>
+                    </div>
+
+                    <div class="ntf-actions">
+                        <button class="ntf-btn" id="btnMarkAll" type="button">
+                            <i class="fa-regular fa-circle-check"></i>
+                            <span>Đã đọc tất cả</span>
+                        </button>
+
+                        <button class="ntf-btn ntf-btn-ghost" id="btnClearRead" type="button">
+                            <i class="fa-regular fa-trash-can"></i>
+                            <span>Xoá đã đọc</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="ntf-bar">
+                    <div class="ntf-tabs" role="tablist" aria-label="Bộ lọc thông báo">
+                        <button class="ntf-tab is-active" type="button" data-filter="all" role="tab"
+                            aria-selected="true">Tất cả</button>
+                        <button class="ntf-tab" type="button" data-filter="unread" role="tab" aria-selected="false">Chưa
+                            đọc</button>
+                    </div>
+
+                    <div class="ntf-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input id="ntfQuery" type="text" placeholder="Tìm theo nội dung, tag..." autocomplete="off" />
+                    </div>
+                </div>
+
+                <div class="ntf-card">
+                    <div class="ntf-section">
+                        <div class="ntf-sec-head">
+                            <h2 class="ntf-sec-title">Mới</h2>
+                            <span class="ntf-sec-meta" id="countNew">0</span>
+                        </div>
+                        <div class="ntf-list" id="listNew"></div>
+                    </div>
+
+                    <div class="ntf-divider"></div>
+
+                    <div class="ntf-section">
+                        <div class="ntf-sec-head">
+                            <h2 class="ntf-sec-title">Trước đó</h2>
+                            <span class="ntf-sec-meta" id="countOld">0</span>
+                        </div>
+                        <div class="ntf-list" id="listOld"></div>
+                    </div>
+
+                    <button class="ntf-more" id="btnMore" type="button">
+                        Xem thêm
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>

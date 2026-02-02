@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DINIO — 505</title>
+  <title>DINIO — 401</title>
 
   <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
   <link rel="stylesheet" th:href="@{/assets/css/error.css}" />
@@ -11,7 +11,7 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
 
-<body class="error-page">
+<body class="error-page error-401">
   <div th:replace="~{fragments/header :: header}"></div>
 
   <main class="error">
@@ -22,39 +22,40 @@
           <span class="dot"></span>
           <span class="brand">DINIO</span>
           <span class="sep">•</span>
-          <span class="muted">Protocol error</span>
+          <span class="muted">Unauthorized</span>
         </div>
 
-        <p class="error-code">505</p>
-        <h1 class="error-title">Phiên bản HTTP không được hỗ trợ</h1>
+        <p class="error-code">401</p>
+        <h1 class="error-title">Bạn cần đăng nhập</h1>
         <p class="error-subtitle">
-          Trình duyệt hoặc proxy đang dùng giao thức không tương thích với máy chủ.
-          Hãy thử tải lại, đổi trình duyệt, hoặc quay về trang chủ.
+          Phiên đăng nhập đã hết hạn hoặc bạn chưa đăng nhập để truy cập trang này.
         </p>
 
         <div class="error-actions">
-          <a class="btn btn-cta" th:href="@{/}">
-            <i class="fa-solid fa-house"></i>
-            Trang chủ
+          <a class="btn btn-cta" th:href="@{/login}">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            Đăng nhập
           </a>
 
-          <a class="btn btn-ghost" href="javascript:location.reload()">
-            <i class="fa-solid fa-rotate-right"></i>
-            Tải lại
+          <a class="btn btn-ghost" th:href="@{/}">
+            <i class="fa-solid fa-house"></i>
+            Trang chủ
           </a>
         </div>
       </div>
 
       <aside class="error-visual" aria-label="System visual">
         <div class="visual-bg" aria-hidden="true"></div>
+
         <div class="visual-card">
-          <p class="visual-kicker">DINIO</p>
-          <h2>Protocol mismatch.</h2>
-          <p>Vui lòng thử lại bằng kết nối/trình duyệt khác.</p>
+          <p class="visual-kicker">DINIO SYSTEM</p>
+          <h2>Authentication required</h2>
+          <p>Vui lòng đăng nhập để tiếp tục sử dụng tính năng này.</p>
+
           <div class="visual-pills">
-            <span class="pill"><i class="fa-solid fa-globe"></i> HTTP/HTTPS</span>
-            <span class="pill"><i class="fa-solid fa-shield-halved"></i> Compatible</span>
-            <span class="pill"><i class="fa-solid fa-wrench"></i> Configure</span>
+            <span class="pill"><i class="fa-solid fa-lock"></i> Login</span>
+            <span class="pill"><i class="fa-solid fa-id-badge"></i> Session</span>
+            <span class="pill"><i class="fa-solid fa-shield-halved"></i> Secure</span>
           </div>
         </div>
       </aside>

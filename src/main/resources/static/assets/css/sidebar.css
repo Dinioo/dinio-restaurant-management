@@ -1,5 +1,4 @@
 :root{
-  
   --side-w:264px;
   --side-w-mini:84px;
   --side-gap:18px;
@@ -29,6 +28,7 @@
   min-width:0;
 }
 
+/* ===== Sidebar base ===== */
 .app-side{
   width:var(--side-w);
   position:sticky;
@@ -43,7 +43,10 @@
   display:flex;
   flex-direction:column;
   overflow:hidden;
-  transition:width .22s var(--ease);
+
+  transition:
+    width .22s var(--ease),
+    transform .22s var(--ease);
 }
 
 .app-side.is-collapsed{
@@ -151,6 +154,7 @@
   border-color:rgba(255,255,255,.12);
 }
 
+/* Collapsed behavior */
 .app-side.is-collapsed .app-side-item{
   grid-template-columns:1fr;
   justify-items:center;
@@ -190,16 +194,100 @@
 }
 
 .app-side.is-collapsed .app-logout span{display:none}
+.app-side-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .22s var(--ease);
+  z-index:39;
+}
+.app-side-backdrop.is-show{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.app-side-fab{
+  display:none;
+}
+
+body.side-open{
+  overflow:hidden;
+}
 
 @media(max-width:980px){
-  .app-shell{padding:12px}
+  .app-shell{
+    padding:12px;
+  }
   .app-side{
     position:fixed;
     top:12px;
     left:12px;
     height:calc(100vh - 24px);
+
+    width:min(var(--side-w), 86vw);
+
     transform:translateX(calc(-100% - 18px));
     z-index:40;
+
+    transition:transform .22s var(--ease);
   }
-  .app-side.is-open{transform:translateX(0)}
+
+  .app-side.is-open{
+    transform:translateX(0);
+  }
+
+  .app-side.is-collapsed{
+    width:min(var(--side-w), 86vw);
+  }
+  .app-side.is-collapsed .app-side-item{
+    grid-template-columns:40px 1fr;
+    justify-items:stretch;
+  }
+  .app-side.is-collapsed .app-side-item span,
+  .app-side.is-collapsed .app-side-label{
+    display:block;
+  }
+  .app-side.is-collapsed .app-logout{
+    grid-template-columns:40px 1fr;
+    justify-items:stretch;
+  }
+  .app-side.is-collapsed .app-logout span{
+    display:block;
+  }
+
+  /* Floating hamburger hiện trên mobile */
+  .app-side-fab{
+    display:grid;
+    place-items:center;
+    position:fixed;
+    top:12px;
+    left:12px;
+    z-index:41;
+
+    width:44px;
+    height:44px;
+    border-radius:14px;
+
+    border:1px solid rgba(255,255,255,.10);
+    background:rgba(18,18,18,.72);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    box-shadow:0 12px 30px rgba(0,0,0,.45);
+
+    color:var(--text);
+    cursor:pointer;
+
+    transition:transform .18s var(--ease), background .18s var(--ease);
+  }
+
+  .app-side-fab:active{
+    transform:translateY(1px);
+  }
+
+  body.side-open .app-side-fab{
+    opacity:0;
+    pointer-events:none;
+  }
 }

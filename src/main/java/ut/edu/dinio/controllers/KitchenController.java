@@ -23,6 +23,10 @@ public class KitchenController {
   public String kitchenKds() {
     return "kitchen/kitchen-kds";
   }
+   @GetMapping("/kitchen/notifications")
+  public String kitchennNotifications() {
+    return "kitchen/notifications";
+  }
 
   @GetMapping("/kitchen/history")
   public String kitchenHistory() {

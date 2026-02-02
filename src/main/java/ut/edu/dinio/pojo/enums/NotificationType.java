@@ -1,0 +1,21 @@
+package ut.edu.dinio.pojo.enums;
+
+public enum NotificationType {
+    NEW_RESERVATION,
+    RESERVATION_CONFIRMED,
+    RESERVATION_CANCELLED,
+
+    TABLE_ASSIGNED,
+    TABLE_STATUS_CHANGED,
+
+    ORDER_CREATED,
+    ORDER_SENT_TO_KITCHEN,
+    ITEM_STATUS_CHANGED,
+    TICKET_READY,
+
+    PAYMENT_REQUESTED,
+    PAYMENT_RECEIVED,
+
+    SYSTEM
+}
+

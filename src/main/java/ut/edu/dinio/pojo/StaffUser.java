@@ -1,7 +1,11 @@
 package ut.edu.dinio.pojo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import ut.edu.dinio.pojo.enums.UserStatus;
 
@@ -41,6 +46,9 @@ public class StaffUser {
     @JoinColumn(name = "RoleID")
     private Role role;
 
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Notification> notifications = new ArrayList<>();
+
     public StaffUser() {}
 
     public StaffUser(String name, String username, String passwordHash, Role role) {
@@ -58,6 +66,8 @@ public class StaffUser {
 
     @JsonIgnore
     public Role getRole() { return role; }
+    @JsonIgnore
+    public List<Notification> getNotifications() { return notifications; }
 
     public void setId(Integer id) { this.id = id; }
     public void setName(String name) { this.name = name; }
@@ -65,4 +75,5 @@ public class StaffUser {
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
     public void setStatus(UserStatus status) { this.status = status; }
     public void setRole(Role role) { this.role = role; }
+    public void setNotifications(List<Notification> notifications) { this.notifications = notifications; }
 }

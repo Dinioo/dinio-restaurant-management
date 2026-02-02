@@ -3,6 +3,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const resTime = document.getElementById("resTime");
   const resGuests = document.getElementById("resGuests");
   const resArea = document.getElementById("resArea");
+  
+  const now = new Date();
+  const todayStr = now.toISOString().split('T')[0];
+
+  resDate.value = todayStr; 
+  resDate.min = todayStr;
+
+  const future30 = new Date(now.getTime() + 30 * 60000);
+  resTime.value = `${String(future30.getHours()).padStart(2, '0')}:${String(future30.getMinutes()).padStart(2, '0')}`;
+  resTime.min = "09:00";
+  resTime.max = "20:30";
 
   const btnClearPick = document.getElementById("btnClearPick");
   const btnSubmitReserve = document.getElementById("btnSubmitReserve");
@@ -278,6 +289,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
   btnSubmitReserve?.addEventListener("click", async (e) => {
     e.preventDefault();
+    e.stopPropagation();
+    const now = new Date();
+    const selectedDateStr = resDate.value;
+    const selectedTimeStr = resTime.value;
+    const selectedDateTime = new Date(`${selectedDateStr}T${selectedTimeStr}`);
+    
+    const minBookingTime = new Date(now.getTime() + 30 * 60000);
+
+    const todayOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const selectedDateOnly = new Date(selectedDateTime.getFullYear(), selectedDateTime.getMonth(), selectedDateTime.getDate());
+
+    if (selectedDateOnly < todayOnly) {
+        errorToast("Không thể đặt bàn cho ngày trong quá khứ.");
+        return;
+    }
+
+    const [h, m] = selectedTimeStr.split(':').map(Number);
+    const totalMinutes = h * 60 + m;
+    if (totalMinutes < 9 * 60 || totalMinutes > 20 * 60 + 30) {
+        errorToast("Vui lòng đặt bàn trong khung giờ từ 09:00 đến 20:30.");
+        return;
+    }
+
+    if (selectedDateTime < minBookingTime) {
+        errorToast("Bạn cần đặt bàn trước ít nhất 30 phút so với thời điểm hiện tại.");
+        return;
+    }
     const mode = bookingMode.value;
 
     const inputName = mode === "self" ? document.getElementById("fullName").value : document.getElementById("fullName2").value;
@@ -318,6 +356,22 @@ document.addEventListener("DOMContentLoaded", () => {
     finally { btnSubmitReserve.disabled = false; }
   });
 
+  const initDateTimeConstraints = () => {
+      const now = new Date();
+      const todayStr = now.toISOString().split('T')[0];
+      resDate.value = todayStr;
+      resDate.min = todayStr;
+
+      const future30 = new Date(now.getTime() + 30 * 60000);
+      const hours = String(future30.getHours()).padStart(2, '0');
+      const minutes = String(future30.getMinutes()).padStart(2, '0');
+      
+      resTime.value = `${hours}:${minutes}`;
+      resTime.min = "09:00"; 
+      resTime.max = "20:30";
+  };
+
+  initDateTimeConstraints();
   fetchTables();
   fetchAndPrefillUserData();
 });

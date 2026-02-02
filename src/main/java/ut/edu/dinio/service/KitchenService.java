@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ut.edu.dinio.pojo.OrderItem;
 import ut.edu.dinio.pojo.StaffUser;
+import ut.edu.dinio.pojo.TableSession;
 import ut.edu.dinio.pojo.enums.OrderItemStatus;
 import ut.edu.dinio.repositories.OrderItemRepository;
 
@@ -23,6 +24,9 @@ public class KitchenService {
 
     @Autowired
     private AuditLogService auditLogService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     public List<Map<String, Object>> getKitchenOrders() {
         List<OrderItemStatus> activeStatuses = Arrays.asList(
@@ -76,6 +80,25 @@ public class KitchenService {
 
         item.setStatus(next);
         orderItemRepo.save(item);
+
+        System.out.println("DEBUG: Trang thai tiep theo la: " + next.name()); // Thêm dòng này
+
+    if (next.name().equals("READY")) {
+        System.out.println("DEBUG: Dang vao luong gui thong bao cho Waiter...");
+        TableSession session = item.getOrder().getSession();
+        
+        if (session.getAssignedStaff() != null) {
+            System.out.println("DEBUG: Gui cho Waiter ID: " + session.getAssignedStaff().getId());
+            notificationService.notifyWaiter(
+                session.getAssignedStaff(), 
+                "Món ăn đã sẵn sàng", 
+                "Món '" + item.getMenuItem().getName() + "' của bàn " + session.getTable().getCode() + " đã xong.", 
+                session.getId()
+            );
+        } else {
+            System.out.println("DEBUG: Khong tim thay AssignedStaff cho session nay!");
+        }
+    }
 
         auditLogService.log(
                 staff,

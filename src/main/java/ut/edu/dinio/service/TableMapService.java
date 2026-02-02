@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ut.edu.dinio.pojo.Area;
 import ut.edu.dinio.pojo.Customer;
 import ut.edu.dinio.pojo.DiningTable;
+import ut.edu.dinio.pojo.Invoice;
 import ut.edu.dinio.pojo.Reservation;
 import ut.edu.dinio.pojo.StaffUser;
 import ut.edu.dinio.pojo.TableSession;
@@ -45,6 +46,9 @@ public class TableMapService {
 
     @Autowired
     private InvoiceService invoiceService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     public List<Map<String, Object>> getAllAreas() {
         List<Area> areas = areaRepository.findAllByOrderByIdAsc();
@@ -149,6 +153,7 @@ public class TableMapService {
         if (newStatus == TableStatus.IN_SERVICE) {
             if (sessionRepository.findByTableIdAndStatus(tableId, SessionStatus.OPEN).isEmpty()) {
                 TableSession session = new TableSession(table, table.getSeats(), staff);
+                session.setAssignedStaff(staff); 
                 session = sessionRepository.save(session);
                 openedSessionId = session.getId();
             }
@@ -159,10 +164,16 @@ public class TableMapService {
                 throw new RuntimeException("Bàn chưa có session đang mở");
             }
 
-            invoiceService.generateInvoiceForCloseSession(tableId, staff);
+            Invoice invoice = invoiceService.generateInvoiceForCloseSession(tableId, staff);
 
             active.setStatus(SessionStatus.CHECK_REQUESTED);
             sessionRepository.save(active);
+            
+            notificationService.notifyCashier(
+                "Bàn " + table.getCode() + " yêu cầu thanh toán",
+                "Tổng tiền: " + String.format("%,.0fđ", invoice.getTotal()),
+                tableId
+            );
         }
 
 
@@ -240,4 +251,8 @@ public class TableMapService {
         return res.getCustomer() != null ? res.getCustomer().getFullName() : "Khách đặt";
     }
 
+    // Sau khi set CHECK_REQUESTED
+    public void notifyCashier(String message, String content, Integer tableId) {
+        notificationService.notifyCashier(message, content, tableId);
+    }
 }

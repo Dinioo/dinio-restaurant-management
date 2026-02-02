@@ -467,6 +467,60 @@ document.addEventListener("DOMContentLoaded", () => {
   return { [date]: { morning, evening } };
 }
 
+  /* =========================
+     SHIFT FLOW (MIDDAY + DAYEND + CLOSE SHIFT)
+     (CHỈ THÊM - KHÔNG ĐỤNG CODE CŨ)
+     ========================= */
+
+  const openModal = (id) => {
+    const m = document.getElementById(id);
+    if (!m) return;
+    m.classList.remove("is-hidden");
+    m.setAttribute("aria-hidden", "false");
+  };
+
+  const closeAnyModal = (modal) => {
+    if (!modal) return;
+    modal.classList.add("is-hidden");
+    modal.setAttribute("aria-hidden", "true");
+  };
+
+  // bấm nút Mid-day -> mở modal middayModal
+  document.getElementById("btnMidDay")?.addEventListener("click", () => {
+    openModal("middayModal");
+  });
+
+  // bấm OK ở modal Mid-day -> đóng -> mở shiftClosedModal
+  document.getElementById("middayOkBtn")?.addEventListener("click", () => {
+    closeAnyModal(document.getElementById("middayModal"));
+    openModal("shiftClosedModal");
+  });
+
+  // bấm nút Day-end -> mở modal dayendModal
+  document.getElementById("btnDayEnd")?.addEventListener("click", () => {
+    openModal("dayendModal");
+  });
+
+  // bấm OK ở modal Day-end -> đóng -> mở shiftClosedModal
+  document.getElementById("dayendOkBtn")?.addEventListener("click", () => {
+    closeAnyModal(document.getElementById("dayendModal"));
+    openModal("shiftClosedModal");
+  });
+
+  // bấm OK ở shiftClosedModal -> logout
+  document.getElementById("reloginBtn")?.addEventListener("click", () => {
+    window.location.href = "/logout";
+  });
+
+  // click backdrop hoặc nút có data-close="1" -> đóng modal đang mở
+  document.querySelectorAll(".fp-modal").forEach(modal => {
+    modal.addEventListener("click", (e) => {
+      const t = e.target;
+      if (t?.dataset?.close === "1" || t?.classList?.contains("fp-backdrop")) {
+        closeAnyModal(modal);
+      }
+    });
+  });
 
   render();
 });

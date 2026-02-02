@@ -14,7 +14,7 @@ body.is-auth{
   min-height: calc(100vh - var(--header-h));
   display: grid;
   place-items: center;
-  padding: 22px 16px 44px;
+  padding: 4%; ;
 }
 
 .auth-shell{
@@ -254,7 +254,7 @@ body.is-auth{
 }
 
 @media (max-height: 820px){
-  .auth{ padding: 16px 16px 28px; }
+  .auth{ padding: 8%; }
   .auth-card{ padding: 22px; }
 
   .control{ height: 44px; }

@@ -16,4 +16,7 @@
 @import url("components/kitchen-detail-modal.css");
 @import url("components/void-bill-modal.css");
 @import url("components/waiter-build-modal.css");
+@import url("components/shift-dayend-simple-modal.css");
+@import url("components/shift-midday-modal.css");
+@import url("components/shift-closed-modal.css");
 

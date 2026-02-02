@@ -1,0 +1,38 @@
+#shiftClosedModal.fp-modal{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+}
+#shiftClosedModal.is-hidden{display:none!important;}
+
+#shiftClosedModal .fp-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.62);
+}
+
+#shiftClosedModal .fp-panel{
+  position:relative;
+  z-index:1;
+  width:min(440px,100%);
+  padding:18px;
+  border-radius:18px;
+  background:var(--surface-1);
+  border:1px solid var(--border-soft);
+  box-shadow:var(--shadow-soft);
+}
+
+#shiftClosedModal .fp-msg{
+  margin:0 0 16px;
+  font-size:14px;
+  text-align:center;
+  color:var(--text);
+}
+
+#shiftClosedModal .fp-actions.single{
+  display:flex;
+}

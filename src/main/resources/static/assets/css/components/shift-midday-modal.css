@@ -1,0 +1,98 @@
+/* =========================
+   MIDDAY SHIFT MODAL
+   ========================= */
+
+#middayModal.fp-modal{
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+#middayModal.is-hidden{
+  display: none !important;
+}
+
+/* nền đen */
+#middayModal .fp-backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+}
+
+/* khung modal */
+#middayModal .fp-panel{
+  position: relative;
+  z-index: 1;
+  width: min(420px, 100%);
+  padding: 20px 18px 18px;
+  border-radius: 18px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
+}
+
+/* dòng thông báo */
+#middayModal .fp-msg{
+  margin: 0 0 18px;
+  font-size: 14px;
+  text-align: center;
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* vùng chứa nút */
+#middayModal .fp-actions{
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+/* style chung cho cả 2 nút */
+#middayModal .fp-actions button{
+  flex: 1;                     /* mỗi nút chiếm 50% */
+  height: 44px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+/* nút Huỷ */
+#middayModal .fp-cancel{
+  border: 1px solid var(--border-soft);
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+#middayModal .fp-cancel:hover{
+  background: var(--surface-3);
+  border-color: rgba(202,165,106,.35);
+}
+
+/* nút OK */
+#middayModal .fp-ok{
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(202,165,106,.25);
+}
+
+#middayModal .fp-ok:hover{
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+/* mobile */
+@media (max-width:520px){
+  #middayModal .fp-panel{
+    border-radius: 16px;
+    padding: 18px 14px 16px;
+  }
+}

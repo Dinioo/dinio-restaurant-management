@@ -1,0 +1,49 @@
+#dayendModal.fp-modal{
+  padding: 2%;
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+}
+#dayendModal.is-hidden{display:none!important;}
+
+#dayendModal .fp-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.55);
+}
+
+#dayendModal .fp-panel{
+  position:relative;
+  z-index:1;
+  width:min(420px,100%);
+  padding:18px;
+  border-radius:18px;
+  background:var(--surface-1);
+  border:1px solid var(--border-soft);
+  box-shadow:var(--shadow-soft);
+}
+
+#dayendModal .fp-msg{
+  margin:0 0 14px;
+  font-size:14px;
+  text-align:center;
+  color:var(--text);
+}
+
+#dayendModal .fp-actions{
+  display:flex;
+  gap:10px;
+}
+
+#dayendModal .fp-cancel{
+  flex:1;
+  height:42px;
+  border-radius:999px;
+  border:1px solid var(--border-soft);
+  background:var(--surface-2);
+  cursor:pointer;
+}

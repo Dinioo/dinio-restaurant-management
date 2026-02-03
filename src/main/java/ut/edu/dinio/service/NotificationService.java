@@ -61,6 +61,14 @@ public class NotificationService {
         }
     }
 
+    // Customer → Cashier: Đặt bàn mới cần xác nhận
+    public void notifyCashierNewReservation(String title, String message, Integer reservationId) {
+        List<StaffUser> cashierStaff = staffUserRepository.findByRoleName(RoleName.CASHIER_MANAGER);
+        for (StaffUser staff : cashierStaff) {
+            saveAndPush(staff, NotificationType.NEW_RESERVATION, title, message, "RESERVATION", reservationId);
+        }
+    }
+
     private void saveAndPush(StaffUser recipient, NotificationType type, String title, 
                              String message, String refType, Integer refId) {
         Notification n = new Notification();

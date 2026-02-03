@@ -131,7 +131,17 @@ public class TableMapService {
         r.setGuestNote((String) data.get("guestNote"));
     }
 
-    return reservationRepository.save(r);
+    Reservation saved = reservationRepository.save(r);
+
+    // Thông báo cho Cashier
+    String guestInfo = isForOther ? r.getGuestName() : customer.getFullName();
+    notificationService.notifyCashierNewReservation(
+        "Đặt bàn mới cần xác nhận",
+        guestInfo + " đặt bàn " + table.getCode() + " cho " + guests + " người",
+        saved.getId()
+    );
+
+    return saved;
 }
     @Transactional
     public void updateTableStatus(Integer tableId, TableStatus newStatus, StaffUser staff) {

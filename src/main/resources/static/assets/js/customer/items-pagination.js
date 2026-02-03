@@ -37,50 +37,84 @@
     }
   };
 
+  function translateSpiceLevel(level) {
+    if (!level) 
+      return "—";
+    const l = level.toLowerCase(); 
+    const levels = {
+        "not_spicy": "Không cay",
+        "mild": "Cay vừa",
+        "medium": "Cay",
+        "hot": "Rất cay"
+    };
+    return levels[l] || level; 
+  }
+  
   function populateAndShowModal(item) {
     const modal = document.getElementById('dishModal');
-    if (!modal)
-      return;
+    if (!modal) return;
 
     const imgEl = document.getElementById('dishModalImg');
     const badgeEl = document.getElementById('dishModalBadge');
     const nameEl = document.getElementById('dishModalName');
     const descEl = document.getElementById('dishModalDesc');
     const priceEl = document.getElementById('dishModalPrice');
-    const btnOrder = document.getElementById('dishOrderNowBtn');
 
-    const priceFormatted = typeof item.price === 'string' ? item.price : new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price || 0);
+    const caloriesEl = document.getElementById('dishModalCalories');
+    const spiceEl = document.getElementById('dishModalSpice');
+    
+    const tagsContainer = document.getElementById('dishModalTags');
+    const allergensContainer = document.getElementById('dishModalAllergens');
+    const ingredientsEl = document.getElementById('dishModalIngredients');
+
+    const priceFormatted = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price || 0);
     const imageUrl = resolveImageUrl(item.imageUrl);
 
-    let badgeText = '';
-    if (item.itemTags && item.itemTags.length > 0) {
-        badgeText = item.itemTags[0];
-    }
-
-    if(imgEl) {
+    if (imgEl) {
         imgEl.src = imageUrl;
         imgEl.onerror = function() { this.src = `${CONTEXT_PATH}/assets/pic/default-food.png`; };
     }
-    
-    if(badgeEl) {
-        badgeEl.textContent = badgeText;
-        badgeEl.style.display = badgeText ? 'inline-block' : 'none';
+    if (nameEl) nameEl.textContent = item.name;
+    if (descEl) descEl.textContent = item.description || '';
+    if (priceEl) priceEl.textContent = priceFormatted;
+
+    if (caloriesEl) caloriesEl.textContent = item.calories ? `${item.calories} kcal` : '—';
+    if (spiceEl) spiceEl.textContent = translateSpiceLevel(item.spiceLevel);
+
+    if (tagsContainer) {
+        tagsContainer.innerHTML = '';
+        const tags = item.tags || [];
+        tags.forEach(tag => {
+            const span = document.createElement('span');
+            span.className = 'dish-modal-chip'; 
+            span.textContent = tag;
+            tagsContainer.appendChild(span);
+        });
     }
 
-    if(nameEl) nameEl.textContent = item.name;
-    if(descEl) descEl.textContent = item.description || '';
-    if(priceEl) priceEl.textContent = priceFormatted;
+    if (allergensContainer) {
+        allergensContainer.innerHTML = '';
+        const allergens = item.allergens || [];
+        if (allergens.length > 0) {
+            allergens.forEach(alg => {
+                const span = document.createElement('span');
+                span.className = 'dish-modal-chip';
+                span.textContent = alg;
+                allergensContainer.appendChild(span);
+            });
+        } else {
+            allergensContainer.innerHTML = '<span class="dish-modal-text">Không có</span>';
+        }
+    }
 
-    if(btnOrder) {
-        btnOrder.onclick = function() {
-            window.location.href = `${CONTEXT_PATH}/reservation?dish=${item.id}`;
-        };
+    if (ingredientsEl) {
+        ingredientsEl.textContent = item.ingredients || '—';
     }
 
     modal.classList.remove('is-hidden');
     modal.classList.add('is-active'); 
     document.body.style.overflow = 'hidden'; 
-  }
+}
 
   function setupModalCloseHandlers() {
     const modal = document.getElementById('dishModal');

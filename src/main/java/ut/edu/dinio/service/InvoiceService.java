@@ -50,7 +50,9 @@ public class InvoiceService {
     private DiningTableRepository tableRepository;
 
     @Autowired
-    private AuditLogService auditLogService; // <--- THÊM MỚI: Cần thiết để ghi log
+    private AuditLogService auditLogService;
+    @Autowired
+    private NotificationService notificationService;
 
     /**
      * Lấy danh sách bàn với thông tin tổng bill
@@ -260,6 +262,16 @@ public class InvoiceService {
         result.put("invoiceId", invoice.getId());
         result.put("paymentId", payment.getId());
         result.put("message", "Thanh toán thành công");
+
+        // Notify waiter payment complete
+        if (session.getAssignedStaff() != null) {
+            notificationService.notifyWaiterPaymentComplete(
+                session.getAssignedStaff(),
+                "Thanh toán hoàn tất",
+                "Bàn " + table.getCode() + " đã thanh toán. Vui lòng dọn bàn.",
+                tableId
+            );
+        }
 
         return result;
     }

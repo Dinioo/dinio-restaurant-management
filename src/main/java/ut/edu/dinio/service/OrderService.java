@@ -19,6 +19,7 @@ import ut.edu.dinio.repositories.KitchenTicketRepository;
 import ut.edu.dinio.repositories.MenuItemRepository;
 import ut.edu.dinio.repositories.OrderItemRepository;
 import ut.edu.dinio.repositories.OrderRepository;
+import ut.edu.dinio.service.NotificationService;
 
 @Service
 public class OrderService {
@@ -29,19 +30,23 @@ public class OrderService {
     private final MenuItemRepository menuItemRepository;
     @Autowired
     private final AuditLogService auditLogService;
+    @Autowired
+    private final NotificationService notificationService;
 
     public OrderService(
             OrderRepository orderRepository,
             OrderItemRepository orderItemRepository,
             KitchenTicketRepository kitchenTicketRepository,
             MenuItemRepository menuItemRepository,
-            AuditLogService auditLogService
+            AuditLogService auditLogService,
+            NotificationService notificationService
         ) {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.kitchenTicketRepository = kitchenTicketRepository;
         this.menuItemRepository = menuItemRepository;
         this.auditLogService = auditLogService;
+        this.notificationService = notificationService;
     }
 
     public KitchenTicket sendToKitchen(
@@ -93,6 +98,12 @@ public class OrderService {
                 "orderId", order.getId(),
                 "itemCount", items.size()
             )
+        );
+
+        notificationService.notifyKitchen(
+            "Order mới từ bàn " + session.getTable().getCode(),
+            items.size() + " món cần chuẩn bị",
+            order.getId()
         );
 
         return ticket;

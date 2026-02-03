@@ -13,21 +13,105 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let filter = "all";
   let limit = 6;
+  let data = [];
 
-  const data = [
-    { id: 1, unread: true, bucket: "new", title: "Xác nhận đặt bàn", text: "Đặt bàn RSV-1 đã được xác nhận cho 19:00 hôm nay.", time: "1 giờ", tag: "Reservation" },
-    { id: 2, unread: true, bucket: "new", title: "Ưu đãi cuối tuần", text: "Giảm 10% cho hoá đơn từ 2 khách. Áp dụng đến CN.", time: "3 giờ", tag: "Promo" },
-    { id: 3, unread: true, bucket: "new", title: "Nhắc nhở", text: "Bạn có thể đến sớm 10 phút để nhận bàn nhanh hơn.", time: "5 giờ", tag: "Notice" },
+  // Cashier chỉ xem: PAYMENT_REQUESTED, NEW_RESERVATION
+  const CASHIER_TYPES = ["PAYMENT_REQUESTED", "NEW_RESERVATION"];
 
-    { id: 4, unread: false, bucket: "old", title: "Món mới", text: "Bếp vừa ra mắt 3 món mới trong thực đơn mùa này.", time: "2 ngày", tag: "Menu" },
-    { id: 5, unread: false, bucket: "old", title: "Cập nhật đặt bàn", text: "Bạn đã thay đổi số khách cho RSV-1 thành 4 khách.", time: "3 ngày", tag: "Reservation" },
-    { id: 6, unread: false, bucket: "old", title: "Gợi ý", text: "Thử Salmon Teriyaki cho bữa tối nhẹ nhàng, hợp vị.", time: "5 ngày", tag: "Suggest" },
-    { id: 7, unread: false, bucket: "old", title: "Ưu đãi thành viên", text: "Tích điểm mỗi hoá đơn để đổi món tráng miệng miễn phí.", time: "1 tuần", tag: "Promo" },
-    { id: 8, unread: false, bucket: "old", title: "Giờ cao điểm", text: "Khung 19:00–20:30 thường đông, bạn nên đặt trước.", time: "2 tuần", tag: "Notice" }
-  ];
+  const currentUserId = document.querySelector('meta[name="user-id"]')?.content;
+
+  if (currentUserId) {
+    fetch("/dinio/api/notifications/list")
+      .then((res) => res.json())
+      .then((notifications) => {
+        const filtered = notifications.filter((n) =>
+          CASHIER_TYPES.includes(n.type),
+        );
+
+        data = filtered.map((n) => {
+          const isNew = isRecentNotification(n.createdAt);
+          return {
+            id: n.id,
+            unread: !n.isRead,
+            bucket: isNew ? "new" : "old",
+            title: n.title,
+            text: n.message,
+            time: formatTime(n.createdAt),
+            tag: getTagForType(n.type),
+            type: n.type,
+          };
+        });
+
+        render();
+        updateHeaderBadge();
+      })
+      .catch((err) => console.error("Failed to load notifications:", err));
+
+    const source = new EventSource(
+      `/dinio/api/notifications/subscribe/${currentUserId}`,
+    );
+
+    source.addEventListener("DINIO_NOTIFY", (event) => {
+      const n = JSON.parse(event.data);
+
+      if (!CASHIER_TYPES.includes(n.type)) return;
+
+      if (window.successToast) successToast(n.message);
+
+      const newNotify = {
+        id: n.id,
+        unread: true,
+        bucket: "new",
+        title: n.title,
+        text: n.message,
+        time: "Vừa xong",
+        tag: getTagForType(n.type),
+        type: n.type,
+      };
+
+      data.unshift(newNotify);
+      render();
+      updateHeaderBadge();
+    });
+
+    source.onerror = (err) => {
+      console.error("SSE connection error:", err);
+    };
+  }
+
+  const isRecentNotification = (createdAt) => {
+    const date = new Date(createdAt);
+    const now = new Date();
+    const hoursDiff = (now - date) / (1000 * 60 * 60);
+    return hoursDiff < 24;
+  };
+
+  const getTagForType = (type) => {
+    switch (type) {
+      case "PAYMENT_REQUESTED":
+        return "Thanh toán";
+      case "NEW_RESERVATION":
+        return "Đặt bàn";
+      default:
+        return "Thông báo";
+    }
+  };
+
+  const formatTime = (datetime) => {
+    const date = new Date(datetime);
+    const now = new Date();
+    const diff = Math.floor((now - date) / 1000 / 60);
+
+    if (diff < 1) return "Vừa xong";
+    if (diff < 60) return diff + " phút";
+    if (diff < 1440) return Math.floor(diff / 60) + " giờ";
+    return Math.floor(diff / 1440) + " ngày";
+  };
 
   const avatarFor = (tag) => {
-    const s = String(tag || "D").trim().toUpperCase();
+    const s = String(tag || "D")
+      .trim()
+      .toUpperCase();
     return s.length >= 2 ? s.slice(0, 2) : s.slice(0, 1);
   };
 
@@ -48,8 +132,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const applyFilter = (arr) => {
     const q = query.value.trim();
     return arr
-      .filter(n => filter === "unread" ? n.unread : true)
-      .filter(n => matches(n, q));
+      .filter((n) => (filter === "unread" ? n.unread : true))
+      .filter((n) => matches(n, q));
   };
 
   const itemHtml = (n) => `
@@ -77,18 +161,29 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
 
   const render = () => {
-    const newItems = applyFilter(data.filter(n => n.bucket === "new")).slice(0, limit);
-    const oldItems = applyFilter(data.filter(n => n.bucket === "old")).slice(0, limit);
+    const newItems = applyFilter(data.filter((n) => n.bucket === "new")).slice(
+      0,
+      limit,
+    );
+    const oldItems = applyFilter(data.filter((n) => n.bucket === "old")).slice(
+      0,
+      limit,
+    );
 
     listNew.innerHTML = newItems.map(itemHtml).join("");
     listOld.innerHTML = oldItems.map(itemHtml).join("");
 
-    countNew.textContent = String(applyFilter(data.filter(n => n.bucket === "new")).length);
-    countOld.textContent = String(applyFilter(data.filter(n => n.bucket === "old")).length);
+    countNew.textContent = String(
+      applyFilter(data.filter((n) => n.bucket === "new")).length,
+    );
+    countOld.textContent = String(
+      applyFilter(data.filter((n) => n.bucket === "old")).length,
+    );
 
     const totalShown = newItems.length + oldItems.length;
     const totalAvailable = applyFilter(data).length;
-    btnMore.style.display = totalShown < Math.min(totalAvailable, limit * 2) ? "none" : "block";
+    btnMore.style.display =
+      totalShown < Math.min(totalAvailable, limit * 2) ? "none" : "block";
     if (applyFilter(data).length > limit * 2) btnMore.style.display = "block";
   };
 
@@ -96,14 +191,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const btn = document.getElementById("notifyBtn");
     const badge = document.getElementById("notifyBadge");
     if (!btn || !badge) return;
-    const unreadCount = data.filter(x => x.unread).length;
+    const unreadCount = data.filter((x) => x.unread).length;
     btn.classList.toggle("has-unread", unreadCount > 0);
     badge.textContent = unreadCount > 9 ? "9+" : String(unreadCount);
   };
 
   const setActiveTab = (next) => {
     filter = next;
-    tabs.forEach(t => {
+    tabs.forEach((t) => {
       const on = t.dataset.filter === next;
       t.classList.toggle("is-active", on);
       t.setAttribute("aria-selected", on ? "true" : "false");
@@ -112,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
   };
 
-  tabs.forEach(t => {
+  tabs.forEach((t) => {
     t.addEventListener("click", () => setActiveTab(t.dataset.filter || "all"));
   });
 
@@ -125,7 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const item = e.target.closest(".ntf-item");
     if (!item) return;
     const id = Number(item.dataset.id);
-    const n = data.find(x => x.id === id);
+    const n = data.find((x) => x.id === id);
     if (!n) return;
 
     const actBtn = e.target.closest("button[data-act]");
@@ -133,12 +228,20 @@ document.addEventListener("DOMContentLoaded", () => {
       const act = actBtn.dataset.act;
       if (act === "toggle") {
         n.unread = !n.unread;
+        fetch(`/dinio/api/notifications/${id}/mark-read`, {
+          method: "POST",
+        }).catch((err) => console.error("Failed to mark as read:", err));
       } else if (act === "remove") {
-        const idx = data.findIndex(x => x.id === id);
+        const idx = data.findIndex((x) => x.id === id);
         if (idx >= 0) data.splice(idx, 1);
       }
     } else {
-      n.unread = false;
+      if (n.unread) {
+        n.unread = false;
+        fetch(`/dinio/api/notifications/${id}/mark-read`, {
+          method: "POST",
+        }).catch((err) => console.error("Failed to mark as read:", err));
+      }
     }
 
     render();
@@ -149,7 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
   listOld.addEventListener("click", onListClick);
 
   btnMarkAll.addEventListener("click", () => {
-    data.forEach(n => (n.unread = false));
+    data.forEach((n) => (n.unread = false));
     render();
     updateHeaderBadge();
   });

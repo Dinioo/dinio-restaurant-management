@@ -9,17 +9,17 @@
       name="user-id"
       th:content="${session.currentStaff != null ? session.currentStaff.id : ''}"
     />
-    <title>DINIO - Thông báo</title>
+    <title>DINIO - Thông báo Bếp</title>
 
     <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
-    <link rel="stylesheet" th:href="@{/assets/css/cashier/notifications.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/waiter/notifications.css}" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
 
     <script
-      th:src="@{/assets/js/cashier/cashier-notifications.js}"
+      th:src="@{/assets/js/kitchen/kitchen-notifications.js}"
       defer
     ></script>
   </head>
@@ -27,7 +27,7 @@
   <body>
     <div class="app-shell">
       <div
-        th:replace="~{fragments/app-sidebar :: appSidebar('notifications')}"
+        th:replace="~{fragments/app-sidebar :: appSidebar('kitchen_kds')}"
       ></div>
 
       <main class="ntf">

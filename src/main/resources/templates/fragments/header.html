@@ -32,17 +32,18 @@
   </div>
 
   <nav id="action">
-    <a
+    <button
       class="item notify"
       id="notifyBtn"
-      th:href="@{/reservations/my}"
+      type="button"
       title="Thông báo"
       aria-haspopup="dialog"
       aria-expanded="false"
+      onclick="window.location.href = '/dinio/customer/notifications'"
     >
       <i class="fa-regular fa-bell"></i>
-      <span class="notify-badge" id="notifyBadge" aria-hidden="true"></span>
-    </a>
+      <span class="notify-badge" id="notifyBadge"></span>
+    </button>
 
     <div class="notify-pop" id="notifyPop" role="dialog" aria-label="Thông báo">
       <div class="notify-head">

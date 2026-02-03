@@ -1,9 +1,3 @@
-/* =========================================================
-   DINIO — Dashboard.css (CLEAN)
-   - Mobile KPI: 3 box dài, label trái - value phải (1 dòng)
-========================================================= */
-
-/* ========== Container / Header ========== */
 .wd{
   width: min(1200px, calc(100% - 48px));
   margin: 0 auto;
@@ -48,7 +42,6 @@
   flex-wrap:wrap;
 }
 
-/* ========== Card / Common ========== */
 .card{
   background:rgba(255,255,255,.05);
   border:1px solid rgba(255,255,255,.08);
@@ -64,7 +57,6 @@
   margin-bottom:6px;
 }
 
-/* ========== Shift block ========== */
 .shift{
   display:grid;
   grid-template-columns:1fr 1.4fr 1fr;
@@ -140,7 +132,6 @@
   min-height:16px;
 }
 
-/* ========== Quick cards ========== */
 .quick{
   display:grid;
   grid-template-columns:repeat(2, minmax(0, 1fr));
@@ -211,7 +202,6 @@
   opacity:.65;
 }
 
-/* ========== Mini grid ========== */
 .mini-grid{
   display:grid;
   grid-template-columns:repeat(4, minmax(0, 1fr));
@@ -277,7 +267,6 @@
   font-weight:700;
 }
 
-/* ========== Modal (keep) ========== */
 .modal{ position:fixed; inset:0; display:none; z-index:9999; }
 .modal.open{ display:block; }
 .modal-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.6); backdrop-filter: blur(6px); }
@@ -359,11 +348,6 @@
   border-top:1px solid rgba(255,255,255,.08);
 }
 
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-/* ---------- <= 980px: stack header, stack shift, 1-col quick, 2-col mini-grid ---------- */
 @media (max-width: 980px){
   .wd{
     width:100%;
@@ -420,7 +404,6 @@
   }
 }
 
-/* ---------- <= 720px: PHONE (KPI = 3 box dài, label/value 1 dòng) ---------- */
 @media (max-width: 720px){
 
   .shift-name{ font-size:16px; }
@@ -434,7 +417,6 @@
     font-size:11px;
   }
 
-  /* KPI: 1 cột => 3 box dài */
   .shift-mid{
     grid-template-columns:1fr;
     gap:10px;
@@ -465,7 +447,6 @@
     text-align:right;
   }
 
-  /* Quick cards compact */
   .qcard{
     padding:12px;
     border-radius:16px;
@@ -484,7 +465,6 @@
   .qtitle{ font-size:13px; }
   .qsub{ font-size:11px; margin-top:3px; }
 
-  /* mini cards gọn lại (không vuông) */
   .mcard{
     padding:12px;
     border-radius:16px;
@@ -501,7 +481,6 @@
   .mlabel{ font-size:11px; opacity:.82; }
 }
 
-/* ---------- <= 420px: tighter ---------- */
 @media (max-width: 420px){
   .shift-kpi{
     padding:11px 12px;
@@ -510,9 +489,6 @@
 
   .kpi-label{ font-size:12px; }
   .kpi-value{ font-size:14px; }
-
-  /* nếu muốn mini-grid 1 cột trên màn rất nhỏ thì bật dòng dưới */
-  /* .mini-grid{ grid-template-columns: 1fr; } */
 
   .mcard{ padding:11px; }
   .mvalue{ font-size:19px; }

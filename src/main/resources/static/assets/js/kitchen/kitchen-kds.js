@@ -75,21 +75,30 @@ function stationPill(st) {
 }
 
 function statusLabel(s) {
-  if (s === "QUEUED") return "Mới vào";
-  if (s === "PREPARING") return "Đang làm";
-  if (s === "READY") return "Sẵn sàng";
-  if (s === "SERVED") return "Đã phục vụ";
-  if (s === "CANCELLED") return "Đã huỷ";
-  if (s === "DRAFT") return "Nháp";
+  if (s === "QUEUED") 
+    return "Mới vào";
+  if (s === "PREPARING") 
+    return "Đang làm";
+  if (s === "READY") 
+    return "Sẵn sàng";
+  if (s === "SERVED") 
+    return "Đã phục vụ";
+  if (s === "CANCELLED") 
+    return "Đã huỷ";
+  if (s === "DRAFT") 
+    return "Nháp";
   return s || "—";
 }
 
 function matchesFilters(it) {
-  if (it.status === "SERVED" || it.status === "CANCELLED" || it.status === "DRAFT") return false;
+  if (it.status === "SERVED" || it.status === "CANCELLED" || it.status === "DRAFT") 
+    return false;
   const q = state.q.trim().toLowerCase();
   const hay = `${it.name} ${it.note || ""} ${fmtStation(it.station)} ${statusLabel(it.status)}`.toLowerCase();
-  if (q && !hay.includes(q)) return false;
-  if (state.station !== "all" && it.station !== state.station) return false;
+  if (q && !hay.includes(q)) 
+    return false;
+  if (state.station !== "all" && it.station !== state.station) 
+    return false;
   return true;
 }
 
@@ -116,9 +125,12 @@ async function fetchKdsData() {
 }
 
 function colKeyFromEnumStatus(s) {
-  if (s === "QUEUED") return "NEW";
-  if (s === "PREPARING") return "COOKING";
-  if (s === "READY") return "READY";
+  if (s === "QUEUED") 
+    return "NEW";
+  if (s === "PREPARING") 
+    return "COOKING";
+  if (s === "READY") 
+    return "READY";
   return null;
 }
 

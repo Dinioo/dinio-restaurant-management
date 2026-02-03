@@ -5,7 +5,8 @@
   const norm = (s) => (s || "").toString().trim().toLowerCase();
   const formatVND = (n) => {
     const num = Number(n || 0);
-    if (!Number.isFinite(num)) return "0đ";
+    if (!Number.isFinite(num)) 
+      return "0đ";
     return num.toLocaleString("vi-VN") + "đ";
   };
 
@@ -19,18 +20,21 @@
       item?.photoUrl ??
       null;
 
-    if (!raw) return "/assets/pic/preview.jpeg";
+    if (!raw) 
+      return "/assets/pic/preview.jpeg";
 
     const val = typeof raw === "string" ? raw : (raw.url || raw.path || "");
-    if (!val) return "/assets/pic/preview.jpeg";
+    if (!val) 
+      return "/assets/pic/preview.jpeg";
 
-    if (/^https?:\/\//i.test(val)) return val;
-    if (val.startsWith("/")) return val;
+    if (/^https?:\/\//i.test(val)) 
+      return val;
+    if (val.startsWith("/")) 
+      return val;
     return "/" + val.replace(/^\.\//, "");
   };
 
 
-  // ===== Dish detail modal (MenuItem) =====
   const escapeAttr = (s) => (s == null ? "" : String(s))
     .replaceAll("&", "&amp;")
     .replaceAll('"', "&quot;")
@@ -38,14 +42,18 @@
     .replaceAll(">", "&gt;");
 
   const parseList = (v) => {
-    if (!v) return [];
-    if (Array.isArray(v)) return v.map(x => String(x).trim()).filter(Boolean);
+    if (!v) 
+      return [];
+    if (Array.isArray(v)) 
+      return v.map(x => String(x).trim()).filter(Boolean);
     const s = String(v).trim();
-    if (!s) return [];
+    if (!s) 
+      return [];
     if (s.startsWith("[") && s.endsWith("]")) {
       try {
         const arr = JSON.parse(s);
-        if (Array.isArray(arr)) return arr.map(x => String(x).trim()).filter(Boolean);
+        if (Array.isArray(arr)) 
+          return arr.map(x => String(x).trim()).filter(Boolean);
       } catch (_) {}
     }
     return s.split(",").map(x => x.trim()).filter(Boolean);
@@ -53,32 +61,48 @@
 
   const labelSpice = (key) => {
     const k = norm(key);
-    if (k === "not_spicy") return "Không cay";
-    if (k === "mild") return "Cay nhẹ";
-    if (k === "medium") return "Cay vừa";
-    if (k === "hot") return "Cay nhiều";
+    if (k === "not_spicy") 
+      return "Không cay";
+    if (k === "mild") 
+      return "Cay nhẹ";
+    if (k === "medium") 
+      return "Cay vừa";
+    if (k === "hot") 
+      return "Cay nhiều";
     return key ? String(key) : "—";
   };
 
   const labelItemTag = (key) => {
     const k = norm(key);
-    if (k === "best") return "Bán chạy";
-    if (k === "new") return "Mới";
-    if (k === "signature") return "Signature";
-    if (k === "premium") return "Cao cấp";
+    if (k === "best") 
+      return "Bán chạy";
+    if (k === "new") 
+      return "Mới";
+    if (k === "signature") 
+      return "Signature";
+    if (k === "premium") 
+      return "Cao cấp";
     return key ? String(key) : "";
   };
 
   const labelAllergen = (key) => {
     const k = norm(key);
-    if (k === "peanuts") return "Đậu phộng";
-    if (k === "tree_nuts") return "Hạt cây";
-    if (k === "milk") return "Sữa";
-    if (k === "eggs") return "Trứng";
-    if (k === "wheat_gluten") return "Gluten/Lúa mì";
-    if (k === "soy") return "Đậu nành";
-    if (k === "fish") return "Cá";
-    if (k === "shellfish") return "Hải sản có vỏ";
+    if (k === "peanuts") 
+      return "Đậu phộng";
+    if (k === "tree_nuts") 
+      return "Hạt cây";
+    if (k === "milk") 
+      return "Sữa";
+    if (k === "eggs") 
+      return "Trứng";
+    if (k === "wheat_gluten") 
+      return "Gluten/Lúa mì";
+    if (k === "soy") 
+      return "Đậu nành";
+    if (k === "fish") 
+      return "Cá";
+    if (k === "shellfish") 
+      return "Hải sản có vỏ";
     return key ? String(key) : "";
   };
 
@@ -103,7 +127,8 @@
 
   const hideDishModal = () => {
     const modal = document.getElementById("dishModal");
-    if (!modal) return;
+    if (!modal) 
+      return;
     modal.classList.add("is-hidden");
     modal.setAttribute("aria-hidden", "true");
     document.body.classList.remove("no-scroll");
@@ -111,7 +136,8 @@
 
   const showDishModal = (dish) => {
     const modal = document.getElementById("dishModal");
-    if (!modal) return;
+    if (!modal) 
+      return;
 
     const img = modal.querySelector("#dishModalImg");
     const badge = modal.querySelector("#dishModalBadge");
@@ -129,18 +155,21 @@
     const alWrap = modal.querySelector("#dishModalAllergens");
     const ingBlock = modal.querySelector("#dishModalIngredientsBlock");
 
-    // Core
     if (img) {
       img.src = normalizeImageUrl(dish.imageUrl) || "/assets/pic/preview.jpeg";
       img.alt = dish.name || "Dish image";
     }
-    if (nameEl) nameEl.textContent = dish.name || "—";
-    if (descEl) descEl.textContent = dish.description || "Chưa có mô tả";
-    if (priceEl) priceEl.textContent = formatVND(dish.price);
+    if (nameEl) 
+      nameEl.textContent = dish.name || "—";
+    if (descEl) 
+      descEl.textContent = dish.description || "Chưa có mô tả";
+    if (priceEl) 
+      priceEl.textContent = formatVND(dish.price);
 
-    // Extra fields (exclude id/category/isActive/isAvailable)
-    if (calEl) calEl.textContent = (dish.calories != null && dish.calories !== "") ? `${dish.calories} kcal` : "—";
-    if (spiceEl) spiceEl.textContent = dish.spiceLevel ? labelSpice(dish.spiceLevel) : "—";
+    if (calEl) 
+      calEl.textContent = (dish.calories != null && dish.calories !== "") ? `${dish.calories} kcal` : "—";
+    if (spiceEl) 
+      spiceEl.textContent = dish.spiceLevel ? labelSpice(dish.spiceLevel) : "—";
 
     if (badge) {
       const k = norm(dish.spiceLevel);
@@ -148,16 +177,22 @@
     }
 
     const ingText = (dish.ingredients || "").toString().trim();
-    if (ingEl) ingEl.textContent = ingText || "—";
-    if (ingBlock) ingBlock.style.display = ingText ? "" : "none";
+    if (ingEl) 
+      ingEl.textContent = ingText || "—";
+    if (ingBlock) 
+      ingBlock.style.display = ingText ? "" : "none";
 
     const tags = parseList(dish.tags);
-    if (tagsWrap) renderChips(tagsWrap, tags, labelItemTag);
-    if (tagsBlock) tagsBlock.style.display = tags.length ? "" : "none";
+    if (tagsWrap) 
+      renderChips(tagsWrap, tags, labelItemTag);
+    if (tagsBlock) 
+      tagsBlock.style.display = tags.length ? "" : "none";
 
     const allergens = parseList(dish.allergens);
-    if (alWrap) renderChips(alWrap, allergens, labelAllergen);
-    if (alBlock) alBlock.style.display = allergens.length ? "" : "none";
+    if (alWrap) 
+      renderChips(alWrap, allergens, labelAllergen);
+    if (alBlock) 
+      alBlock.style.display = allergens.length ? "" : "none";
 
     modal.classList.remove("is-hidden");
     modal.setAttribute("aria-hidden", "false");
@@ -165,23 +200,23 @@
   };
 
   const ensureDishModalBindings = () => {
-    if (window.__dishModalBound) return;
+    if (window.__dishModalBound) 
+      return;
     window.__dishModalBound = true;
 
-    // Close: backdrop / X / buttons
     document.addEventListener("click", (e) => {
       const closeEl = e.target.closest("[data-close]");
       if (closeEl) {
         const modal = closeEl.closest(".fp-modal");
-        if (modal && modal.id === "dishModal") hideDishModal();
+        if (modal && modal.id === "dishModal") 
+          hideDishModal();
         return;
       }
 
-      // Open detail
       const btn = e.target.closest("[data-action='detail'], .js-dish-detail");
-      if (!btn) return;
+      if (!btn) 
+        return;
 
-      // Prefer dataset on the button; fallback to closest card
       const host = (btn.dataset && (btn.dataset.name || btn.dataset.priceRaw)) ? btn : (btn.closest(".dish-card") || btn);
 
       const dish = {
@@ -199,9 +234,9 @@
       showDishModal(dish);
     });
 
-    // ESC close
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") hideDishModal();
+      if (e.key === "Escape") 
+        hideDishModal();
     });
   };
 
@@ -300,7 +335,6 @@
     return btn;
   };
 
-  // Core init
   window.initMenuPage = async function initMenuPage({ view = "customer" } = {}) {
     const catTabs = $("#menuCatTabs");
     const tagChips = $("#menuTagChips");
@@ -311,9 +345,9 @@
     const sortSel = $(".menu-sort");
     const countEl = $(".menu-count b");
 
-    if (!catTabs || !tagChips || !sectionsWrap) return;
+    if (!catTabs || !tagChips || !sectionsWrap) 
+      return;
 
-    // modal bindings (open/close)
     ensureDishModalBindings();
 
     const params = new URLSearchParams(location.search);
@@ -324,8 +358,10 @@
       sort: params.get("sort") ? String(params.get("sort")).trim() : (sortSel?.value || "recommended"),
     };
 
-    if (input && state.q) input.value = state.q;
-    if (sortSel && state.sort) sortSel.value = state.sort;
+    if (input && state.q) 
+      input.value = state.q;
+    if (sortSel && state.sort) 
+      sortSel.value = state.sort;
 
     const qs = new URLSearchParams();
 
@@ -336,7 +372,8 @@
       qs.set("cat", urlCat);
     }
 
-    if (state.sort) qs.set("sort", state.sort);
+    if (state.sort)
+      qs.set("sort", state.sort);
 
     const res = await fetch(`/dinio/api/menu/page-data?${qs.toString()}`);
     const data = await res.json();
@@ -344,7 +381,6 @@
     if (data && data.cat != null) {
       state.cat = String(data.cat);
     }
-    // render cats
     catTabs.innerHTML = "";
     const btnAll = buildCatButton("all", "All");
     catTabs.appendChild(btnAll);
@@ -353,13 +389,11 @@
       catTabs.appendChild(buildCatButton(c.id, c.name));
     });
 
-    // render tags
     tagChips.innerHTML = "";
     (data.tags || []).forEach((t) => {
       tagChips.appendChild(buildTagChip(t));
     });
 
-    // render sections + items
     sectionsWrap.innerHTML = "";
     const sectionMap = new Map();
 
@@ -372,11 +406,11 @@
     (data.items || []).forEach((it) => {
       const sec = sectionMap.get(String(it.categoryId));
       const grid = sec ? $(".menu-grid", sec) : null;
-      if (!grid) return;
+      if (!grid) 
+        return;
       grid.appendChild(buildDishWrap(it));
     });
 
-    // collect nodes after render
     const catBtns = $$(".side-tab", catTabs);
     const tagBtns = $$(".chip", tagChips);
     const items = $$(".dish-wrap", sectionsWrap);
@@ -404,17 +438,19 @@
 
         const show = okCat && okTag && okQ;
         el.classList.toggle("is-hidden", !show);
-        if (show) visible++;
+        if (show) 
+          visible++;
       });
 
-      // hide empty sections
       $$(".menu-section", sectionsWrap).forEach(sec => {
         const anyVisible = $$(".dish-wrap:not(.is-hidden)", sec).length > 0;
         sec.style.display = anyVisible ? "" : "none";
       });
 
-      if (countEl) countEl.textContent = String(visible);
-      if (clearBtn) clearBtn.style.display = state.q ? "inline-flex" : "none";
+      if (countEl) 
+        countEl.textContent = String(visible);
+      if (clearBtn) 
+        clearBtn.style.display = state.q ? "inline-flex" : "none";
     };
 
     const applySort = () => {
@@ -424,9 +460,12 @@
       grids.forEach(grid => {
         const children = Array.from(grid.querySelectorAll(":scope > .dish-wrap"));
         const sorted = children.sort((a, b) => {
-          if (mode === "low") return getPrice(a) - getPrice(b);
-          if (mode === "high") return getPrice(b) - getPrice(a);
-          if (mode === "newest") return (Number(b.dataset.new || 0) - Number(a.dataset.new || 0));
+          if (mode === "low") 
+            return getPrice(a) - getPrice(b);
+          if (mode === "high") 
+            return getPrice(b) - getPrice(a);
+          if (mode === "newest") 
+            return (Number(b.dataset.new || 0) - Number(a.dataset.new || 0));
           return 0;
         });
 
@@ -439,15 +478,15 @@
       applySort();
     };
 
-    // sync active states
     const activeCatBtn = catBtns.find(b => (b.dataset.cat || "all") === state.cat);
-    if (activeCatBtn) setActive(catBtns, activeCatBtn);
+    if (activeCatBtn) 
+      setActive(catBtns, activeCatBtn);
     if (state.tag) {
       const activeTagBtn = tagBtns.find(b => norm(b.dataset.tag) === state.tag);
-      if (activeTagBtn) activeTagBtn.classList.add("is-active");
+      if (activeTagBtn) 
+        activeTagBtn.classList.add("is-active");
     }
 
-    // bind events
     catBtns.forEach(btn => {
       btn.addEventListener("click", () => {
         state.cat = (btn.dataset.cat || "all").toString().trim();
@@ -456,7 +495,8 @@
 
         if (state.cat !== "all") {
           const sec = $(`.menu-section[data-section="${state.cat}"]`, sectionsWrap);
-          if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
+          if (sec) 
+            sec.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       });
     });
@@ -464,7 +504,8 @@
     tagBtns.forEach(btn => {
       btn.addEventListener("click", () => {
         const t = norm(btn.dataset.tag || "");
-        if (!t) return;
+        if (!t) 
+          return;
 
         if (state.tag === t) {
           state.tag = null;

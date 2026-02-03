@@ -44,11 +44,9 @@ public class Notification {
     @Column(name = "Message", nullable = false, length = 500, columnDefinition = "NVARCHAR(500)")
     private String message;
 
-    // Đính kèm tham chiếu nghiệp vụ (để click mở đúng màn hình: bàn, session, order, ticket, invoice, reservation...)
     @Column(name = "RefType", length = 50, columnDefinition = "NVARCHAR(50)")
-    private String refType; // ví dụ: "TABLE", "SESSION", "ORDER", "TICKET", "INVOICE", "RESERVATION"
+    private String refType; 
 
-    //ID của đối tượng tham chiếu
     @Column(name = "RefId")
     private Integer refId;
 

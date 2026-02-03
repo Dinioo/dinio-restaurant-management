@@ -1,9 +1,3 @@
-/* =========================================================
-   WAITER ORDER — waiter-order.css
-   Reuse preorder.css (po-*) and override with wo-*
-   ========================================================= */
-
-/* ---------- Page layout ---------- */
 .wo-main { padding-top: 18px; padding-bottom: 48px; }
 .wo-section { margin-bottom: 52px; }
 
@@ -19,9 +13,6 @@
   .wo-cart{ position: static; }
 }
 
-/* =========================================================
-   REMOVE / NEUTRALIZE PREORDER WRAPPERS (menu side)
-   ========================================================= */
 .wo-menu.po-menu{
   background: transparent !important;
   padding: 0 !important;
@@ -31,18 +22,16 @@
   backdrop-filter: none !important;
 }
 
-/* Toolbar wrapper của preorder hay có border + nền => gây "bọc vuông mỏng" */
 .wo-toolbar.po-toolbar{
   background: transparent !important;
   padding: 0 !important;
   margin: 0 0 14px 0 !important;
   border-radius: 0 !important;
-  border: none !important;       /* ✅ fix khung vuông mỏng */
+  border: none !important;       
   box-shadow: none !important;
   backdrop-filter: none !important;
 }
 
-/* Nếu preorder có thêm wrapper khác vô tình bọc filter/search */
 .wo-filterbar.po-filterbar{
   background: transparent !important;
   border: none !important;
@@ -52,9 +41,6 @@
   margin-bottom: 18px !important;
 }
 
-/* =========================================================
-   SEARCH (pill only)
-   ========================================================= */
 .wo-search.po-search{
   width:100%;
   display:flex;
@@ -84,9 +70,6 @@
 }
 .wo-search.po-search input::placeholder{ opacity:.7; }
 
-/* =========================================================
-   CHIP BAR + DIVIDER + ACCENT CHIP
-   ========================================================= */
 .wo-chipbar{
   display:flex;
   flex-wrap:wrap;
@@ -116,9 +99,6 @@
   background: var(--accent-tint-hover);
 }
 
-/* =========================================================
-   MENU GRID — show more items
-   ========================================================= */
 .wo-grid.po-grid{
   display:grid;
   grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
@@ -126,7 +106,6 @@
   margin-top:8px;
 }
 
-/* Card: reuse po-card style, but compact */
 .wo-card.po-card{
   position: relative;
   padding: 14px !important;
@@ -163,20 +142,15 @@
   opacity: .75;
 }
 
-/* Add button */
 .wo-actions-row.po-actions{ margin-top: 10px; }
 .wo-actions-row .btn-order{
   width:100%;
   border-radius: 999px;
 }
 
-/* =========================================================
-   RIGHT CART (sticky panel)
-   ========================================================= */
 .wo-cart{ position: sticky; top: 18px; }
 .wo-cart-card{ border-radius: 18px; }
 
-/* order lines scroll */
 .wo-lines{
   min-height: 120px;
   max-height: 290px;
@@ -193,7 +167,6 @@
   border-radius: 10px;
 }
 
-/* order line cards */
 .wo-line{
   background: var(--surface-2);
   border: 1px solid var(--border-soft);
@@ -252,7 +225,6 @@
   gap: 10px;
 }
 
-/* qty */
 .wo-qty{
   display:flex;
   align-items:center;
@@ -292,16 +264,12 @@
 }
 .wo-remove:hover{ opacity: 1; }
 
-/* right actions */
 .wo-actions{
   display:grid;
   gap:10px;
   margin-top: 12px;
 }
 
-/* =========================================================
-   TOPPING MODAL
-   ========================================================= */
 .wo-modal{ position: fixed; inset: 0; z-index: 9999; }
 .wo-modal.is-hidden{ display:none; }
 

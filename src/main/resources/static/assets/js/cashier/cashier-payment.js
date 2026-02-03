@@ -65,32 +65,38 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const openModal = (node) => {
-    if (!node) return;
+    if (!node) 
+      return;
     node.classList.remove("is-hidden");
     node.setAttribute("aria-hidden", "false");
   };
 
   const closeModal = (node) => {
-    if (!node) return;
+    if (!node) 
+      return;
     node.classList.add("is-hidden");
     node.setAttribute("aria-hidden", "true");
   };
 
   const bindModalClose = (node) => {
-    if (!node) return;
+    if (!node) 
+      return;
 
     node.addEventListener("click", (e) => {
-      if (e.target.closest("[data-close='1']")) closeModal(node);
+      if (e.target.closest("[data-close='1']")) 
+        closeModal(node);
     });
 
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeModal(node);
+      if (e.key === "Escape") 
+        closeModal(node);
     });
   };
 
   function tierToDiscount(tier) {
     const t = String(tier || "").toUpperCase();
-    if (t === "VIP") return 0.1;
+    if (t === "VIP") 
+      return 0.1;
     return 0;
   }
 
@@ -159,16 +165,21 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderTotals() {
     const { subtotal, discount, vat, service, total } = calc();
     
-    if (ui.sumSub) ui.sumSub.textContent = fmtMoney(subtotal);
-    if (ui.sumDiscount) ui.sumDiscount.textContent = discount > 0 ? `- ${fmtMoney(discount)}` : fmtMoney(0);
-    if (ui.sumVat) ui.sumVat.textContent = `${Math.round((state.vatRate || 0) * 100)}% • ${fmtMoney(vat)}`;
+    if (ui.sumSub) 
+      ui.sumSub.textContent = fmtMoney(subtotal);
+    if (ui.sumDiscount) 
+      ui.sumDiscount.textContent = discount > 0 ? `- ${fmtMoney(discount)}` : fmtMoney(0);
+    if (ui.sumVat) 
+      ui.sumVat.textContent = `${Math.round((state.vatRate || 0) * 100)}% • ${fmtMoney(vat)}`;
     
     if (ui.sumServiceFee) {
       ui.sumServiceFee.textContent = fmtMoney(service);
     }
     
-    if (ui.sumTotal) ui.sumTotal.textContent = fmtMoney(total);
-    if (ui.bottomTotal) ui.bottomTotal.textContent = fmtMoney(total);
+    if (ui.sumTotal) 
+      ui.sumTotal.textContent = fmtMoney(total);
+    if (ui.bottomTotal) 
+      ui.bottomTotal.textContent = fmtMoney(total);
   }
 
   function renderMeta() {
@@ -191,7 +202,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderAll() {
-    if (!state.data) return;
+    if (!state.data) 
+      return;
     updateBillUrl();
     renderPayActive();
     renderMeta();
@@ -204,7 +216,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch(
         `/dinio/api/cashier/payment-detail?tableId=${tableId}`,
       );
-      if (!response.ok) throw new Error("API error");
+      if (!response.ok) 
+        throw new Error("API error");
 
       const data = await response.json();
 
@@ -228,7 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
         service: Number(data.service || 0),
       };
     } catch (error) {
-      console.error("❌ Lỗi tải dữ liệu thanh toán:", error);
+      console.error("Lỗi tải dữ liệu thanh toán:", error);
       throw error;
     }
   }
@@ -247,7 +260,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function submitPayment() {
-    if (!validateBeforePay()) return;
+    if (!validateBeforePay()) 
+      return;
 
     try {
       const { total } = calc();
@@ -271,7 +285,8 @@ document.addEventListener("DOMContentLoaded", () => {
           },
         );
 
-        if (!response.ok) throw new Error("Không thể tạo link VNPay");
+        if (!response.ok) 
+          throw new Error("Không thể tạo link VNPay");
 
         const result = await response.json();
 
@@ -293,7 +308,8 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) throw new Error("Payment failed");
+      if (!response.ok) 
+        throw new Error("Payment failed");
 
       const result = await response.json();
 
@@ -316,9 +332,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ui.payGrid?.addEventListener("click", (e) => {
       const btn = e.target.closest(".csp-payopt");
-      if (!btn) return;
+      if (!btn) 
+        return;
       const v = btn.dataset.pay;
-      if (!v) return;
+      if (!v) 
+        return;
 
       state.payMethod = v;
       renderPayActive();
@@ -327,7 +345,8 @@ document.addEventListener("DOMContentLoaded", () => {
     ui.btnEditVat?.addEventListener("click", () => {
       const cur = Math.round((state.vatRate || 0) * 100);
       const v = prompt("Nhập VAT (%)", String(cur));
-      if (v === null) return;
+      if (v === null) 
+        return;
 
       const n = Number(v);
       if (Number.isNaN(n) || n < 0 || n > 30) {
@@ -360,7 +379,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     ui.btnPay?.addEventListener("click", () => {
-      if (!validateBeforePay()) return;
+      if (!validateBeforePay()) 
+        return;
       const { total } = calc();
       ui.mTable.textContent = state.data?.tableId || state.tableId || "—";
       ui.mTotal.textContent = fmtMoney(total);

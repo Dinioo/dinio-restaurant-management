@@ -171,22 +171,16 @@ body.error-page{
   font-size: 12px;
   opacity: .95;
 }
-/* =========================================================
-   ERROR VARIANTS — works WITH your current CSS (override only)
-   Add body classes: .error-404 / .error-505
-========================================================= */
 
-/* Use CSS variables so we don't rewrite your whole file */
 body.error-page{
   --err-accent: rgba(239,191,88,0.95);
   --err-accent-soft: rgba(239,191,88,0.12);
   --err-vbg-1: rgba(239,191,88,0.22);
   --err-vbg-2: rgba(0,0,0,0.10);
   --err-vbg-3: rgba(0,0,0,0.65);
-  --err-bg-image: none; /* default: no photo */
+  --err-bg-image: none; 
 }
 
-/* Map your existing hardcoded colors to variables */
 .error-badge .dot{
   background: var(--err-accent);
   box-shadow: 0 0 0 4px var(--err-accent-soft);
@@ -196,21 +190,18 @@ body.error-page{
   color: var(--err-accent);
 }
 
-/* Override the visual background so it stops looking "about_story / restaurant" */
 .error-visual .visual-bg{
   background-image:
     radial-gradient(900px 520px at 22% 16%, var(--err-vbg-1), transparent 60%),
     linear-gradient(to bottom, var(--err-vbg-2), var(--err-vbg-3)),
-    var(--err-bg-image) !important; /* override your url(/about_story.jpg) */
+    var(--err-bg-image) !important; 
 }
 
-/* ===== 404: Not Found (cool blue) ===== */
 body.error-page.error-404{
   --err-accent: rgba(104,190,255,0.98);
   --err-accent-soft: rgba(104,190,255,0.16);
   --err-vbg-1: rgba(104,190,255,0.22);
 
-  /* abstract only (no photo) */
   --err-bg-image:
     radial-gradient(1200px 700px at 75% 30%, rgba(104,190,255,0.18), transparent 55%),
     radial-gradient(900px 520px at 25% 70%, rgba(255,255,255,0.06), transparent 55%);
@@ -221,7 +212,6 @@ body.error-page.error-404 .error-badge{
   border-color: rgba(104,190,255,0.16);
 }
 
-/* ===== 505: Protocol error (purple) ===== */
 body.error-page.error-505{
   --err-accent: rgba(186,140,255,0.98);
   --err-accent-soft: rgba(186,140,255,0.16);
@@ -237,7 +227,6 @@ body.error-page.error-505 .error-badge{
   border-color: rgba(186,140,255,0.16);
 }
 
-/* Optional: tighter subtitle readability */
 .error-subtitle{
   line-height: 1.55;
 }

@@ -37,10 +37,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const topic = (el.topic.value || "").trim();
     const msg = (el.msg.value || "").trim();
 
-    if (!name) return { ok: false, field: el.name, msg: "Vui lòng nhập họ tên." };
-    if (!phone || phone.length < 9) return { ok: false, field: el.phone, msg: "Vui lòng nhập số điện thoại hợp lệ." };
-    if (!topic) return { ok: false, field: el.topic, msg: "Vui lòng chọn chủ đề." };
-    if (!msg || msg.length < 10) return { ok: false, field: el.msg, msg: "Nội dung quá ngắn. Nhập thêm chút nhé." };
+    if (!name) 
+      return { ok: false, field: el.name, msg: "Vui lòng nhập họ tên." };
+    if (!phone || phone.length < 9) 
+      return { ok: false, field: el.phone, msg: "Vui lòng nhập số điện thoại hợp lệ." };
+    if (!topic) 
+      return { ok: false, field: el.topic, msg: "Vui lòng chọn chủ đề." };
+    if (!msg || msg.length < 10) 
+      return { ok: false, field: el.msg, msg: "Nội dung quá ngắn. Nhập thêm chút nhé." };
     return { ok: true };
   };
 
@@ -92,7 +96,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const id = btn.getAttribute("data-faq");
       const ans = document.querySelector(`[data-faqa="${id}"]`);
       const isOpen = btn.classList.toggle("is-open");
-      if (ans) ans.classList.toggle("is-open", isOpen);
+      if (ans) 
+        ans.classList.toggle("is-open", isOpen);
     });
   });
 });

@@ -65,22 +65,23 @@ document.addEventListener("DOMContentLoaded", () => {
     search?.addEventListener("input", applyFilter);
     roleFilter?.addEventListener("change", applyFilter);
 
-    // Confirm delete
     table?.addEventListener("submit", (e) => {
         const form = e.target.closest(".del-form");
-        if (!form) return;
+        if (!form) 
+            return;
 
         const row = form.closest(".staff-row");
         const username = row?.dataset.username || "staff này";
 
         const ok = window.confirm(`Xóa ${username}? Hành động này không thể hoàn tác.`);
-        if (!ok) e.preventDefault();
+        if (!ok) 
+            e.preventDefault();
     });
 
-    // Inline edit
     table?.addEventListener("click", async (e) => {
         const row = e.target.closest(".staff-row");
-        if (!row) return;
+        if (!row) 
+            return;
 
         const id = row.dataset.id;
 
@@ -88,7 +89,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const uView = row.querySelector(".username-view");
         const uInput = row.querySelector(".username-input");
 
-        if (!btnEdit) return;
+        if (!btnEdit) 
+            return;
 
         row.classList.add("is-editing");
         uInput.value = row.dataset.username || "";
@@ -141,7 +143,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     table?.addEventListener("keydown", async (e) => {
         const input = e.target.closest(".password-input");
-        if (!input || e.key !== "Enter") return;
+        if (!input || e.key !== "Enter") 
+            return;
 
         const row = input.closest(".staff-row");
         const id = row.dataset.id;
@@ -173,13 +176,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     document.addEventListener("keydown", async (e) => {
         const input = e.target.closest(".name-input");
-        if (!input || e.key !== "Enter") return;
+        if (!input || e.key !== "Enter") 
+            return;
 
         const row = input.closest(".staff-row");
         const id = row.dataset.id;
         const name = input.value.trim();
 
-        if (!name) return toast("Name không được trống", "warn");
+        if (!name) 
+            return toast("Name không được trống", "warn");
 
         try {
             const res = await fetch("/dinio/admin/staff/update-name", {
@@ -188,7 +193,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify({ id: Number(id), name })
             });
             const data = await res.json();
-            if (data.status !== "success") return toast(data.message || "Lỗi", "error");
+            if (data.status !== "success") 
+                return toast(data.message || "Lỗi", "error");
 
             row.dataset.name = name;
             row.querySelector(".name-view").textContent = name;
@@ -199,7 +205,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     document.addEventListener("change", async (e) => {
         const sel = e.target.closest(".status-input");
-        if (!sel) return;
+        if (!sel) 
+            return;
 
         const row = sel.closest(".staff-row");
         const id = row.dataset.id;
@@ -212,7 +219,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify({ id: Number(id), status })
             });
             const data = await res.json();
-            if (data.status !== "success") return toast(data.message || "Lỗi", "error");
+            if (data.status !== "success") 
+                return toast(data.message || "Lỗi", "error");
 
             row.dataset.status = status;
             row.querySelector(".status-view").textContent = status;

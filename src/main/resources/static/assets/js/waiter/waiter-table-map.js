@@ -26,7 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const wtCloseModal = document.getElementById("wtCloseSessionModal");
   const openCloseModal = () => {
-    if (!wtCloseModal) return;
+    if (!wtCloseModal) 
+      return;
     wtCloseModal.setAttribute("aria-hidden", "false");
     wtCloseModal.classList.remove("is-hidden");
     document.body.classList.add("is-modal-open");
@@ -34,8 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (wtBillModal) {
       wtBillModal.addEventListener("click", (e) => {
-        if (e.target.closest(".fp-backdrop[data-close='1']")) return closeBillModal();
-        if (e.target.closest("[data-close='1']")) return closeBillModal();
+        if (e.target.closest(".fp-backdrop[data-close='1']")) 
+          return closeBillModal();
+        if (e.target.closest("[data-close='1']")) 
+          return closeBillModal();
       });
 
       document.addEventListener("keydown", (e) => {
@@ -132,7 +135,8 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const resetBillUI = () => {
-    if (!billEls.loading) return;
+    if (!billEls.loading) 
+      return;
     billEls.loading.style.display = "";
     billEls.empty.style.display = "none";
     billEls.tableLines.style.display = "none";
@@ -145,15 +149,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const s = data?.session;
     const inv = data?.invoice;
 
-    // meta
-    if (billEls.title) billEls.title.textContent = t?.code ? `Hóa đơn • Bàn ${t.code}` : "Hóa đơn";
-    if (billEls.table) billEls.table.textContent = t?.code || "—";
-    if (billEls.area) billEls.area.textContent = t?.areaName || "—";
-    if (billEls.seats) billEls.seats.textContent = (t?.seats ?? "—");
-    if (billEls.session) billEls.session.textContent = s?.id ? `#${s.id}` : "—";
-    if (billEls.openedAt) billEls.openedAt.textContent = s?.openedAt || "—";
+    if (billEls.title) 
+      billEls.title.textContent = t?.code ? `Hóa đơn • Bàn ${t.code}` : "Hóa đơn";
+    if (billEls.table) 
+      billEls.table.textContent = t?.code || "—";
+    if (billEls.area) 
+      billEls.area.textContent = t?.areaName || "—";
+    if (billEls.seats) 
+      billEls.seats.textContent = (t?.seats ?? "—");
+    if (billEls.session) 
+      billEls.session.textContent = s?.id ? `#${s.id}` : "—";
+    if (billEls.openedAt) 
+      billEls.openedAt.textContent = s?.openedAt || "—";
 
-    // no invoice
     if (!inv || !Array.isArray(inv.lines) || inv.lines.length === 0) {
       billEls.loading.style.display = "none";
       billEls.empty.style.display = "";
@@ -162,7 +170,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // lines
     billEls.tbody.innerHTML = inv.lines.map((ln) => {
       const name = ln.name || "—";
       const qty = Number(ln.qty || 0);
@@ -182,7 +189,6 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     }).join("");
 
-    // totals
     billEls.subtotal.textContent = fmtMoney(inv.subtotal);
     billEls.tax.textContent = fmtMoney(inv.tax);
     billEls.svc.textContent = fmtMoney(inv.serviceCharge);
@@ -211,19 +217,23 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const getGuestName = (res) => {
-    if (!res) return "Khách vãng lai";
-    if (res.customer && res.customer.name) return res.customer.name;
+    if (!res) 
+      return "Khách vãng lai";
+    if (res.customer && res.customer.name)
+      return res.customer.name;
     return res.guestName || "Khách đặt";
 };
 
   const isFutureReservation = (res) => {
-  if (!res || !res.reservedAt) return false;
+  if (!res || !res.reservedAt) 
+    return false;
     const resTime = new Date(res.reservedAt).getTime();
     const now = new Date().getTime();
     return resTime > (now - 60 * 60 * 1000); 
   };
   const fetchGuestName = async (resId) => {
-    if (!resId) return "Khách vãng lai";
+    if (!resId) 
+      return "Khách vãng lai";
     try {
       const response = await fetch(`${CONTEXT_PATH}/api/reservations/${resId}/guest-name`);
       if (response.ok) {
@@ -243,7 +253,8 @@ document.addEventListener("DOMContentLoaded", () => {
       headers: getHeaders()
     });
 
-    if (!res.ok) throw new Error("Fetch bill preview failed");
+    if (!res.ok) 
+      throw new Error("Fetch bill preview failed");
     return await res.json();
   };
 
@@ -255,7 +266,8 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch(`${CONTEXT_PATH}/api/reservations/occupied?date=${today}`)
       ]);
 
-      if (resT.ok) allTables = await resT.json();
+      if (resT.ok) 
+        allTables = await resT.json();
       if (resO.ok) {
         const rawOccupied = await resO.json();
         await Promise.all(rawOccupied.map(async (res) => {
@@ -268,16 +280,19 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       renderTables();
       renderList();
-      if (selectedTableId) await updateSelectedInfo();
+      if (selectedTableId) 
+        await updateSelectedInfo();
     } catch (e) { console.error("Sync error:", e); }
   };
 
   const renderTables = () => {
-    if (!tmAreas) return;
+    if (!tmAreas) 
+      return;
     tmAreas.innerHTML = "";
     const grouped = allTables.reduce((acc, t) => {
       const key = t.areaKey || "floor1";
-      if (!acc[key]) acc[key] = [];
+      if (!acc[key]) 
+        acc[key] = [];
       acc[key].push(t);
       return acc;
     }, {});
@@ -294,9 +309,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const btn = document.createElement("button");
         btn.type = "button";
         let statusClass = "is-available";
-        if (table.status === "IN_SERVICE") statusClass = "is-occupied";
-        else if (table.status === "CLEANING" || table.status === "NEED_PAYMENT") statusClass = "is-clean";
-        else if (res && isFutureReservation(res)) statusClass = "is-reserved";
+        if (table.status === "IN_SERVICE") 
+          statusClass = "is-occupied";
+        else if (table.status === "CLEANING" || table.status === "NEED_PAYMENT") 
+          statusClass = "is-clean";
+        else if (res && isFutureReservation(res)) 
+          statusClass = "is-reserved";
 
         btn.className = `tm-table ${statusClass} ${table.id == selectedTableId ? 'is-selected' : ''}`;
         btn.innerHTML = `<span class="t-code">${table.code}</span><span class="t-meta">${table.seats} chỗ</span>
@@ -311,14 +329,16 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const renderList = () => {
-    if (!list) return;
+    if (!list) 
+      return;
     const query = (queryInp.value || "").trim().toLowerCase();
     list.innerHTML = "";
 
     const items = allTables.filter(t => {
       const res = occupiedReservations.find(r => r.tableId == t.id);
       const isActive = (t.status !== "AVAILABLE") || (res && isFutureReservation(res));
-      if (!isActive) return false;
+      if (!isActive)
+        return false;
       const name = res ? (res.guestName || "Khách đặt") : "Walk-in";
       return !query || `${t.code} ${name}`.toLowerCase().includes(query);
     });
@@ -329,14 +349,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const party = res ? (res.seats || res.partySize || t.seats) : t.seats;
 
       let badgeClass = "badge";
-      let statusText = ""; // Biến tạm để giữ chữ hiển thị
+      let statusText = ""; 
 
       if (t.status === "IN_SERVICE") {
         badgeClass += " is-seated";
         statusText = "SEATED";
       } else if (t.status === "CLEANING" || t.status === "NEED_PAYMENT") {
         badgeClass += " is-clean";
-        statusText = "CLEAN"; // Chốt hiển thị là CLEAN cho cả 2 trạng thái
+        statusText = "CLEAN"; 
       } else if (res) {
         badgeClass += " is-res";
         statusText = "RESERVED";
@@ -360,11 +380,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const updateSelectedInfo = async () => {
     const t = allTables.find(x => x.id == selectedTableId);
-    if (!t) return;
+    if (!t) 
+      return;
     let res = occupiedReservations.find(r => r.tableId == t.id);
 
-    if (t.status === "AVAILABLE" && res && !isFutureReservation(res)) res = null;
-    if (t.status === "CLEANING" || t.status === "NEED_PAYMENT") res = null;
+    if (t.status === "AVAILABLE" && res && !isFutureReservation(res)) 
+      res = null;
+    if (t.status === "CLEANING" || t.status === "NEED_PAYMENT") 
+      res = null;
 
     pick.table.textContent = t.code;
     pick.area.textContent = t.areaName || areaLabel(t.areaKey);
@@ -396,8 +419,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const clearSelectedInfo = () => {
     selectedTableId = null;
-    Object.values(pick).forEach(el => { if (el) el.textContent = "—"; });
-    Object.values(actions).forEach(btn => { if (btn) btn.disabled = true; });
+    Object.values(pick).forEach(el => { 
+      if (el) 
+        el.textContent = "—"; });
+    Object.values(actions).forEach(btn => { 
+      if (btn) 
+        btn.disabled = true; });
     document.querySelectorAll(".tm-table").forEach(b => b.classList.remove("is-selected"));
   };
 
@@ -421,7 +448,8 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   actions.start.onclick = async () => {
     const success = await callStatusAPI("status", "IN_SERVICE", "Bắt đầu phục vụ.");
-    if (success) window.location.href = `${CONTEXT_PATH}/waiter/order?tableId=${selectedTableId}`;
+    if (success) 
+      window.location.href = `${CONTEXT_PATH}/waiter/order?tableId=${selectedTableId}`;
   };
 
   actions.order.onclick = () => window.location.href = `${CONTEXT_PATH}/waiter/order-detail?tableId=${selectedTableId}&from=tables`;
@@ -430,9 +458,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   wtCloseConfirmBtn.onclick = async () => {
-    if (!selectedTableId) return;
+    if (!selectedTableId) 
+      return;
     const ok = await callStatusAPI("status", "NEED_PAYMENT", "Đã kết thúc phiên. Đang tải hóa đơn...");
-    if (!ok) return;
+    if (!ok) 
+      return;
 
     wtCloseConfirmBtn.blur();
 
@@ -451,14 +481,19 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(e);
       errorToast("Không tải được hóa đơn. Vui lòng thử lại!");
 
-      if (billEls.loading) billEls.loading.style.display = "none";
-      if (billEls.empty) billEls.empty.style.display = "";
-      if (billEls.tableLines) billEls.tableLines.style.display = "none";
-      if (billEls.sumWrap) billEls.sumWrap.style.display = "none";
+      if (billEls.loading) 
+        billEls.loading.style.display = "none";
+      if (billEls.empty) 
+        billEls.empty.style.display = "";
+      if (billEls.tableLines) 
+        billEls.tableLines.style.display = "none";
+      if (billEls.sumWrap) 
+        billEls.sumWrap.style.display = "none";
     }
   };
   actions.cleaned.onclick = async () => {
-    if (!selectedTableId) return;
+    if (!selectedTableId) 
+      return;
     const t = allTables.find(x => String(x.id) === String(selectedTableId));
     if (!t || t.status !== "CLEANING") {
       errorToast("Bàn chưa ở trạng thái DỌN BÀN. Vui lòng thanh toán trước rồi mới dọn xong.");

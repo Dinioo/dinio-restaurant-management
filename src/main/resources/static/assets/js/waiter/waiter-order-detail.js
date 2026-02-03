@@ -44,7 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
         headers: { "Accept": "application/json" }
       });
 
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) 
+        throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
       state.table = data.table || null;
@@ -83,7 +84,8 @@ document.addEventListener("DOMContentLoaded", () => {
       row.className = "wd-order-row";
       row.dataset.id = o.id;
 
-      if (o.id === state.activeOrderId) row.classList.add("is-active", "is-open");
+      if (o.id === state.activeOrderId) 
+        row.classList.add("is-active", "is-open");
 
       const itemCount = Array.isArray(o.items) ? o.items.length : 0;
 
@@ -193,16 +195,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function formatMoney(v) {
-    if (v == null) return "0đ";
+    if (v == null) 
+      return "0đ";
     const n = typeof v === "number" ? v : Number(String(v));
-    if (Number.isNaN(n)) return "0đ";
+    if (Number.isNaN(n)) 
+      return "0đ";
     return Math.round(n).toLocaleString("vi-VN") + "đ";
   }
 
   function mulMoney(unitPrice, qty) {
     const u = unitPrice == null ? 0 : Number(String(unitPrice));
     const q = qty == null ? 0 : Number(String(qty));
-    if (Number.isNaN(u) || Number.isNaN(q)) return 0;
+    if (Number.isNaN(u) || Number.isNaN(q)) 
+      return 0;
     return u * q;
   }
 

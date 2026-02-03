@@ -133,7 +133,6 @@ public class TableMapService {
 
     Reservation saved = reservationRepository.save(r);
 
-    // Thông báo cho Cashier
     String guestInfo = isForOther ? r.getGuestName() : customer.getFullName();
     notificationService.notifyCashierNewReservation(
         "Đặt bàn mới cần xác nhận",
@@ -261,7 +260,6 @@ public class TableMapService {
         return res.getCustomer() != null ? res.getCustomer().getFullName() : "Khách đặt";
     }
 
-    // Sau khi set CHECK_REQUESTED
     public void notifyCashier(String message, String content, Integer tableId) {
         notificationService.notifyCashier(message, content, tableId);
     }

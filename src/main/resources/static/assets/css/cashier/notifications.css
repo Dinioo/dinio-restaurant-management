@@ -1,12 +1,3 @@
-/* =========================================================
-   DINIO — Notifications (FULL CSS)
-   - Uses your BLUE accent theme (#2B8CFF) + glass dark
-   - Compatible with app-sidebar fragment variables
-========================================================= */
-
-/* =========================
-   Theme tokens (page-local)
-========================= */
 :root{
   --ntf-text-strong: rgba(255,255,255,.96);
   --ntf-text-normal: rgba(255,255,255,.92);
@@ -27,14 +18,9 @@
   --ntf-shadow: 0 24px 70px rgba(0,0,0,.55);
 }
 
-/* =========================
-   Sidebar theme bridge (scoped)
-   - so sidebar keeps correct tone on this page
-========================= */
 .ntf{ min-width: 0; }
 
 .app-shell{
-  /* map base/app vars -> sidebar vars (scoped) */
   --side-w: 264px;
   --side-w-mini: 84px;
   --side-gap: 18px;
@@ -46,7 +32,6 @@
   --item-bg: rgba(255,255,255,.06);
   --item-stroke: rgba(255,255,255,.08);
 
-  /* sidebar uses --text/--muted */
   --text: rgba(255,255,255,.92);
   --muted: rgba(255,255,255,.62);
 
@@ -65,12 +50,10 @@
   min-width: 0;
 }
 
-/* match sidebar mobile behavior */
 @media(max-width:980px){
   .app-shell{ padding:12px; }
 }
 
-/* focus polish */
 .app-shell .app-menu-btn:focus-visible,
 .app-shell .app-side-item:focus-visible,
 .app-shell .app-logout:focus-visible{
@@ -78,11 +61,8 @@
   box-shadow: 0 0 0 4px rgba(43,140,255,.22);
 }
 
-/* =========================
-   Page layout (YOUR STYLE)
-========================= */
 main.ntf{
-  padding: 0; /* shell already padded */
+  padding: 0; 
 }
 
 .ntf{
@@ -125,9 +105,6 @@ main.ntf{
   justify-content:flex-end;
 }
 
-/* =========================
-   Buttons
-========================= */
 .ntf-btn{
   display:inline-flex;
   align-items:center;
@@ -161,9 +138,6 @@ main.ntf{
   background:transparent;
 }
 
-/* =========================
-   Top bar (tabs + search)
-========================= */
 .ntf-bar{
   display:flex;
   align-items:center;
@@ -241,9 +215,6 @@ main.ntf{
   box-shadow:0 0 0 4px rgba(43,140,255,.16);
 }
 
-/* =========================
-   Main card
-========================= */
 .ntf-card{
   border-radius:22px;
   background:var(--ntf-surface);
@@ -284,15 +255,11 @@ main.ntf{
   margin:0 14px;
 }
 
-/* =========================
-   List + item
-========================= */
 .ntf-list{
   display:grid;
   gap:6px;
 }
 
-/* empty state (optional) */
 .ntf-empty{
   padding: 14px 10px 6px;
   color: var(--ntf-text-muted);
@@ -318,7 +285,6 @@ main.ntf{
   box-shadow:0 0 0 4px rgba(43,140,255,.16);
 }
 
-/* unread marker */
 .ntf-dot{
   width:9px;
   height:9px;
@@ -333,7 +299,6 @@ main.ntf{
   opacity:1;
 }
 
-/* avatar bubble */
 .ntf-avatar{
   width:44px;
   height:44px;
@@ -420,9 +385,6 @@ main.ntf{
   box-shadow:0 0 0 4px rgba(43,140,255,.16);
 }
 
-/* =========================
-   Load more
-========================= */
 .ntf-more{
   width:100%;
   border:0;
@@ -443,9 +405,6 @@ main.ntf{
   box-shadow: inset 0 0 0 2px rgba(255,255,255,.08), 0 0 0 4px rgba(43,140,255,.12);
 }
 
-/* =========================
-   Responsive
-========================= */
 @media (max-width: 900px){
   .ntf-wrap{
     width:min(1120px, calc(100% - 32px));

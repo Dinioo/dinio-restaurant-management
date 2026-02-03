@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let limit = 6;
   let data = [];
 
-  // Cashier chỉ xem: PAYMENT_REQUESTED, NEW_RESERVATION
   const CASHIER_TYPES = ["PAYMENT_REQUESTED", "NEW_RESERVATION"];
 
   const currentUserId = document.querySelector('meta[name="user-id"]')?.content;
@@ -54,9 +53,11 @@ document.addEventListener("DOMContentLoaded", () => {
     source.addEventListener("DINIO_NOTIFY", (event) => {
       const n = JSON.parse(event.data);
 
-      if (!CASHIER_TYPES.includes(n.type)) return;
+      if (!CASHIER_TYPES.includes(n.type)) 
+        return;
 
-      if (window.successToast) successToast(n.message);
+      if (window.successToast) 
+        successToast(n.message);
 
       const newNotify = {
         id: n.id,
@@ -102,9 +103,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const now = new Date();
     const diff = Math.floor((now - date) / 1000 / 60);
 
-    if (diff < 1) return "Vừa xong";
-    if (diff < 60) return diff + " phút";
-    if (diff < 1440) return Math.floor(diff / 60) + " giờ";
+    if (diff < 1) 
+      return "Vừa xong";
+    if (diff < 60) 
+      return diff + " phút";
+    if (diff < 1440) 
+      return Math.floor(diff / 60) + " giờ";
     return Math.floor(diff / 1440) + " ngày";
   };
 
@@ -124,7 +128,8 @@ document.addEventListener("DOMContentLoaded", () => {
       .replaceAll("'", "&#039;");
 
   const matches = (n, q) => {
-    if (!q) return true;
+    if (!q) 
+      return true;
     const t = (n.title + " " + n.text + " " + n.tag).toLowerCase();
     return t.includes(q.toLowerCase());
   };
@@ -184,13 +189,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalAvailable = applyFilter(data).length;
     btnMore.style.display =
       totalShown < Math.min(totalAvailable, limit * 2) ? "none" : "block";
-    if (applyFilter(data).length > limit * 2) btnMore.style.display = "block";
+    if (applyFilter(data).length > limit * 2) 
+      btnMore.style.display = "block";
   };
 
   const updateHeaderBadge = () => {
     const btn = document.getElementById("notifyBtn");
     const badge = document.getElementById("notifyBadge");
-    if (!btn || !badge) return;
+    if (!btn || !badge) 
+      return;
     const unreadCount = data.filter((x) => x.unread).length;
     btn.classList.toggle("has-unread", unreadCount > 0);
     badge.textContent = unreadCount > 9 ? "9+" : String(unreadCount);
@@ -218,10 +225,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const onListClick = (e) => {
     const item = e.target.closest(".ntf-item");
-    if (!item) return;
+    if (!item) 
+      return;
     const id = Number(item.dataset.id);
     const n = data.find((x) => x.id === id);
-    if (!n) return;
+    if (!n) 
+      return;
 
     const actBtn = e.target.closest("button[data-act]");
     if (actBtn) {
@@ -233,7 +242,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }).catch((err) => console.error("Failed to mark as read:", err));
       } else if (act === "remove") {
         const idx = data.findIndex((x) => x.id === id);
-        if (idx >= 0) data.splice(idx, 1);
+        if (idx >= 0) 
+          data.splice(idx, 1);
       }
     } else {
       if (n.unread) {
@@ -259,7 +269,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   btnClearRead.addEventListener("click", () => {
     for (let i = data.length - 1; i >= 0; i--) {
-      if (!data[i].unread) data.splice(i, 1);
+      if (!data[i].unread) 
+        data.splice(i, 1);
     }
     render();
     updateHeaderBadge();

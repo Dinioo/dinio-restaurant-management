@@ -81,7 +81,7 @@ public class KitchenService {
         item.setStatus(next);
         orderItemRepo.save(item);
 
-        System.out.println("DEBUG: Trang thai tiep theo la: " + next.name()); // Thêm dòng này
+        System.out.println("DEBUG: Trang thai tiep theo la: " + next.name()); 
 
     if (next.name().equals("READY")) {
         System.out.println("DEBUG: Dang vao luong gui thong bao cho Waiter...");

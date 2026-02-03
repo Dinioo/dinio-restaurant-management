@@ -28,7 +28,6 @@
   min-width:0;
 }
 
-/* ===== Sidebar base ===== */
 .app-side{
   width:var(--side-w);
   position:sticky;
@@ -154,7 +153,6 @@
   border-color:rgba(255,255,255,.12);
 }
 
-/* Collapsed behavior */
 .app-side.is-collapsed .app-side-item{
   grid-template-columns:1fr;
   justify-items:center;
@@ -257,7 +255,6 @@ body.side-open{
     display:block;
   }
 
-  /* Floating hamburger hiện trên mobile */
   .app-side-fab{
     display:grid;
     place-items:center;

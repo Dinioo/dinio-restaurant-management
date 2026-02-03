@@ -19,12 +19,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const isPw = pwInput.type === "password";
     pwInput.type = isPw ? "text" : "password";
     const icon = pwToggle.querySelector("i");
-    if (icon) icon.className = isPw ? "fa-regular fa-eye-slash" : "fa-regular fa-eye";
+    if (icon) 
+      icon.className = isPw ? "fa-regular fa-eye-slash" : "fa-regular fa-eye";
   });
 
   roleSeg?.addEventListener("click", (e) => {
     const btn = e.target.closest(".sl-seg-btn");
-    if (!btn) return;
+    if (!btn) 
+      return;
     applyRole(btn.dataset.role || "staff");
   });
 

@@ -56,9 +56,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   fpModal.addEventListener("click", (e) => {
-    if (e.target?.dataset?.close) closeModal();
-    if (e.target?.id === "fpClose") closeModal();
-    if (e.target?.closest?.("#fpClose")) closeModal();
+    if (e.target?.dataset?.close) 
+      closeModal();
+    if (e.target?.id === "fpClose") 
+      closeModal();
+    if (e.target?.closest?.("#fpClose")) 
+      closeModal();
   });
 
   document.addEventListener("keydown", (e) => {

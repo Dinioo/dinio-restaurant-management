@@ -23,7 +23,6 @@
 
 <body>
 
-  <!-- APP SHELL: sidebar + main -->
   <div class="app-shell">
     <div th:replace="~{fragments/app-sidebar :: appSidebar('dashboard')}"></div>
 
@@ -71,7 +70,6 @@
         </button>
 
 
-        <!-- NEW: Bill đã thanh toán (cho Cashier/Manager) -->
         <button class="qcard" type="button" data-nav="/dinio/cashier/bills">
           <div class="qicon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
           <div class="qbody">

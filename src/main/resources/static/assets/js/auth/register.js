@@ -36,8 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   identifier?.addEventListener("input", () => {
     const v = (identifier.value || "").trim();
-    if (/^(\+84|0)?\d+$/.test(v)) identifier.setAttribute("inputmode", "tel");
-    else identifier.setAttribute("inputmode", "email");
+    if (/^(\+84|0)?\d+$/.test(v)) 
+      identifier.setAttribute("inputmode", "tel");
+    else 
+      identifier.setAttribute("inputmode", "email");
   });
 
   form?.addEventListener("submit", async (e) => {

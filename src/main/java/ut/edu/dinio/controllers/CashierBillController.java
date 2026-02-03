@@ -67,10 +67,8 @@ public class CashierBillController {
         if (table == null)
             return ResponseEntity.notFound().build();
 
-        // response root
         Map<String, Object> root = new HashMap<>();
 
-        // table json (area có thể null)
         Map<String, Object> tableJson = new HashMap<>();
         tableJson.put("id", table.getId());
         tableJson.put("code", table.getCode());
@@ -87,7 +85,7 @@ public class CashierBillController {
                 .orElse(null);
 
         if (session == null) {
-            root.put("session", null); // HashMap cho phép null value
+            root.put("session", null); 
             root.put("invoice", null);
             return ResponseEntity.ok(root);
         }
@@ -137,7 +135,7 @@ public class CashierBillController {
                 line.put("qty", qty);
                 line.put("unitPrice", up);
                 line.put("lineTotal", lineTotal);
-                line.put("note", note); // có thể null OK
+                line.put("note", note); 
                 lines.add(line);
             }
         }

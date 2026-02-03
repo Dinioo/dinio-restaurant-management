@@ -1,12 +1,5 @@
-/* ===============================
-   DINIO — CUSTOMER TABLE MAP
-   Premium / clean / modern (ROOT TOKENS)
-   =============================== */
-
-/* ===== anti horizontal scroll ===== */
 html, body { overflow-x: hidden; }
 
-/* ===== SHELL ===== */
 .tm-shell{
   display: grid;
   grid-template-columns: 1.35fr 0.65fr;
@@ -21,7 +14,6 @@ html, body { overflow-x: hidden; }
   .tm-drawer{ position: static; top: auto; }
 }
 
-/* ===== TOOLBAR ===== */
 .tm-toolbar{
   width: 100%;
   max-width: 100%;
@@ -121,7 +113,6 @@ html, body { overflow-x: hidden; }
 .dot.is-vip{ background: rgba(239,191,88,0.45); border: 1px solid var(--accent-border-strong); }
 .dot.is-selected{ background: rgba(255,255,255,0.9); }
 
-/* ===== MAP CARD ===== */
 .tm-map{
   background: var(--surface-1);
   border: 1px solid var(--border-soft);
@@ -154,7 +145,6 @@ html, body { overflow-x: hidden; }
   color: var(--text-strong);
 }
 
-/* ===== AREAS ===== */
 .tm-areas{
   display:flex;
   flex-direction: column;
@@ -191,7 +181,6 @@ html, body { overflow-x: hidden; }
   font-size: 12px;
 }
 
-/* ===== TABLE GRID ===== */
 .tm-grid{
   display:grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -209,7 +198,7 @@ html, body { overflow-x: hidden; }
 .tm-table{
   appearance: none;
   border: 1px solid var(--border-soft);
-  background: var(--surface-1); /* default */
+  background: var(--surface-1); 
   color: var(--text-normal);
   border-radius: 18px;
   padding: 12px 10px;
@@ -220,7 +209,6 @@ html, body { overflow-x: hidden; }
   flex-direction: column;
   gap: 6px;
 
-  /* giữ transition như bạn đang có (không thêm hiệu ứng mới) */
   transition: border-color .12s ease, background .12s ease, box-shadow .12s ease;
 }
 
@@ -254,37 +242,28 @@ html, body { overflow-x: hidden; }
   color: var(--text-muted);
 }
 
-/* ===========================
-   ✅ Status backgrounds
-   =========================== */
-
-/* Còn trống */
 .tm-table.is-available{
   border-color: var(--accent-border-soft);
   background: var(--tm-bg-available);
 }
 
-/* VIP (khác nhẹ so với available) */
 .tm-table.is-vip{
   border-color: var(--accent-border);
   background: var(--tm-bg-vip);
 }
 
-/* Đã đặt */
 .tm-table.is-reserved{
   border-color: var(--border-soft);
   background: var(--tm-bg-reserved);
   opacity: .72;
 }
 
-/* Đang chọn */
 .tm-table.is-selected{
   border-color: var(--accent-border-active);
   background: var(--tm-bg-selected);
   box-shadow: 0 0 0 4px var(--ring-accent);
 }
 
-/* ===== DRAWER ===== */
 .tm-drawer{
   position: sticky;
   top: 96px;
@@ -402,7 +381,6 @@ html, body { overflow-x: hidden; }
   font-size: 13px;
 }
 
-/* ===== page spacing giống Home ===== */
 #tablemap-head.section,
 #tablemap-tools.section,
 #tablemap-layout.section{
@@ -434,7 +412,6 @@ html, body { overflow-x: hidden; }
   }
 }
 
-/* ===== Mode Switch ===== */
 .tm-mode{
   display: flex;
   gap: 10px;
@@ -471,10 +448,8 @@ html, body { overflow-x: hidden; }
   color: var(--text-strong);
 }
 
-/* Panels */
 .tm-panel.is-hidden{ display: none !important; }
 
-/* Group blocks */
 .tm-slab{
   padding: 12px;
   border-radius: 14px;

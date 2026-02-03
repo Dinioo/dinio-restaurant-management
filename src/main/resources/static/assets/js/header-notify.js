@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const currentUserId = document.querySelector('meta[name="user-id"]')?.content;
 
-  // Load initial notifications
   if (currentUserId) {
     fetch("/dinio/api/notifications/list")
       .then((res) => res.json())
@@ -28,7 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch((err) => console.error("Failed to load notifications:", err));
 
-    // Setup SSE connection
     const source = new EventSource(
       `/dinio/api/notifications/subscribe/${currentUserId}`,
     );
@@ -36,7 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
     source.addEventListener("DINIO_NOTIFY", (event) => {
       const n = JSON.parse(event.data);
 
-      if (window.successToast) successToast(n.message);
+      if (window.successToast) 
+        successToast(n.message);
 
       const newNotify = {
         id: n.id,
@@ -77,8 +76,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const now = new Date();
     const diff = Math.floor((now - date) / 1000 / 60);
 
-    if (diff < 60) return diff + " phút";
-    if (diff < 1440) return Math.floor(diff / 60) + " giờ";
+    if (diff < 60) 
+      return diff + " phút";
+    if (diff < 1440) 
+      return Math.floor(diff / 60) + " giờ";
     return Math.floor(diff / 1440) + " ngày";
   };
 
@@ -113,7 +114,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const syncBadge = () => {
     const unreadCount = data.filter((n) => n.unread).length;
     btn.classList.toggle("has-unread", unreadCount > 0);
-    if (badge) badge.textContent = unreadCount > 9 ? "9+" : String(unreadCount);
+    if (badge) 
+      badge.textContent = unreadCount > 9 ? "9+" : String(unreadCount);
   };
 
   const open = () => {
@@ -136,13 +138,16 @@ document.addEventListener("DOMContentLoaded", () => {
   closeBtn.addEventListener("click", () => close());
 
   document.addEventListener("click", (e) => {
-    if (!pop.classList.contains("is-open")) return;
+    if (!pop.classList.contains("is-open")) 
+      return;
     const inside = pop.contains(e.target) || btn.contains(e.target);
-    if (!inside) close();
+    if (!inside) 
+      close();
   });
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") close();
+    if (e.key === "Escape") 
+      close();
   });
 
   tabs.forEach((t) => {
@@ -159,7 +164,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   list.addEventListener("click", (e) => {
     const item = e.target.closest(".notify-item");
-    if (!item) return;
+    if (!item) 
+      return;
     const id = Number(item.dataset.id);
     const n = data.find((x) => x.id === id);
     if (n && n.unread) {
@@ -167,7 +173,6 @@ document.addEventListener("DOMContentLoaded", () => {
       item.classList.remove("is-unread");
       syncBadge();
 
-      // Mark as read on server
       fetch(`/dinio/api/notifications/${id}/mark-read`, {
         method: "POST",
       }).catch((err) => console.error("Failed to mark as read:", err));

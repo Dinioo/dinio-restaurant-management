@@ -22,7 +22,6 @@ public interface TableSessionRepository extends JpaRepository<TableSession, Inte
             Integer tableId,
             Collection<SessionStatus> statuses);
 
-    // THÊM Query rõ ràng
     @Query("SELECT ts FROM TableSession ts WHERE ts.table.id = :tableId AND ts.status = :status")
     Optional<TableSession> findByTableIdAndStatus(@Param("tableId") Integer tableId,
             @Param("status") SessionStatus status);

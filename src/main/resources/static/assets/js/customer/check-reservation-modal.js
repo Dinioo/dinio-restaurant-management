@@ -24,11 +24,13 @@ document.addEventListener("DOMContentLoaded", () => {
   window.closeCheckReservationModal = close;
 
   modal.addEventListener("click", (e) => {
-    if (e.target?.dataset?.close) close();
+    if (e.target?.dataset?.close) 
+      close();
   });
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !modal.classList.contains("is-hidden")) close();
+    if (e.key === "Escape" && !modal.classList.contains("is-hidden")) 
+      close();
   });
 
   yesBtn?.addEventListener("click", () => {

@@ -47,14 +47,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const openResetModal = (email, otp) => {
     currentEmail = email || "";
     currentOtp = otp || "";
-    if (emailPreview) emailPreview.textContent = email || "email";
+    if (emailPreview) 
+      emailPreview.textContent = email || "email";
 
     modal.classList.remove("is-hidden");
     modal.setAttribute("aria-hidden", "false");
 
     hideAlert();
-    if (newPw) newPw.value = "";
-    if (confirmPw) confirmPw.value = "";
+    if (newPw) 
+      newPw.value = "";
+    if (confirmPw) 
+      confirmPw.value = "";
     setTimeout(() => newPw?.focus(), 0);
   };
 
@@ -67,7 +70,8 @@ document.addEventListener("DOMContentLoaded", () => {
   window.closeResetModal = closeResetModal;
 
   modal.addEventListener("click", (e) => {
-    if (e.target?.dataset?.close) closeResetModal();
+    if (e.target?.dataset?.close) 
+      closeResetModal();
   });
 
   modal.querySelectorAll("[data-close='1']").forEach(btn => {
@@ -75,7 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !modal.classList.contains("is-hidden")) closeResetModal();
+    if (e.key === "Escape" && !modal.classList.contains("is-hidden")) 
+      closeResetModal();
   });
 
   const bindToggle = (btn, input) => {
@@ -85,7 +90,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const isPw = input.type === "password";
       input.type = isPw ? "text" : "password";
       const icon = btn.querySelector("i");
-      if (icon) icon.className = isPw ? "fa-regular fa-eye-slash" : "fa-regular fa-eye";
+      if (icon) 
+        icon.className = isPw ? "fa-regular fa-eye-slash" : "fa-regular fa-eye";
     });
   };
   bindToggle(toggle1, newPw);

@@ -117,10 +117,14 @@ public class SecurityConfig {
         return (request, response, authentication) -> {
             var roles = org.springframework.security.core.authority.AuthorityUtils.authorityListToSet(authentication.getAuthorities());
             String cp = request.getContextPath();
-            if (roles.contains("ROLE_ADMIN")) response.sendRedirect(cp + "/admin/dashboard");
-            else if (roles.contains("ROLE_WAITER")) response.sendRedirect(cp + "/waiter/dashboard");
-            else if (roles.contains("ROLE_KITCHEN")) response.sendRedirect(cp + "/kitchen/orders");
-            else if (roles.contains("ROLE_CASHIER_MANAGER")) response.sendRedirect(cp + "/cashier/orders");
+            if (roles.contains("ROLE_ADMIN")) 
+                response.sendRedirect(cp + "/admin/dashboard");
+            else if (roles.contains("ROLE_WAITER")) 
+                response.sendRedirect(cp + "/waiter/dashboard");
+            else if (roles.contains("ROLE_KITCHEN")) 
+                response.sendRedirect(cp + "/kitchen/orders");
+            else if (roles.contains("ROLE_CASHIER_MANAGER")) 
+                response.sendRedirect(cp + "/cashier/orders");
             else response.sendRedirect(cp + "/staff/login");
         };
     }

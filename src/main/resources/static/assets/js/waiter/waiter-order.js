@@ -38,7 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const token = document.querySelector('meta[name="_csrf"]')?.content;
     const header = document.querySelector('meta[name="_csrf_header"]')?.content;
     const headers = { "Content-Type": "application/json" };
-    if (token && header) headers[header] = token;
+    if (token && header) 
+      headers[header] = token;
     return headers;
   };
 
@@ -145,11 +146,13 @@ document.addEventListener("DOMContentLoaded", () => {
   function bindMenuClicks() {
     grid.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-add]");
-      if (!btn) return;
+      if (!btn) 
+        return;
 
       const id = String(btn.dataset.add);
       const card = grid.querySelector(`.wo-card[data-id="${cssEsc(id)}"]`);
-      if (!card) return;
+      if (!card) 
+        return;
 
       const menuItemId = Number(card.dataset.id);
       const name = card.dataset.name || "—";
@@ -170,7 +173,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (inc) {
         const id = Number(inc.dataset.inc);
         const it = cart.get(id);
-        if (it) it.qty += 1;
+        if (it) 
+          it.qty += 1;
         renderCart();
         return;
       }
@@ -180,7 +184,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const it = cart.get(id);
         if (it) {
           it.qty -= 1;
-          if (it.qty <= 0) cart.delete(id);
+          if (it.qty <= 0) 
+            cart.delete(id);
         }
         renderCart();
         return;
@@ -240,7 +245,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     catChips.addEventListener("click", (e) => {
       const chip = e.target.closest(".chip");
-      if (!chip) return;
+      if (!chip) 
+        return;
 
       activeCat = chip.dataset.cat || "all";
       catChips.querySelectorAll(".chip").forEach((b) => b.classList.remove("is-active"));

@@ -136,9 +136,12 @@ document.addEventListener("DOMContentLoaded", () => {
       );
     }
 
-    if (state.sort === "newest") items.sort((a, b) => new Date(b.date) - new Date(a.date));
-    if (state.sort === "popular") items.sort((a, b) => score(b) - score(a));
-    if (state.sort === "readtime") items.sort((a, b) => a.readMin - b.readMin);
+    if (state.sort === "newest") 
+      items.sort((a, b) => new Date(b.date) - new Date(a.date));
+    if (state.sort === "popular") 
+      items.sort((a, b) => score(b) - score(a));
+    if (state.sort === "readtime") 
+      items.sort((a, b) => a.readMin - b.readMin);
 
     renderList(items);
   };
@@ -174,7 +177,8 @@ document.addEventListener("DOMContentLoaded", () => {
     $$("[data-openbtn], [data-open]", el.list).forEach(n => {
       n.addEventListener("click", (e) => {
         const id = n.getAttribute("data-openbtn") || n.getAttribute("data-open");
-        if (!id) return;
+        if (!id) 
+          return;
         openModal(id);
       });
     });
@@ -219,7 +223,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const openModal = (id) => {
     const p = posts.find(x => x.id === id);
-    if (!p) return;
+    if (!p) 
+      return;
 
     el.modalTitle.textContent = p.title;
     el.modalTopic.textContent = p.topic;
@@ -227,8 +232,10 @@ document.addEventListener("DOMContentLoaded", () => {
     el.modalRead.textContent = `${p.readMin} phút đọc`;
 
     el.modalContent.innerHTML = p.content.map(block => {
-      if (block.t === "h3") return `<h3>${escapeHtml(block.v)}</h3>`;
-      if (block.t === "ul") return `<ul>${block.v.map(li => `<li>${escapeHtml(li)}</li>`).join("")}</ul>`;
+      if (block.t === "h3") 
+        return `<h3>${escapeHtml(block.v)}</h3>`;
+      if (block.t === "ul") 
+        return `<ul>${block.v.map(li => `<li>${escapeHtml(li)}</li>`).join("")}</ul>`;
       return `<p>${escapeHtml(block.v)}</p>`;
     }).join("");
 
@@ -281,11 +288,13 @@ document.addEventListener("DOMContentLoaded", () => {
   el.modalClose.addEventListener("click", closeModal);
   el.modal.addEventListener("click", (e) => {
     const close = e.target && e.target.getAttribute && e.target.getAttribute("data-close");
-    if (close) closeModal();
+    if (close) 
+      closeModal();
   });
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !el.modal.classList.contains("is-hidden")) closeModal();
+    if (e.key === "Escape" && !el.modal.classList.contains("is-hidden")) 
+      closeModal();
   });
 
   renderFeatured();

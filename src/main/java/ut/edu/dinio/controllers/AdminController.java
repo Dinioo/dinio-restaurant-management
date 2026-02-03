@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
-import ut.edu.dinio.pojo.Role;
 import ut.edu.dinio.pojo.StaffUser;
 import ut.edu.dinio.pojo.enums.UserStatus;
 import ut.edu.dinio.repositories.AuditLogRepository;

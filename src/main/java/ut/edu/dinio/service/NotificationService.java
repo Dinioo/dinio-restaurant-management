@@ -22,7 +22,6 @@ public class NotificationService {
     @Autowired
     private NotificationSseService sseService;
 
-    // Kitchen → Waiter: Món READY
     public void notifyWaiter(StaffUser waiter, String title, String message, Integer sessionId) {
         System.out.println("DEBUG NotificationService: notifyWaiter called");
         System.out.println("  - Waiter ID: " + waiter.getId());
@@ -32,7 +31,6 @@ public class NotificationService {
         System.out.println("DEBUG NotificationService: Notification saved!");
     }
 
-    // Waiter → Kitchen: Order mới
     public void notifyKitchen(String title, String message, Integer orderId) {
         List<StaffUser> kitchenStaff = staffUserRepository.findByRoleName(RoleName.KITCHEN);
         for (StaffUser staff : kitchenStaff) {
@@ -40,7 +38,6 @@ public class NotificationService {
         }
     }
 
-    // Waiter → Cashier: Yêu cầu thanh toán
     public void notifyCashier(String title, String message, Integer tableId) {
         List<StaffUser> cashierStaff = staffUserRepository.findByRoleName(RoleName.CASHIER_MANAGER);
         for (StaffUser staff : cashierStaff) {
@@ -48,12 +45,10 @@ public class NotificationService {
         }
     }
 
-    // Cashier → Waiter: Thanh toán xong
     public void notifyWaiterPaymentComplete(StaffUser waiter, String title, String message, Integer tableId) {
         saveAndPush(waiter, NotificationType.PAYMENT_RECEIVED, title, message, "TABLE", tableId);
     }
 
-    // Cashier → Kitchen: Reservation có preorder
     public void notifyKitchenPreorder(String title, String message, Integer reservationId) {
         List<StaffUser> kitchenStaff = staffUserRepository.findByRoleName(RoleName.KITCHEN);
         for (StaffUser staff : kitchenStaff) {
@@ -61,7 +56,6 @@ public class NotificationService {
         }
     }
 
-    // Customer → Cashier: Đặt bàn mới cần xác nhận
     public void notifyCashierNewReservation(String title, String message, Integer reservationId) {
         List<StaffUser> cashierStaff = staffUserRepository.findByRoleName(RoleName.CASHIER_MANAGER);
         for (StaffUser staff : cashierStaff) {

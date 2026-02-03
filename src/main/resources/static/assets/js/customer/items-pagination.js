@@ -28,7 +28,8 @@
   window.openDishModal = async function(id) {
     try {
         const response = await fetch(`${CONTEXT_PATH}/api/menu/items/${id}`);
-        if (!response.ok) throw new Error(`Lỗi tải: ${response.status}`);
+        if (!response.ok) 
+          throw new Error(`Lỗi tải: ${response.status}`);
         const itemDetail = await response.json();
         populateAndShowModal(itemDetail);
     } catch (error) {
@@ -52,7 +53,8 @@
   
   function populateAndShowModal(item) {
     const modal = document.getElementById('dishModal');
-    if (!modal) return;
+    if (!modal) 
+      return;
 
     const imgEl = document.getElementById('dishModalImg');
     const badgeEl = document.getElementById('dishModalBadge');
@@ -141,7 +143,8 @@
     try {
       const response = await fetch(`${CONTEXT_PATH}/api/menu/favorites`);
       
-      if (!response.ok) throw new Error(`Network response not ok: ${response.status}`);
+      if (!response.ok) 
+        throw new Error(`Network response not ok: ${response.status}`);
       
       const allItemsData = await response.json();
 

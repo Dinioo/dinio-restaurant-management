@@ -11,7 +11,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional; // Import thêm cái này
+import org.springframework.transaction.annotation.Transactional; 
 
 import ut.edu.dinio.pojo.Customer;
 import ut.edu.dinio.pojo.DiningTable;
@@ -69,7 +69,6 @@ public class InvoiceService {
             tableInfo.put("status", table.getStatus().name());
             tableInfo.put("areaName", table.getArea() != null ? table.getArea().getName() : "");
 
-            // Tìm session đang mở hoặc đang chờ thanh toán
             Optional<TableSession> sessionOpt = sessionRepository
                 .findTopByTableIdAndStatusInOrderByOpenedAtDesc(
                     table.getId(), 
@@ -113,7 +112,7 @@ public class InvoiceService {
 
         Map<String, Object> result = new HashMap<>();
 
-        result.put("tableId", table.getId()); // Sửa lại lấy ID thay vì Code cho đúng logic frontend
+        result.put("tableId", table.getId()); 
         result.put("tableName", table.getCode());
         result.put("areaLabel", table.getArea() != null ? table.getArea().getName() : "");
         result.put("seats", table.getSeats());
@@ -263,7 +262,6 @@ public class InvoiceService {
         result.put("paymentId", payment.getId());
         result.put("message", "Thanh toán thành công");
 
-        // Notify waiter payment complete
         if (session.getAssignedStaff() != null) {
             notificationService.notifyWaiterPaymentComplete(
                 session.getAssignedStaff(),
@@ -276,7 +274,6 @@ public class InvoiceService {
         return result;
     }
 
-    // Helper methods
     private BigDecimal calculateSessionTotal(Integer sessionId) {
         List<Order> orders = orderRepository.findBySessionIdOrderByCreatedAtDesc(sessionId);
         BigDecimal total = BigDecimal.ZERO;
@@ -294,7 +291,6 @@ public class InvoiceService {
         return String.format("%,.0fđ", amount);
     }
 
-    // --- HÀM MỚI THÊM VÀO ĐÂY ---
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Invoice generateInvoiceForCloseSession(Integer tableId, StaffUser staff) {
         TableSession session = sessionRepository

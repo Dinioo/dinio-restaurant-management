@@ -95,14 +95,16 @@
     const file = ipImageFile?.files?.[0];
     if (!file) {
       pvImage.src = "/assets/pic/preview.jpeg";
-      if (pvImagePath) pvImagePath.textContent = "preview.jpeg";
+      if (pvImagePath) 
+        pvImagePath.textContent = "preview.jpeg";
       return;
     }
 
     const url = URL.createObjectURL(file);
     pvImage.src = url;
     pvImage.onload = () => URL.revokeObjectURL(url);
-    if (pvImagePath) pvImagePath.textContent = file.name;
+    if (pvImagePath) 
+      pvImagePath.textContent = file.name;
   };
 
   const updateCategoryPreview = () => {
@@ -114,10 +116,14 @@
   };
 
   const updateSummary = () => {
-    if (pvSumName) pvSumName.textContent = ipName?.value?.trim() || "—";
-    if (pvSumCategory) pvSumCategory.textContent = ipCategory?.selectedOptions?.[0]?.textContent?.trim() || "—";
-    if (pvSumPrice) pvSumPrice.textContent = formatVND(ipPrice?.value || 0);
-    if (pvSumStatus) pvSumStatus.textContent = ipStatus?.value || "—";
+    if (pvSumName) 
+      pvSumName.textContent = ipName?.value?.trim() || "—";
+    if (pvSumCategory) 
+      pvSumCategory.textContent = ipCategory?.selectedOptions?.[0]?.textContent?.trim() || "—";
+    if (pvSumPrice) 
+      pvSumPrice.textContent = formatVND(ipPrice?.value || 0);
+    if (pvSumStatus) 
+      pvSumStatus.textContent = ipStatus?.value || "—";
   };
 
   const setDone = (key, done) => {
@@ -141,9 +147,12 @@
   };
 
   const updateAll = () => {
-    if (pvName) pvName.textContent = ipName?.value?.trim() || "Tên món…";
-    if (pvDesc) pvDesc.textContent = ipDesc?.value?.trim() || "Mô tả ngắn sẽ hiển thị ở đây…";
-    if (pvPrice) pvPrice.textContent = formatVND(ipPrice?.value || 0);
+    if (pvName) 
+      pvName.textContent = ipName?.value?.trim() || "Tên món…";
+    if (pvDesc) 
+      pvDesc.textContent = ipDesc?.value?.trim() || "Mô tả ngắn sẽ hiển thị ở đây…";
+    if (pvPrice) 
+      pvPrice.textContent = formatVND(ipPrice?.value || 0);
 
     updateCategoryPreview();
     updateImagePreview();
@@ -169,7 +178,8 @@
 
     const previewCard = document.querySelector(".preview-card");
     modalPreviewSlot.innerHTML = "";
-    if (previewCard) modalPreviewSlot.appendChild(previewCard.cloneNode(true));
+    if (previewCard) 
+      modalPreviewSlot.appendChild(previewCard.cloneNode(true));
   };
 
   const closeModal = () => {
@@ -215,10 +225,12 @@
   btnPreviewPopup?.addEventListener("click", openModal);
   closePreviewModal?.addEventListener("click", closeModal);
   previewModal?.addEventListener("click", (e) => {
-    if (e.target?.dataset?.close) closeModal();
+    if (e.target?.dataset?.close) 
+      closeModal();
   });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeModal();
+    if (e.key === "Escape") 
+      closeModal();
   });
 
   btnResetForm?.addEventListener("click", resetForm);

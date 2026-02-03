@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const rows = Array.from(document.querySelectorAll(".audit-row"));
   const empty = document.getElementById("auditEmpty");
 
-  if (!rows.length || !search) return;
+  if (!rows.length || !search) 
+    return;
 
   function applyFilter() {
     const q = (search.value || "").trim().toLowerCase();
@@ -13,10 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const text = row.innerText.toLowerCase();
       const ok = q ? text.includes(q) : true;
       row.style.display = ok ? "" : "none";
-      if (ok) shown++;
+      if (ok) 
+        shown++;
     });
 
-    if (empty) empty.style.display = shown ? "none" : "";
+    if (empty) 
+      empty.style.display = shown ? "none" : "";
   }
 
   search.addEventListener("input", applyFilter);

@@ -1,10 +1,6 @@
-/* ===============================
-   DINIO — MY RESERVATIONS (LIST)
-   =============================== */
 
 html, body{ overflow-x:hidden; }
 
-/* spacing giống hệ thống */
 #myres-head.section,
 #myres-tools.section,
 #myres-list.section{ padding: 0; }
@@ -28,10 +24,8 @@ html, body{ overflow-x:hidden; }
   #myres-list .menu-container{ padding: 0 16px; }
 }
 
-/* tools layout */
 .myres-tools{ display:grid; gap:12px; }
 
-/* search */
 .myres-search-row{ width:100%; }
 
 .myres-search{
@@ -69,7 +63,6 @@ html, body{ overflow-x:hidden; }
 .myres-clear:hover{ border-color: var(--accent-border-soft); background: var(--surface-2); }
 .myres-clear:focus-visible{ outline:none; box-shadow:0 0 0 3px var(--ring-accent); }
 
-/* bar */
 .myres-bar{
   width:100%;
   background: var(--surface-1);
@@ -119,7 +112,6 @@ html, body{ overflow-x:hidden; }
   .myres-select{ flex:1; min-width: 150px; }
 }
 
-/* tabs */
 .myres-tabs{
   display:flex;
   gap: 8px;
@@ -146,7 +138,6 @@ html, body{ overflow-x:hidden; }
   box-shadow: 0 0 0 3px var(--ring-accent);
 }
 
-/* chip */
 .myres-chip{
   display:flex;
   align-items:center;
@@ -160,7 +151,6 @@ html, body{ overflow-x:hidden; }
 }
 .myres-chip i{ color: var(--accent-solid); }
 
-/* summary */
 .myres-summary{
   display:flex;
   align-items:center;
@@ -173,7 +163,6 @@ html, body{ overflow-x:hidden; }
 .myres-count{ color: var(--text-muted); font-size: 13px; }
 .myres-count span{ color: var(--text-normal); font-weight: 900; }
 
-/* legend */
 .myres-legend{
   display:flex;
   align-items:center;
@@ -201,9 +190,6 @@ html, body{ overflow-x:hidden; }
 .dot.is-cancelled{ background: rgba(255,255,255,0.20); }
 .dot.is-completed{ background: rgba(255,255,255,0.55); }
 
-/* =======================
-   LIST rows
-   ======================= */
 .myres-grid{
   display:grid;
   grid-template-columns: 1fr;
@@ -286,7 +272,6 @@ html, body{ overflow-x:hidden; }
   color: rgba(255,255,255,0.75);
 }
 
-/* basic info line */
 .myres-row-sub{
   margin-top: 8px;
   display:flex;
@@ -311,7 +296,6 @@ html, body{ overflow-x:hidden; }
   font-weight: 800;
 }
 
-/* actions box ngang */
 .myres-row-actions{
   position: relative;
   display:flex;
@@ -331,7 +315,6 @@ html, body{ overflow-x:hidden; }
   min-width: 92px;
 }
 
-/* responsive */
 @media (max-width: 860px){
   .myres-row{
     flex-direction: column;
@@ -342,7 +325,6 @@ html, body{ overflow-x:hidden; }
   }
 }
 
-/* empty */
 .myres-empty{ display:flex; justify-content:center; padding: 28px 0 60px; }
 .myres-empty.is-hidden{ display:none !important; }
 
@@ -370,9 +352,6 @@ html, body{ overflow-x:hidden; }
   color: rgba(239,191,88,0.95);
 }
 
-/* =======================
-   MODALS
-   ======================= */
 .myres-modal{
   position: fixed;
   inset: 0;
@@ -428,7 +407,6 @@ html, body{ overflow-x:hidden; }
   color: rgba(255,255,255,0.85);
 }
 
-/* meta inside modal */
 .myres-meta{
   display:grid;
   grid-template-columns: repeat(2, minmax(0,1fr));
@@ -459,7 +437,6 @@ html, body{ overflow-x:hidden; }
 }
 .myres-note-view i{ margin-top: 2px; color: rgba(239,191,88,0.95); }
 
-/* buttons row in modal */
 .myres-panel-actions{
   display:flex;
   justify-content:flex-end;
@@ -473,7 +450,6 @@ html, body{ overflow-x:hidden; }
   font-weight: 800;
 }
 
-/* icon button */
 .icon-btn{
   width: 40px;
   height: 40px;

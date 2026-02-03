@@ -5,8 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const toast = $("#helpToast");
   const toastText = $("#toastText");
   const showToast = (msg) => {
-    if (!toast) return;
-    if (toastText) toastText.textContent = msg || "Đã gửi yêu cầu. Dinio sẽ liên hệ sớm.";
+    if (!toast) 
+      return;
+    if (toastText) 
+      toastText.textContent = msg || "Đã gửi yêu cầu. Dinio sẽ liên hệ sớm.";
     toast.classList.add("is-on");
     clearTimeout(showToast._t);
     showToast._t = setTimeout(() => toast.classList.remove("is-on"), 2400);
@@ -14,24 +16,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const smoothTo = (sel) => {
     const el = $(sel);
-    if (!el) return;
+    if (!el) 
+      return;
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const setOpen = (item, open) => {
     const a = $(".faq-a", item);
     const icon = $(".faq-q i", item);
-    if (!a) return;
+    if (!a) 
+      return;
 
     if (open) {
       item.classList.add("is-open");
       const h = a.scrollHeight;
       a.style.height = h + "px";
-      if (icon) icon.style.transform = "rotate(180deg)";
+      if (icon) 
+        icon.style.transform = "rotate(180deg)";
     } else {
       item.classList.remove("is-open");
       a.style.height = "0px";
-      if (icon) icon.style.transform = "";
+      if (icon) 
+        icon.style.transform = "";
     }
   };
 
@@ -39,7 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
   faqItems.forEach((it) => {
     const q = $(".faq-q", it);
     const a = $(".faq-a", it);
-    if (!q || !a) return;
+    if (!q || !a) 
+      return;
 
     a.style.height = "0px";
     q.addEventListener("click", () => {
@@ -59,7 +66,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const title = ($(".faq-q span", it)?.textContent || "").toLowerCase();
         const ok = !key || tags.includes(key) || title.includes(key);
         it.style.display = ok ? "" : "none";
-        if (ok) any = true;
+        if (ok) 
+          any = true;
       });
     });
   }
@@ -68,11 +76,13 @@ document.addEventListener("DOMContentLoaded", () => {
     b.addEventListener("click", () => {
       const scroll = b.getAttribute("data-scroll");
       const openId = b.getAttribute("data-open");
-      if (scroll) smoothTo(scroll);
+      if (scroll) 
+        smoothTo(scroll);
       if (openId) {
         setTimeout(() => {
           const target = document.getElementById(openId);
-          if (target) setOpen(target, true);
+          if (target) 
+            setOpen(target, true);
         }, 280);
       }
     });
@@ -96,11 +106,16 @@ document.addEventListener("DOMContentLoaded", () => {
       const priority = supportForm.querySelector('select[name="priority"]');
       const msg = supportForm.querySelector('textarea[name="message"]');
 
-      if (name) name.value = "Khách Dinio";
-      if (phone) phone.value = "0900 000 000";
-      if (type) type.value = "Đổi giờ đặt bàn";
-      if (priority) priority.value = "Thường";
-      if (msg) msg.value = "Mình muốn đổi giờ đặt bàn từ 19:00 sang 20:00. Số khách: 2. Ghi chú: ngồi yên tĩnh.";
+      if (name) 
+        name.value = "Khách Dinio";
+      if (phone) 
+        phone.value = "0900 000 000";
+      if (type) 
+        type.value = "Đổi giờ đặt bàn";
+      if (priority) 
+        priority.value = "Thường";
+      if (msg) 
+        msg.value = "Mình muốn đổi giờ đặt bàn từ 19:00 sang 20:00. Số khách: 2. Ghi chú: ngồi yên tĩnh.";
       showToast("Đã điền mẫu. Bạn kiểm tra lại rồi bấm Gửi.");
     });
   }

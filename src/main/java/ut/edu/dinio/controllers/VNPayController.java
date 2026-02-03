@@ -24,13 +24,9 @@ public class VNPayController {
     @Autowired
     private InvoiceService invoiceService;
 
-    /**
-     * Callback từ VNPay sau khi thanh toán
-     */
     @GetMapping("/callback")
     public String vnpayCallback(@RequestParam Map<String, String> params, Model model) {
         try {
-            // Verify signature
             boolean isValid = vnPayService.verifyPaymentResponse(params);
             
             if (!isValid) {
@@ -44,14 +40,12 @@ public class VNPayController {
             String amount = params.get("vnp_Amount");
             
             model.addAttribute("txnRef", txnRef);
-            model.addAttribute("amount", Long.parseLong(amount) / 100); // Chia 100 để trả về VND
+            model.addAttribute("amount", Long.parseLong(amount) / 100); 
 
             if ("00".equals(responseCode)) {
-                // Thanh toán thành công
                 Integer tableId = vnPayService.extractTableIdFromTxnRef(txnRef);
                 
                 if (tableId != null) {
-                    // Xử lý thanh toán trong database
                     BigDecimal paymentAmount = new BigDecimal(amount).divide(new BigDecimal(100));
                     invoiceService.processPayment(
                         tableId, 
@@ -68,7 +62,6 @@ public class VNPayController {
                     model.addAttribute("message", "Không tìm thấy thông tin bàn");
                 }
             } else {
-                // Thanh toán thất bại
                 model.addAttribute("status", "failed");
                 model.addAttribute("message", getResponseMessage(responseCode));
             }
@@ -81,9 +74,6 @@ public class VNPayController {
         }
     }
 
-    /**
-     * Mapping response code VNPay sang message
-     */
     private String getResponseMessage(String responseCode) {
         Map<String, String> messages = new HashMap<>();
         messages.put("00", "Giao dịch thành công");

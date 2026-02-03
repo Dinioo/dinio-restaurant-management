@@ -34,7 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const pad2 = (x) => String(x).padStart(2, "0");
   
   const fmtDT = (iso) => {
-    if (!iso) return "—";
+    if (!iso) 
+      return "—";
     const d = new Date(iso);
     return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
   };
@@ -48,7 +49,8 @@ document.addEventListener("DOMContentLoaded", () => {
   async function fetchReservations(dateYmd) {
     try {
       const response = await fetch(`/dinio/api/cashier/reservations?date=${dateYmd}`);
-      if (!response.ok) throw new Error("Fetch failed");
+      if (!response.ok) 
+        throw new Error("Fetch failed");
       return await response.json();
     } catch (e) {
       console.error(e);
@@ -77,11 +79,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let arr = [...state.all];
 
-    if (slot) arr = arr.filter((x) => getSlot(x.reservedAt) === slot);
+    if (slot) 
+      arr = arr.filter((x) => getSlot(x.reservedAt) === slot);
 
-    if (party === "1-2") arr = arr.filter((x) => x.partySize <= 2);
-    if (party === "3-4") arr = arr.filter((x) => x.partySize >= 3 && x.partySize <= 4);
-    if (party === "5+") arr = arr.filter((x) => x.partySize >= 5);
+    if (party === "1-2") 
+      arr = arr.filter((x) => x.partySize <= 2);
+    if (party === "3-4") 
+      arr = arr.filter((x) => x.partySize >= 3 && x.partySize <= 4);
+    if (party === "5+") 
+      arr = arr.filter((x) => x.partySize >= 5);
 
     if (q) {
       arr = arr.filter((x) => {

@@ -119,7 +119,8 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const cardPhotos = (files) => {
-    if (!files || !files.length) return "";
+    if (!files || !files.length) 
+      return "";
     const imgs = files.slice(0, 4).map((f) => `<div class="ph"><img alt="photo" src="${f}"></div>`).join("");
     return `<div class="rv-item-photos">${imgs}</div>`;
   };
@@ -195,9 +196,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const validate = () => {
     const d = getFormData();
-    if (!d.name) return { ok: false, field: el.name, msg: "Vui lòng nhập họ tên." };
-    if (!d.rating) return { ok: false, field: $("#starPicker"), msg: "Vui lòng chọn số sao." };
-    if (!d.msg || d.msg.length < 10) return { ok: false, field: el.msg, msg: "Nhận xét quá ngắn. Nhập thêm chút nhé." };
+    if (!d.name) 
+      return { ok: false, field: el.name, msg: "Vui lòng nhập họ tên." };
+    if (!d.rating) 
+      return { ok: false, field: $("#starPicker"), msg: "Vui lòng chọn số sao." };
+    if (!d.msg || d.msg.length < 10) 
+      return { ok: false, field: el.msg, msg: "Nhận xét quá ngắn. Nhập thêm chút nhé." };
     return { ok: true, data: d };
   };
 

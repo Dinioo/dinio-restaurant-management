@@ -26,9 +26,6 @@ public class VNPayService {
     @Autowired
     private VNPayConfig vnPayConfig;
 
-    /**
-     * Tạo URL thanh toán VNPay
-     */
     public String createPaymentUrl(Integer tableId, long amount, String ipAddress) {
         try {
             String vnp_Version = vnPayConfig.getVersion();
@@ -43,7 +40,7 @@ public class VNPayService {
             vnp_Params.put("vnp_Version", vnp_Version);
             vnp_Params.put("vnp_Command", vnp_Command);
             vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
-            vnp_Params.put("vnp_Amount", String.valueOf(amount * 100)); // VNPay yêu cầu số tiền * 100
+            vnp_Params.put("vnp_Amount", String.valueOf(amount * 100));
             vnp_Params.put("vnp_CurrCode", "VND");
             vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
             vnp_Params.put("vnp_OrderInfo", "Thanh toan ban " + tableId);
@@ -51,8 +48,7 @@ public class VNPayService {
             vnp_Params.put("vnp_Locale", "vn");
             vnp_Params.put("vnp_ReturnUrl", vnPayConfig.getReturnUrl());
             vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
-            vnp_Params.put("vnp_BankCode", "NCB"); // Bắt buộc Vietcombank
-            // KHÔNG CÓ vnp_BankCode
+            vnp_Params.put("vnp_BankCode", "NCB");
 
             Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -97,9 +93,6 @@ public class VNPayService {
         }
     }
 
-    /**
-     * Verify callback từ VNPay
-     */
     public boolean verifyPaymentResponse(Map<String, String> params) {
         try {
             String vnp_SecureHash = params.get("vnp_SecureHash");
@@ -131,9 +124,6 @@ public class VNPayService {
         }
     }
 
-    /**
-     * HMAC SHA512
-     */
     private String hmacSHA512(String key, String data) {
         try {
             Mac hmac512 = Mac.getInstance("HmacSHA512");
@@ -150,12 +140,8 @@ public class VNPayService {
         }
     }
 
-    /**
-     * Extract tableId từ vnp_TxnRef
-     */
     public Integer extractTableIdFromTxnRef(String txnRef) {
         try {
-            // Format: TABLE{id}_{timestamp}
             String[] parts = txnRef.split("_");
             if (parts.length > 0) {
                 String tableIdStr = parts[0].replace("TABLE", "");

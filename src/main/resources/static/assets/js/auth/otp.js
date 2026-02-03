@@ -59,7 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
   window.closeOtpModal = closeOtpModal;
 
   modal.addEventListener("click", (e) => {
-    if (e.target?.dataset?.close) closeOtpModal();
+    if (e.target?.dataset?.close) 
+      closeOtpModal();
   });
   modal.querySelectorAll("[data-close='1']").forEach(btn => btn.addEventListener("click", closeOtpModal));
   document.addEventListener("keydown", (e) => {
@@ -69,13 +70,17 @@ document.addEventListener("DOMContentLoaded", () => {
     input.addEventListener("input", (e) => {
       const v = e.target.value.replace(/\D/g, "");
       e.target.value = v.slice(-1);
-      if (e.target.value && idx < inputs.length - 1) inputs[idx + 1].focus();
+      if (e.target.value && idx < inputs.length - 1) 
+        inputs[idx + 1].focus();
     });
 
     input.addEventListener("keydown", (e) => {
-      if (e.key === "Backspace" && !input.value && idx > 0) inputs[idx - 1].focus();
-      if (e.key === "ArrowLeft" && idx > 0) inputs[idx - 1].focus();
-      if (e.key === "ArrowRight" && idx < inputs.length - 1) inputs[idx + 1].focus();
+      if (e.key === "Backspace" && !input.value && idx > 0) 
+        inputs[idx - 1].focus();
+      if (e.key === "ArrowLeft" && idx > 0) 
+        inputs[idx - 1].focus();
+      if (e.key === "ArrowRight" && idx < inputs.length - 1) 
+        inputs[idx + 1].focus();
     });
 
     input.addEventListener("paste", (e) => {
@@ -86,7 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       e.preventDefault();
       digits.split("").forEach((d, i) => {
-        if (inputs[i]) inputs[i].value = d;
+        if (inputs[i]) 
+          inputs[i].value = d;
       });
       inputs[Math.min(digits.length, inputs.length) - 1]?.focus();
     });

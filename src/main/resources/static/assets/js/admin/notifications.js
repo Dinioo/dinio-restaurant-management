@@ -40,7 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
       .replaceAll("'", "&#039;");
 
   const matches = (n, q) => {
-    if (!q) return true;
+    if (!q) 
+      return true;
     const t = (n.title + " " + n.text + " " + n.tag).toLowerCase();
     return t.includes(q.toLowerCase());
   };
@@ -89,13 +90,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalShown = newItems.length + oldItems.length;
     const totalAvailable = applyFilter(data).length;
     btnMore.style.display = totalShown < Math.min(totalAvailable, limit * 2) ? "none" : "block";
-    if (applyFilter(data).length > limit * 2) btnMore.style.display = "block";
+    if (applyFilter(data).length > limit * 2) 
+      btnMore.style.display = "block";
   };
 
   const updateHeaderBadge = () => {
     const btn = document.getElementById("notifyBtn");
     const badge = document.getElementById("notifyBadge");
-    if (!btn || !badge) return;
+    if (!btn || !badge) 
+      return;
     const unreadCount = data.filter(x => x.unread).length;
     btn.classList.toggle("has-unread", unreadCount > 0);
     badge.textContent = unreadCount > 9 ? "9+" : String(unreadCount);
@@ -123,10 +126,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const onListClick = (e) => {
     const item = e.target.closest(".ntf-item");
-    if (!item) return;
+    if (!item) 
+      return;
     const id = Number(item.dataset.id);
     const n = data.find(x => x.id === id);
-    if (!n) return;
+    if (!n) 
+      return;
 
     const actBtn = e.target.closest("button[data-act]");
     if (actBtn) {
@@ -135,7 +140,8 @@ document.addEventListener("DOMContentLoaded", () => {
         n.unread = !n.unread;
       } else if (act === "remove") {
         const idx = data.findIndex(x => x.id === id);
-        if (idx >= 0) data.splice(idx, 1);
+        if (idx >= 0)
+           data.splice(idx, 1);
       }
     } else {
       n.unread = false;
@@ -156,7 +162,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   btnClearRead.addEventListener("click", () => {
     for (let i = data.length - 1; i >= 0; i--) {
-      if (!data[i].unread) data.splice(i, 1);
+      if (!data[i].unread) 
+        data.splice(i, 1);
     }
     render();
     updateHeaderBadge();

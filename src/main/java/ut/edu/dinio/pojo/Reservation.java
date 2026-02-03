@@ -56,7 +56,7 @@ public class Reservation {
     private Boolean isForOther = false;
 
     @Column(name = "GuestName", length = 120, columnDefinition = "NVARCHAR(120)")
-    private String guestName; // bắt buộc khi isForOther=true
+    private String guestName;  
 
     @Column(name = "GuestPhone", length = 30, columnDefinition = "NVARCHAR(30)")
     private String guestPhone; 

@@ -27,21 +27,34 @@ async function fetchProfileData() {
 }
 
 function loadToUI() {
-  if ($("#sumName")) $("#sumName").textContent = userData.fullName;
-  if ($("#sumPhone")) $("#sumPhone").textContent = `SĐT: ${userData.phone}`;
-  if ($("#sumEmail")) $("#sumEmail").textContent = `Email: ${userData.email}`;
-  if ($("#sumCode")) $("#sumCode").textContent = userData.code;
-  if ($("#sumPoint")) $("#sumPoint").textContent = userData.points;
-  if ($("#sumJoin")) $("#sumJoin").textContent = userData.joinDate;
-
-  if ($("#fullName")) $("#fullName").value = userData.fullName;
-  if ($("#phone")) $("#phone").value = userData.phone;
-  if ($("#currentEmail")) $("#currentEmail").value = userData.email;
+  if ($("#sumName")) 
+    $("#sumName").textContent = userData.fullName;
+  if ($("#sumPhone")) 
+    $("#sumPhone").textContent = `SĐT: ${userData.phone}`;
+  if ($("#sumEmail")) 
+    $("#sumEmail").textContent = `Email: ${userData.email}`;
+  if ($("#sumCode")) 
+    $("#sumCode").textContent = userData.code;
   
-  if ($("#dob")) $("#dob").value = (userData.dob === "N/A") ? "" : userData.dob;
-  if ($("#address")) $("#address").value = (userData.address === "N/A") ? "" : userData.address;
-  if ($("#note")) $("#note").value = (userData.note === "N/A") ? "" : userData.note;
-   if ($("#avatarImg")) $("#avatarImg").src = userData.avatarUrl || $("#avatarImg").src;
+  if ($("#sumPoint")) 
+    $("#sumPoint").textContent = userData.points;
+  if ($("#sumJoin"))
+    $("#sumJoin").textContent = userData.joinDate;
+  if ($("#fullName")) 
+    $("#fullName").value = userData.fullName;
+  if ($("#phone")) 
+    $("#phone").value = userData.phone;
+  if ($("#currentEmail")) 
+    $("#currentEmail").value = userData.email;
+  
+  if ($("#dob")) 
+    $("#dob").value = (userData.dob === "N/A") ? "" : userData.dob;
+  if ($("#address")) 
+    $("#address").value = (userData.address === "N/A") ? "" : userData.address;
+  if ($("#note")) 
+    $("#note").value = (userData.note === "N/A") ? "" : userData.note;
+  if ($("#avatarImg")) 
+    $("#avatarImg").src = userData.avatarUrl || $("#avatarImg").src;
 }
 
 function bindAvatar() {
@@ -49,13 +62,15 @@ function bindAvatar() {
   const fileInput = $("#avatarFile");
   const img = $("#avatarImg");
 
-  if (!btn || !fileInput || !img) return;
+  if (!btn || !fileInput || !img) 
+    return;
 
   btn.addEventListener("click", () => fileInput.click());
 
   fileInput.addEventListener("change", async () => {
     const file = fileInput.files?.[0];
-    if (!file) return;
+    if (!file) 
+      return;
 
     if (!file.type.startsWith("image/")) {
       errorToast("File không hợp lệ");
@@ -80,7 +95,8 @@ function bindAvatar() {
       const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
 
       const headers = {};
-      if (csrfToken && csrfHeader) headers[csrfHeader] = csrfToken;
+      if (csrfToken && csrfHeader) 
+        headers[csrfHeader] = csrfToken;
 
       const res = await fetch("/dinio/profile/api/avatar", {
         method: "POST",

@@ -178,7 +178,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const fetchTables = async () => {
     try {
       const response = await fetch(`${CONTEXT_PATH}/api/tables`);
-      if (!response.ok) throw new Error("Failed to fetch tables");
+      if (!response.ok) 
+        throw new Error("Failed to fetch tables");
       allTables = await response.json();
       renderTables(allTables);
     } catch (error) {
@@ -193,7 +194,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const grouped = {};
     tables.forEach(t => {
       const key = t.areaKey || "floor1";
-      if (!grouped[key]) grouped[key] = [];
+      if (!grouped[key]) 
+        grouped[key] = [];
       grouped[key].push(t);
     });
 
@@ -226,7 +228,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const selectTable = (btn) => {
     if (!btn || btn.disabled)
       return;
-    if (selectedBtn) selectedBtn.classList.remove("is-selected");
+    if (selectedBtn) 
+      selectedBtn.classList.remove("is-selected");
     selectedBtn = btn;
     btn.classList.add("is-selected");
     syncReview();
@@ -234,7 +237,8 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const clearSelection = () => {
-    if (selectedBtn) selectedBtn.classList.remove("is-selected");
+    if (selectedBtn) 
+      selectedBtn.classList.remove("is-selected");
     selectedBtn = null;
     syncReview();
     updateSubmitEnabled();
@@ -269,7 +273,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const updateSubmitEnabled = () => {
     const ok = !!selectedBtn && !!resDate.value && !!resTime.value;
-    if (btnSubmitReserve) btnSubmitReserve.disabled = !ok;
+    if (btnSubmitReserve) 
+      btnSubmitReserve.disabled = !ok;
   };
 
   resTime?.addEventListener("input", updateTableStatusesUI);

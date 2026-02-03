@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const pickGuest = $("#pickGuest");
   const pickTotal = $("#pickTotal");
 
-  // ===== Bill modal (same IDs as waiter) =====
   const wtBillModal = $("#wtBillModal");
 
   const billEls = {
@@ -43,14 +42,16 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const openBillModal = () => {
-    if (!wtBillModal) return;
+    if (!wtBillModal) 
+      return;
     wtBillModal.setAttribute("aria-hidden", "false");
     wtBillModal.classList.remove("is-hidden");
     document.body.classList.add("is-modal-open");
   };
 
   const closeBillModal = () => {
-    if (!wtBillModal) return;
+    if (!wtBillModal) 
+      return;
     wtBillModal.setAttribute("aria-hidden", "true");
     wtBillModal.classList.add("is-hidden");
     document.body.classList.remove("is-modal-open");
@@ -58,7 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (wtBillModal) {
     wtBillModal.addEventListener("click", (e) => {
-      if (e.target.closest(".fp-backdrop[data-close='1']")) return closeBillModal();
+      if (e.target.closest(".fp-backdrop[data-close='1']")) 
+        return closeBillModal();
       if (e.target.closest("[data-close='1']")) return closeBillModal();
     });
 
@@ -81,12 +83,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const resetBillUI = () => {
-    if (!billEls.loading) return;
+    if (!billEls.loading) 
+      return;
     billEls.loading.style.display = "";
     billEls.empty.style.display = "none";
     billEls.tableLines.style.display = "none";
     billEls.sumWrap.style.display = "none";
-    if (billEls.tbody) billEls.tbody.innerHTML = "";
+    if (billEls.tbody) 
+      billEls.tbody.innerHTML = "";
   };
 
   const renderBill = (data) => {
@@ -94,15 +98,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const s = data?.session;
     const inv = data?.invoice;
 
-    // meta
-    if (billEls.title) billEls.title.textContent = t?.code ? `Hóa đơn • Bàn ${t.code}` : "Hóa đơn";
-    if (billEls.table) billEls.table.textContent = t?.code || "—";
-    if (billEls.area) billEls.area.textContent = t?.areaName || "—";
-    if (billEls.seats) billEls.seats.textContent = (t?.seats ?? "—");
-    if (billEls.session) billEls.session.textContent = s?.id ? `#${s.id}` : "—";
-    if (billEls.openedAt) billEls.openedAt.textContent = s?.openedAt || "—";
+    if (billEls.title) 
+      billEls.title.textContent = t?.code ? `Hóa đơn • Bàn ${t.code}` : "Hóa đơn";
+    if (billEls.table) 
+      billEls.table.textContent = t?.code || "—";
+    if (billEls.area) 
+      billEls.area.textContent = t?.areaName || "—";
+    if (billEls.seats) 
+      billEls.seats.textContent = (t?.seats ?? "—");
+    if (billEls.session) 
+      billEls.session.textContent = s?.id ? `#${s.id}` : "—";
+    if (billEls.openedAt) 
+      billEls.openedAt.textContent = s?.openedAt || "—";
 
-    // no invoice
     if (!inv || !Array.isArray(inv.lines) || inv.lines.length === 0) {
       billEls.loading.style.display = "none";
       billEls.empty.style.display = "";
@@ -111,7 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // lines
     billEls.tbody.innerHTML = inv.lines
       .map((ln) => {
         const name = ln.name || "—";
@@ -136,12 +143,16 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .join("");
 
-    // totals
-    if (billEls.subtotal) billEls.subtotal.textContent = fmtVnd(inv.subtotal);
-    if (billEls.tax) billEls.tax.textContent = fmtVnd(inv.tax);
-    if (billEls.svc) billEls.svc.textContent = fmtVnd(inv.serviceCharge);
-    if (billEls.disc) billEls.disc.textContent = fmtVnd(inv.discountTotal);
-    if (billEls.total) billEls.total.textContent = fmtVnd(inv.total);
+    if (billEls.subtotal) 
+      billEls.subtotal.textContent = fmtVnd(inv.subtotal);
+    if (billEls.tax) 
+      billEls.tax.textContent = fmtVnd(inv.tax);
+    if (billEls.svc) 
+      billEls.svc.textContent = fmtVnd(inv.serviceCharge);
+    if (billEls.disc) 
+      billEls.disc.textContent = fmtVnd(inv.discountTotal);
+    if (billEls.total) 
+      billEls.total.textContent = fmtVnd(inv.total);
 
     billEls.loading.style.display = "none";
     billEls.empty.style.display = "none";
@@ -153,11 +164,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const token = document.querySelector('meta[name="_csrf"]')?.content;
     const header = document.querySelector('meta[name="_csrf_header"]')?.content;
     const headers = { "Content-Type": "application/json" };
-    if (token && header) headers[header] = token;
+    if (token && header) 
+      headers[header] = token;
     return headers;
   };
 
-  // ===== data in cashier table-map =====
   let tables = [];
   let selectedId = null;
 
@@ -183,11 +194,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const mapAreaNameToKey = (areaName) => {
     const name = (areaName || "").toLowerCase();
-    if (name.includes("1") || name.includes("floor 1")) return "floor1";
-    if (name.includes("2") || name.includes("floor 2")) return "floor2";
-    if (name.includes("3") || name.includes("floor 3")) return "floor3";
-    if (name.includes("vip")) return "vip";
-    if (name.includes("outdoor")) return "outdoor";
+    if (name.includes("1") || name.includes("floor 1")) 
+      return "floor1";
+    if (name.includes("2") || name.includes("floor 2")) 
+      return "floor2";
+    if (name.includes("3") || name.includes("floor 3")) 
+      return "floor3";
+    if (name.includes("vip")) 
+      return "vip";
+    if (name.includes("outdoor")) 
+      return "outdoor";
     return "floor1";
   };
 
@@ -195,7 +211,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const g = {};
     for (const t of list) {
       const k = t.area;
-      if (!g[k]) g[k] = [];
+      if (!g[k]) 
+        g[k] = [];
       g[k].push(t);
     }
     const order = ["floor1", "floor2", "floor3", "vip", "outdoor"];
@@ -224,13 +241,16 @@ document.addEventListener("DOMContentLoaded", () => {
     $$(".wtm-item.is-active").forEach((it) => it.classList.remove("is-active"));
 
     const btn = $(`.tm-table[data-id="${CSS.escape(id)}"]`);
-    if (btn) btn.classList.add("is-selected");
+    if (btn) 
+      btn.classList.add("is-selected");
 
     const row = $(`.wtm-item[data-id="${CSS.escape(id)}"]`);
-    if (row) row.classList.add("is-active");
+    if (row) 
+      row.classList.add("is-active");
 
     const t = tables.find((x) => x.id === id);
-    if (!t) return;
+    if (!t) 
+      return;
 
     const a = AREA_META[t.area]?.title || t.areaName;
     const sm = statusMeta(t.status);
@@ -272,7 +292,8 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const renderAreas = () => {
-    if (!elAreas) return;
+    if (!elAreas) 
+      return;
     elAreas.innerHTML = "";
 
     const floor = elFloor?.value || "all";
@@ -335,7 +356,8 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const renderList = () => {
-    if (!elList) return;
+    if (!elList) 
+      return;
     elList.innerHTML = "";
 
     const visible = tables.filter((t) => t.hasSession);
@@ -355,11 +377,11 @@ document.addEventListener("DOMContentLoaded", () => {
     renderList();
   };
 
-  // Load dữ liệu thật từ API
   const load = async () => {
     try {
       const response = await fetch("/dinio/api/cashier/tables-with-bills");
-      if (!response.ok) throw new Error("API error");
+      if (!response.ok) 
+        throw new Error("API error");
 
       const data = await response.json();
 
@@ -379,9 +401,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       selectedId = null;
       renderAll();
-      console.log("✅ Đã tải", tables.length, "bàn từ API");
+      console.log("Đã tải", tables.length, "bàn từ API");
     } catch (error) {
-      console.error("❌ Lỗi tải dữ liệu:", error);
+      console.error("Lỗi tải dữ liệu:", error);
       tables = [];
       renderAll();
     }
@@ -392,7 +414,8 @@ document.addEventListener("DOMContentLoaded", () => {
       method: "GET",
       headers: getHeaders(),
     });
-    if (!res.ok) throw new Error("Fetch bill preview failed");
+    if (!res.ok) 
+      throw new Error("Fetch bill preview failed");
     return await res.json();
   };
 
@@ -411,11 +434,13 @@ document.addEventListener("DOMContentLoaded", () => {
   elShow?.addEventListener("change", () => {
     const keep = selectedId;
     renderAreas();
-    if (keep) setSelected(keep);
+    if (keep) 
+      setSelected(keep);
   });
 
   btnOpenBill?.addEventListener("click", async () => {
-    if (!selectedId) return;
+    if (!selectedId) 
+      return;
 
     resetBillUI();
     openBillModal();
@@ -426,15 +451,20 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (e) {
       console.error(e);
 
-      if (billEls.loading) billEls.loading.style.display = "none";
-      if (billEls.empty) billEls.empty.style.display = "";
-      if (billEls.tableLines) billEls.tableLines.style.display = "none";
-      if (billEls.sumWrap) billEls.sumWrap.style.display = "none";
+      if (billEls.loading) 
+        billEls.loading.style.display = "none";
+      if (billEls.empty) 
+        billEls.empty.style.display = "";
+      if (billEls.tableLines) 
+        billEls.tableLines.style.display = "none";
+      if (billEls.sumWrap) 
+        billEls.sumWrap.style.display = "none";
     }
   });
 
   btnPay?.addEventListener("click", () => {
-    if (!selectedId) return;
+    if (!selectedId) 
+      return;
     window.location.href = `/dinio/cashier/payment?tableId=${encodeURIComponent(selectedId)}`;
   });
 

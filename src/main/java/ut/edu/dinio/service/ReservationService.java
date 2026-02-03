@@ -69,13 +69,10 @@ public class ReservationService {
         return "success";
     }
 
-    // Trong file ReservationService.java
-
 public List<Map<String, Object>> getOccupiedReservationsByDate(String dateStr) {
         try {
-            LocalDate date = LocalDate.parse(dateStr); // Parse ngày từ String
+            LocalDate date = LocalDate.parse(dateStr); 
 
-            // Gọi Repository để lấy danh sách (đã bao gồm JOIN FETCH customer)
             List<Reservation> list = reservationRepository.findOccupiedReservationsForMap(
                 date.atStartOfDay(), 
                 date.plusDays(1).atStartOfDay()
@@ -87,13 +84,10 @@ public List<Map<String, Object>> getOccupiedReservationsByDate(String dateStr) {
                 map.put("id", r.getId());
                 map.put("tableId", r.getTable().getId()); 
                 map.put("reservedAt", r.getReservedAt());
-                
-                // --- SỬA LOGIC LẤY TÊN KHÁCH HÀNG ---
-                // 1. Ưu tiên lấy từ trường guestName/guestPhone lưu trên Reservation (do người dùng nhập form)
+
                 String displayName = r.getGuestName();
                 String displayPhone = r.getGuestPhone();
 
-                // 2. Nếu không có, mới lấy từ tài khoản Customer liên kết (Fallback)
                 if (displayName == null || displayName.isEmpty()) {
                     if (r.getCustomer() != null) {
                         displayName = r.getCustomer().getFullName();
@@ -109,16 +103,13 @@ public List<Map<String, Object>> getOccupiedReservationsByDate(String dateStr) {
                         displayPhone = "";
                     }
                 }
-                // -------------------------------------
 
-                // Tạo object customer info để trả về frontend
                 Map<String, String> customerInfo = new HashMap<>();
                 customerInfo.put("name", displayName);
                 customerInfo.put("phone", displayPhone);
                 
                 map.put("customer", customerInfo);
                 
-                // Cập nhật cả trường guestName ở root để tương thích với code JS cũ (nếu có)
                 map.put("guestName", displayName);
                 
                 return map;

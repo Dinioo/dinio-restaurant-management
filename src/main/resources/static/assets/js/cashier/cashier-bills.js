@@ -28,7 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const fmtMoney = (n) => Number(n || 0).toLocaleString("vi-VN") + "đ";
 
   const fmtDT = (iso) => {
-    if (!iso) return "—";
+    if (!iso) 
+      return "—";
     const d = new Date(iso);
     const pad2 = (x) => String(x).padStart(2, "0");
     return `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
@@ -36,16 +37,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function load() {
     const ymd = ui.date?.value || new Date().toISOString().slice(0, 10);
-    if (ui.date) ui.date.value = ymd;
+    if (ui.date) 
+      ui.date.value = ymd;
 
     try {
       const response = await fetch(`/dinio/api/cashier/bills?date=${ymd}`);
-      if (!response.ok) throw new Error("Fetch failed");
+      if (!response.ok) 
+        throw new Error("Fetch failed");
       state.all = await response.json();
       applyFilter();
     } catch (e) {
       console.error(e);
-      if (window.errorToast) window.errorToast("Không tải được dữ liệu hóa đơn");
+      if (window.errorToast) 
+        window.errorToast("Không tải được dữ liệu hóa đơn");
     }
   }
 
@@ -56,9 +60,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let arr = [...state.all];
 
-    if (pay) arr = arr.filter((x) => x.payType === pay);
-    if (pre === "PRE") arr = arr.filter((x) => x.isPreorder === true);
-    if (pre === "WALKIN") arr = arr.filter((x) => x.isPreorder === false);
+    if (pay) 
+      arr = arr.filter((x) => x.payType === pay);
+    if (pre === "PRE") 
+      arr = arr.filter((x) => x.isPreorder === true);
+    if (pre === "WALKIN") 
+      arr = arr.filter((x) => x.isPreorder === false);
 
     if (q) {
       arr = arr.filter((x) =>
@@ -72,7 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function render() {
-    if (!ui.tbody) return;
+    if (!ui.tbody) 
+      return;
     const arr = state.filtered;
     const totalPages = Math.max(1, Math.ceil(arr.length / state.pageSize));
     state.page = Math.min(state.page, totalPages);
@@ -98,10 +106,14 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }).join("");
 
-    if (ui.pageInfo) ui.pageInfo.textContent = `${state.page} / ${totalPages}`;
-    if (ui.footHint) ui.footHint.textContent = `Tổng cộng: ${arr.length} hóa đơn`;
-    if (ui.prevPage) ui.prevPage.disabled = state.page <= 1;
-    if (ui.nextPage) ui.nextPage.disabled = state.page >= totalPages;
+    if (ui.pageInfo) 
+      ui.pageInfo.textContent = `${state.page} / ${totalPages}`;
+    if (ui.footHint) 
+      ui.footHint.textContent = `Tổng cộng: ${arr.length} hóa đơn`;
+    if (ui.prevPage) 
+      ui.prevPage.disabled = state.page <= 1;
+    if (ui.nextPage) 
+      ui.nextPage.disabled = state.page >= totalPages;
   }
 
   ui.date?.addEventListener("change", load);
@@ -121,7 +133,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   ui.tbody?.addEventListener("click", (e) => {
     const btn = e.target.closest("button[data-action]");
-    if (!btn) return;
+    if (!btn) 
+      return;
 
     const tr = btn.closest("tr");
     const id = tr.dataset.id;
@@ -143,7 +156,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   ui.vbConfirmBtn?.addEventListener("click", async () => {
-    if (!state.pendingVoidId) return;
+    if (!state.pendingVoidId) 
+      return;
 
     try {
       const response = await fetch(`/dinio/api/cashier/bills/${state.pendingVoidId}/void`, {
@@ -155,14 +169,17 @@ document.addEventListener("DOMContentLoaded", () => {
         state.all = state.all.filter(x => String(x.id) !== String(state.pendingVoidId));
         applyFilter();
 
-        if (window.successToast) window.successToast("Đã xóa hóa đơn vĩnh viễn khỏi hệ thống");
+        if (window.successToast) 
+          window.successToast("Đã xóa hóa đơn vĩnh viễn khỏi hệ thống");
       } else {
         const errData = await response.json();
-        if (window.errorToast) window.errorToast(errData.message || "Xóa thất bại");
+        if (window.errorToast) 
+          window.errorToast(errData.message || "Xóa thất bại");
       }
     } catch (e) {
       console.error("Lỗi xóa:", e);
-      if (window.errorToast) window.errorToast("Lỗi kết nối máy chủ");
+      if (window.errorToast) 
+        window.errorToast("Lỗi kết nối máy chủ");
     } finally {
       ui.vbModal?.classList.add("is-hidden");
       state.pendingVoidId = null;

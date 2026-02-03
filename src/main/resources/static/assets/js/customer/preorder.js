@@ -29,7 +29,8 @@
   const btnCheckout = qs("#btnGoCheckout");
 
   const hasMenu = !!qs("#menuSections");
-  if (!hasMenu) return;
+  if (!hasMenu) 
+    return;
 
   const CART_KEY = "dinio_preorder_cart_v3";
 
@@ -149,7 +150,8 @@
     });
 
     const shown = cards.filter(c => c.style.display !== "none").length;
-    if (countShownEl) countShownEl.textContent = String(shown);
+    if (countShownEl) 
+      countShownEl.textContent = String(shown);
   }
 
   function saveCart() {
@@ -172,7 +174,8 @@
     if (!cart[id])
       return;
     cart[id].qty += delta;
-    if (cart[id].qty <= 0) delete cart[id];
+    if (cart[id].qty <= 0) 
+      delete cart[id];
     renderCart();
   }
 
@@ -199,7 +202,8 @@
       list.style.gap = "10px";
       list.style.margin = "10px 0 0";
       const head = qs(".po-cart-head");
-      if (head && head.parentElement) head.insertAdjacentElement("afterend", list);
+      if (head && head.parentElement) 
+        head.insertAdjacentElement("afterend", list);
     }
     return list;
   }
@@ -243,8 +247,10 @@
       list.appendChild(empty);
     }
 
-    if (cartSubtotalEl) cartSubtotalEl.textContent = fmt(subtotal);
-    if (cartCountEl) cartCountEl.textContent = String(count);
+    if (cartSubtotalEl) 
+      cartSubtotalEl.textContent = fmt(subtotal);
+    if (cartCountEl) 
+      cartCountEl.textContent = String(count);
 
     saveCart();
   }
@@ -300,31 +306,41 @@
 
   function slugFromCategoryName(name) {
     const s = String(name || "").toLowerCase();
-    if (s.includes("starter") || s.includes("khai")) return "starter";
-    if (s.includes("main") || s.includes("chính")) return "main";
-    if (s.includes("dessert") || s.includes("tráng")) return "dessert";
-    if (s.includes("drink") || s.includes("đồ uống")) return "drink";
+    if (s.includes("starter") || s.includes("khai")) 
+      return "starter";
+    if (s.includes("main") || s.includes("chính")) 
+      return "main";
+    if (s.includes("dessert") || s.includes("tráng")) 
+      return "dessert";
+    if (s.includes("drink") || s.includes("đồ uống")) 
+      return "drink";
     return "other";
   }
 
   function sectionHint(slug) {
-    if (slug === "starter") return "Món khai vị";
-    if (slug === "main") return "Món chính";
-    if (slug === "dessert") return "Tráng miệng";
-    if (slug === "drink") return "Đồ uống";
+    if (slug === "starter") 
+      return "Món khai vị";
+    if (slug === "main") 
+      return "Món chính";
+    if (slug === "dessert") 
+      return "Tráng miệng";
+    if (slug === "drink") 
+      return "Đồ uống";
     return "";
   }
 
   async function loadMenuFromDb() {
     const res = await fetch(`/dinio/api/menu/page-data?view=customer`);
-    if (!res.ok) throw new Error("Menu API failed");
+    if (!res.ok) 
+      throw new Error("Menu API failed");
 
     const data = await res.json();
     const cats = data.categories || [];
     const items = data.items || [];
 
     const menuSections = qs("#menuSections");
-    if (!menuSections) return;
+    if (!menuSections) 
+      return;
 
     menuSections.innerHTML = "";
 
@@ -345,7 +361,8 @@
 
     order.forEach(slug => {
       const arr = group[slug];
-      if (!arr || !arr.length) return;
+      if (!arr || !arr.length) 
+        return;
 
       const sec = document.createElement("section");
       sec.className = "po-section";
@@ -430,8 +447,10 @@
   });
 
   btnCheckout.addEventListener("click", async () => {
-    if (!rid) return errorToast("Thiếu reservationId (rid)");
-    if (Object.keys(cart).length === 0) return errorToast("Bạn chưa chọn món");
+    if (!rid) 
+      return errorToast("Thiếu reservationId (rid)");
+    if (Object.keys(cart).length === 0) 
+      return errorToast("Bạn chưa chọn món");
 
     const payload = {
       items: Object.values(cart).map(it => ({

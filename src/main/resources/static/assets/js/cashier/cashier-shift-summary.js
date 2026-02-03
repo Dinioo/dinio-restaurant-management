@@ -369,18 +369,26 @@ document.addEventListener("DOMContentLoaded", () => {
   function sumBy(arr, fn) { return arr.reduce((s, x) => s + Number(fn(x) || 0), 0); }
 
   function renderStatus(st) {
-    if (st === "PAID") return `<span class="st is-paid">Đã thanh toán</span>`;
-    if (st === "PENDING") return `<span class="st is-pending">Chờ thanh toán</span>`;
-    if (st === "CANCELLED") return `<span class="st is-cancel">Huỷ</span>`;
-    if (st === "REFUNDED") return `<span class="st is-refund">Hoàn</span>`;
+    if (st === "PAID") 
+      return `<span class="st is-paid">Đã thanh toán</span>`;
+    if (st === "PENDING") 
+      return `<span class="st is-pending">Chờ thanh toán</span>`;
+    if (st === "CANCELLED") 
+      return `<span class="st is-cancel">Huỷ</span>`;
+    if (st === "REFUNDED") 
+      return `<span class="st is-refund">Hoàn</span>`;
     return `<span class="st">${escapeHtml(st)}</span>`;
   }
 
   function renderPay(pm) {
-    if (pm === "CASH") return `<span class="pay cash">Tiền mặt</span>`;
-    if (pm === "BANK") return `<span class="pay bank">Chuyển khoản</span>`;
-    if (pm === "VISA") return `<span class="pay visa">Visa</span>`;
-    if (pm === "MIX") return `<span class="pay mix">Mix</span>`;
+    if (pm === "CASH") 
+      return `<span class="pay cash">Tiền mặt</span>`;
+    if (pm === "BANK") 
+      return `<span class="pay bank">Chuyển khoản</span>`;
+    if (pm === "VISA") 
+      return `<span class="pay visa">Visa</span>`;
+    if (pm === "MIX") 
+      return `<span class="pay mix">Mix</span>`;
     return `<span class="pay">${escapeHtml(pm)}</span>`;
   }
 
@@ -467,52 +475,43 @@ document.addEventListener("DOMContentLoaded", () => {
   return { [date]: { morning, evening } };
 }
 
-  /* =========================
-     SHIFT FLOW (MIDDAY + DAYEND + CLOSE SHIFT)
-     (CHỈ THÊM - KHÔNG ĐỤNG CODE CŨ)
-     ========================= */
-
   const openModal = (id) => {
     const m = document.getElementById(id);
-    if (!m) return;
+    if (!m) 
+      return;
     m.classList.remove("is-hidden");
     m.setAttribute("aria-hidden", "false");
   };
 
   const closeAnyModal = (modal) => {
-    if (!modal) return;
+    if (!modal) 
+      return;
     modal.classList.add("is-hidden");
     modal.setAttribute("aria-hidden", "true");
   };
 
-  // bấm nút Mid-day -> mở modal middayModal
   document.getElementById("btnMidDay")?.addEventListener("click", () => {
     openModal("middayModal");
   });
 
-  // bấm OK ở modal Mid-day -> đóng -> mở shiftClosedModal
   document.getElementById("middayOkBtn")?.addEventListener("click", () => {
     closeAnyModal(document.getElementById("middayModal"));
     openModal("shiftClosedModal");
   });
 
-  // bấm nút Day-end -> mở modal dayendModal
   document.getElementById("btnDayEnd")?.addEventListener("click", () => {
     openModal("dayendModal");
   });
 
-  // bấm OK ở modal Day-end -> đóng -> mở shiftClosedModal
   document.getElementById("dayendOkBtn")?.addEventListener("click", () => {
     closeAnyModal(document.getElementById("dayendModal"));
     openModal("shiftClosedModal");
   });
 
-  // bấm OK ở shiftClosedModal -> logout
   document.getElementById("reloginBtn")?.addEventListener("click", () => {
     window.location.href = "/logout";
   });
 
-  // click backdrop hoặc nút có data-close="1" -> đóng modal đang mở
   document.querySelectorAll(".fp-modal").forEach(modal => {
     modal.addEventListener("click", (e) => {
       const t = e.target;

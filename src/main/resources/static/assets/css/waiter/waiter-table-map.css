@@ -1,6 +1,5 @@
 html, body { overflow-x: hidden; }
 
-/* ===== Layout shell ===== */
 .tm-shell.wt-shell{
   display: grid;
   grid-template-columns: 1.35fr 0.65fr;
@@ -14,7 +13,6 @@ html, body { overflow-x: hidden; }
   .wtm-right{ position: static; top: auto; }
 }
 
-/* ===== Table badge ===== */
 .tm-table{ position: relative; }
 .t-badge{
   font-size: 12px;
@@ -29,7 +27,6 @@ html, body { overflow-x: hidden; }
   .t-badge{ font-size: 11px; }
 }
 
-/* ===== Legend dots (extra) ===== */
 .dot.is-occupied{
   background: rgba(255,97,97,0.65);
   border: 1px solid rgba(255,97,97,0.35);
@@ -48,7 +45,6 @@ html, body { overflow-x: hidden; }
   background: rgba(239,191,88,0.12);
 }
 
-/* ===== Right panel ===== */
 .wtm-right{ position: sticky; top: 96px; }
 .wtm-right-card{
   background: var(--surface-1);
@@ -165,14 +161,8 @@ html, body { overflow-x: hidden; }
   line-height: 1.5;
 }
 
-/* =========================================================
-   MODAL: Waiter Close Session
-   ========================================================= */
-
-/* MUST: hide/show theo class is-hidden */
 #wtCloseSessionModal.is-hidden{ display: none !important; }
 
-/* Base modal overlay */
 #wtCloseSessionModal.fp-modal{
   position: fixed;
   inset: 0;
@@ -260,7 +250,6 @@ html, body { overflow-x: hidden; }
   background: rgba(255,93,93,.08);
 }
 
-/* extra content */
 #wtCloseSessionModal .wtclose-note{
   display: grid;
   gap: 8px;

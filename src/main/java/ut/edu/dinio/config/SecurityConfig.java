@@ -45,6 +45,7 @@ public class SecurityConfig {
                 .requestMatchers("/staff/login", "/assets/**", "/favicon.ico", "/vnpay/**").permitAll()
                 .requestMatchers("/api/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/waiter/tables").hasAnyRole("WAITER", "ADMIN", "CASHIER_MANAGER")
                 .requestMatchers("/waiter/**").hasAnyRole("WAITER", "ADMIN")
                 .requestMatchers("/kitchen/**").hasAnyRole("KITCHEN", "ADMIN")
                 .requestMatchers("/cashier/**").hasAnyRole("CASHIER_MANAGER", "ADMIN")
